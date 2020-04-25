@@ -18,6 +18,8 @@ const Slider: React.FC<SliderProps> = ({
   return (
     <ReactSlider
       className={cn(styles.root, disabled && styles.disabled)}
+      max={120}
+      min={5}
       onChange={onChange}
       renderThumb={(props: any, state: any) => (
         <div {...props}>

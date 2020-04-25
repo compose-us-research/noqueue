@@ -16,13 +16,19 @@
 
 .thumbInfo {
   font-weight: 600px;
+  left: -50%;
   position: absolute;
+  text-align: center;
   top: 50px;
+  white-space: nowrap;
 }
 
 .track {
+  background-color: #fff;
+  border: 1px solid #fff;
   border-radius: 10px;
   height: 10px;
+  margin: 16px 25px;
 }
 
 /* modifiers */
