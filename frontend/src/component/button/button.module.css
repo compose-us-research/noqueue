@@ -1,0 +1,22 @@
+/* elements */
+.root {
+  border-radius: 28.5px;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 17px 39px;
+}
+
+/* modifiers */
+.primary {
+  background-color: #4643d3;
+  color: #fff;
+}
+
+.secondary {
+  background-color: #fff;
+  color: #5146c9;
+}
+
+.disabled {
+  opacity: 0.6;
+}

@@ -1,0 +1,31 @@
+/* elements */
+.root {
+  border-radius: 28.5px;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 17px 39px;
+}
+
+.thumb {
+  background-color: #fe805c;
+  border-radius: 50%;
+  cursor: grab;
+  height: 45px;
+  width: 45px;
+}
+
+.thumbInfo {
+  font-weight: 600px;
+  position: absolute;
+  top: 50px;
+}
+
+.track {
+  border-radius: 10px;
+  height: 10px;
+}
+
+/* modifiers */
+.disabled {
+  opacity: 0.6;
+}
