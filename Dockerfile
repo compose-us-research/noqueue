@@ -1,12 +1,12 @@
 FROM node:12
 
-RUN mkdir -p /opt/noqueue
-COPY . /opt/noqueue
+RUN mkdir -p /app
+COPY . /app
 
-WORKDIR /opt/noqueue/frontend
-RUN npm install && npm build
+WORKDIR /app/frontend
+RUN yarn install && yarn build
 
-WORKDIR /opt/noqueue/backend
+WORKDIR /app/backend
 RUN npm install
 
 CMD ["npm", "start"]
