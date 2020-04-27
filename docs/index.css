@@ -45,23 +45,61 @@ body {
 }
 
 body {
-  background-color: #4643d3;
-  color: #fff;
+  background-color: #fff;
+  color: #12121f;
   line-height: 1.8em;
 }
 
 section {
   margin: 0;
-  padding: 25px 50px;
+  padding: 20px;
 }
 
 a {
   font-weight: 600;
-  color: #fff;
+  color: #4643D3;
 }
 
 li {
   padding: 0.45em;
+}
+
+img {
+  width: 100%;
+  max-width: 580px;
+}
+
+.iphone-screens {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+figcaption {
+  font-size: .85rem;
+  opacity: 0.6;
+  line-height: 1.2rem;
+}
+
+@media screen and (min-width: 1024px) {
+  .solution {
+    display: flex;
+  }
+
+  .col:first-child {
+    max-width: 60%;
+    padding-right: 20px;
+  }
+}
+
+.col figure {
+  margin: 0;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
 .header {
@@ -80,10 +118,11 @@ li {
 }
 
 .header h1 {
-  bottom: 0;
+  bottom: 20px;
   color: #fff;
   position: absolute;
   text-align: center;
+  line-height: 1.25;
 }
 
 .button {
@@ -97,6 +136,7 @@ li {
 .button.primary {
   background-color: #4643d3;
   color: #fff;
+  text-decoration: none;
 }
 
 .button.secondary {
@@ -108,4 +148,8 @@ li {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.center {
+  text-align: center;
 }
