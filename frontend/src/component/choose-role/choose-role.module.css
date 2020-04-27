@@ -1,0 +1,23 @@
+.root {
+    background-color: #4643d3;
+    display: flex;
+    min-height: 100vh;
+    height: 100%;
+    flex-direction: column;
+  }
+  
+  .text {
+    color: #fff;
+    padding: 25px;
+    text-align: center;
+  }
+  
+  .actions {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-around;
+    padding: 25px;
+    height: 100%;
+  }
+  

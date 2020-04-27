@@ -3,6 +3,7 @@
   border-radius: 28.5px;
   font-size: 16px;
   font-weight: 600;
+  height: 103px;
   padding: 17px 39px;
 }
 
@@ -34,4 +35,8 @@
 /* modifiers */
 .disabled {
   opacity: 0.6;
+}
+
+.disabled .thumb {
+  cursor: default;
 }

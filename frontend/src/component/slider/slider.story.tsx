@@ -7,6 +7,8 @@ export default {
   component: Slider,
 };
 
-export const Regular = () => <Slider onChange={action("changed")} />;
+export const Regular = () => (
+  <Slider max={60} min={15} onChange={action("changed")} />
+);
 
 export const Disabled = () => <Slider disabled onChange={action("changed")} />;

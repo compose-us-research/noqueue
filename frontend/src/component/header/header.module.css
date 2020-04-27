@@ -1,0 +1,9 @@
+/* elements */
+.root {
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.5) 0 -50px 100px;
+  padding: 25px;
+  width: 100%;
+}
+
+/* modifiers */

@@ -6,29 +6,35 @@ import styles from "./slider.module.css";
 
 interface SliderProps {
   disabled?: boolean;
-  onChange?: () => void;
+  max?: number;
+  min?: number;
+  onChange?: (value: number | number[] | null | undefined) => void;
 }
 
 const noop = () => {};
 
 const Slider: React.FC<SliderProps> = ({
   disabled = false,
+  max = 120,
+  min = 5,
   onChange = noop,
 }) => {
   return (
-    <ReactSlider
-      className={cn(styles.root, disabled && styles.disabled)}
-      max={120}
-      min={5}
-      onChange={onChange}
-      renderThumb={(props: any, state: any) => (
-        <div {...props}>
-          <div className={styles.thumbInfo}>{state.valueNow} Minuten</div>
-        </div>
-      )}
-      thumbClassName={styles.thumb}
-      trackClassName={styles.track}
-    />
+    <div className={cn(styles.root, disabled && styles.disabled)}>
+      <ReactSlider
+        disabled={disabled}
+        max={max}
+        min={min}
+        onChange={onChange}
+        renderThumb={(props: any, state: any) => (
+          <div {...props}>
+            <div className={styles.thumbInfo}>{state.valueNow} Minuten</div>
+          </div>
+        )}
+        thumbClassName={styles.thumb}
+        trackClassName={styles.track}
+      />
+    </div>
   );
 };
 
