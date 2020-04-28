@@ -2,8 +2,8 @@ import React from "react";
 import ChooseDay from "./choose-day";
 
 export default {
-  title: "ChooseDay",
+  title: "Screens|ChooseDay",
   component: ChooseDay,
 };
 
-export const Simple = () => <ChooseDay />;
+export const Default = () => <ChooseDay />;

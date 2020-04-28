@@ -3,7 +3,7 @@ import ChooseSlot from "./choose-slot";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "ChooseSlot",
+  title: "Screens|ChooseSlot",
   component: ChooseSlot,
 };
 
