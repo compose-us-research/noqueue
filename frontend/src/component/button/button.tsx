@@ -4,11 +4,13 @@ import cn from "classnames";
 import styles from "./button.module.css";
 
 export type ButtonVariants = "primary" | "secondary" | "unselected";
+export type ButtonType = "button" | "submit";
 
 interface ButtonProps {
   children?: React.ReactNode;
   disabled?: boolean;
   onClick?: () => void;
+  type?: ButtonType;
   variant?: ButtonVariants;
 }
 
@@ -18,6 +20,7 @@ const Button: React.FC<ButtonProps> = ({
   children,
   disabled = false,
   onClick = noop,
+  type = "button",
   variant = "primary",
 }) => {
   return (
@@ -30,7 +33,7 @@ const Button: React.FC<ButtonProps> = ({
         disabled && styles.disabled
       )}
       onClick={onClick}
-      type="button"
+      type={type}
     >
       {children}
     </button>

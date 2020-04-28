@@ -1,0 +1,27 @@
+.root {
+  align-items: center;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  padding-bottom: 25px;
+}
+
+.fields {
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  flex-flow: wrap;
+  max-width: 600px;
+  padding: 25px;
+  width: 100%;
+}
+
+.regular {
+  width: 100%;
+}
+
+.half {
+  width: 50%;
+}

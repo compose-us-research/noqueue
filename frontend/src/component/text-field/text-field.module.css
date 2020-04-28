@@ -1,0 +1,22 @@
+/* elements */
+.root {
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 17px 39px;
+}
+
+.input {
+  border: 0;
+  border-radius: 28.5px;
+  display: block;
+  height: 50px;
+  padding: 0 25px;
+  width: 100%;
+}
+
+/* modifiers */
+
+.required .input {
+  box-shadow: 0 0 2px #f00;
+}

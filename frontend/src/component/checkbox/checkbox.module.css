@@ -1,0 +1,24 @@
+/* elements */
+.root {
+  border-radius: 28.5px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 17px 39px;
+}
+
+.input {
+  border: 1px solid #000;
+  border-radius: 5px;
+  height: 25px;
+  width: 25px;
+}
+
+.label {
+  color: #AFAFBD;
+  padding-left: 25px;
+}
+
+/* modifiers */
