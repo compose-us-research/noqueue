@@ -1,31 +1,49 @@
+const debug = require('debug')('noqueue-server')
 const { resolve } = require('path')
 const express = require('express')
 const morgan = require('morgan')
-const shop = require('./lib/shop')
+const Database = require('./lib/Database')
+const defaults = require('./lib/defaults')
+const admin = require('./lib/middleware/admin')
+const shop = require('./lib/middleware/shop')
 
-const configs = [{
-  path: 'coop-basel',
-  label: 'Coop Basel',
-  maxCustomers: 10
-}, {
-  path: 'migros-basel',
-  label: 'Migros Basel',
-  maxCustomers: 20
-}]
-
-const app = express()
-
-app.use(morgan('combined'))
-
-// mount all shop instances
-for (const config of configs) {
-  app.use(`/shop/${config.path}`, shop(config))
+const config = {
+  port: process.env.PORT || 80,
+  db: {
+    user: process.env.DB_USER || defaults.db.user,
+    host: process.env.DB_HOST || defaults.db.host,
+    database: process.env.DB_DATABASE || defaults.db.database,
+    password: process.env.DB_PASSWORD || defaults.db.password,
+    port: process.env.DB_PORT || defaults.db.port,
+  },
+  path: process.env.SHOP_PATH || 'default'
 }
 
-// host frontend
-app.use(express.static(resolve(__dirname, '../frontend/build')))
+async function init () {
+  try {
+    const app = express()
 
-// start server on PORT or 80
-const server = app.listen(process.env.PORT || 80, () => {
-  console.log(`listening at http://localhost:${server.address().port}/`)
-})
+    const db = new Database(config.db)
+    await db.init()
+
+    app.use(morgan('combined'))
+
+    debug('mount admin API at /admin')
+    app.use('/admin', admin({ db }))
+
+    debug(`mount shop at /shop/${config.path}`)
+    app.use(`/shop/${config.path}`, shop({ db }))
+
+    const frontendPath = resolve(__dirname, '../frontend/build')
+    debug(`mount frontend from ${frontendPath}`)
+    app.use(express.static(frontendPath))
+
+    const server = app.listen(config.port, () => {
+      console.log(`listening at http://localhost:${server.address().port}/`)
+    })
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+init()
