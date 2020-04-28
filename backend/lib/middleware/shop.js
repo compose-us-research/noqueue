@@ -1,17 +1,19 @@
-const { URL } = require('url')
 const absoluteUrl = require('absolute-url')
 const express = require('express')
 const bodyParser = require('body-parser')
+const slot = require('./slot')
 
-function shop (config) {
+function shop ({ db }) {
   const router = new express.Router()
 
   router.use(absoluteUrl())
 
-  router.get('/', (req, res, next) => {
+  router.get('/', async (req, res, next) => {
     if (req.accepts('html')) {
       return next()
     }
+
+    const config = await db.getConfig()
 
     res.json({
       '@id': req.absoluteUrl(),
@@ -20,20 +22,17 @@ function shop (config) {
     })
   })
 
-  router.get('/slot/available', (req, res, next) => {
+  router.put('/', bodyParser.json(), async (req, res, next) => {
     if (req.accepts('html')) {
       return next()
     }
 
-    res.json([{
-      from: new Date(),
-      to: new Date(Date.now() + 24 * 60 * 60 * 1000)
-    }])
+    await db.setConfig(req.body)
+
+    res.status(201).end()
   })
 
-  router.post('/slot', bodyParser.json(), (req, res, next) => {
-    next()
-  })
+  router.use('/slot', slot({ db }))
 
   return router
 }

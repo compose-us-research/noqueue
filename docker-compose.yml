@@ -1,0 +1,25 @@
+version: '3'
+services:
+
+  noqueue:
+    container_name: noqueue
+    image: noqueue
+    restart: unless-stopped
+    environment:
+      DB_PASSWORD: "abcd"
+      DB_HOST: "postgres"
+    links:
+      - "postgres:postgres"
+    ports:
+      - "0.0.0.0:8080:80"
+
+  postgres:
+    container_name: postgres
+    image: postgres:12
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: "abcd"
+    ports:
+      - "0.0.0.0:5432:5432"
+    volumes:
+      - /srv/postgres:/var/lib/postgresql/data
