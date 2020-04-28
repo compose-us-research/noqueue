@@ -36,9 +36,11 @@ const ChooseDay: React.FC<ChooseSlotProps> = ({ onSelect, slots }) => {
           </Button>
         ))}
       </div>
-      <div className={styles.action}>
+      <div className={styles.info}>
         Achtung: Du kannst deinen Zeitraum natürlich nachträglich verändern /
         stornieren, wenn dir etwas dazwischen kommen sollte.
+      </div>
+      <div className={styles.action}>
         <Button
           disabled={selectedSlot === null}
           onClick={() => {

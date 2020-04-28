@@ -9,11 +9,18 @@
 }
 
 .buttons {
-  justify-content: space-evenly;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  grid-gap: 10px;
+  width: 100%;
+}
+
+.info {
+  padding: 25px;
 }
 
 .action {
-  padding: 25px;
+  padding: 0 25px 25px;
 }
 
 /* modifiers */

@@ -21,6 +21,21 @@ export const Simple = () => (
         from: new Date("2020-04-26Z16:15:00"),
         to: new Date("2020-04-26Z16:30:00"),
       },
+      {
+        id: 3,
+        from: new Date("2020-04-26Z14:15:00"),
+        to: new Date("2020-04-26Z14:30:00"),
+      },
+      {
+        id: 4,
+        from: new Date("2020-04-26Z17:15:00"),
+        to: new Date("2020-04-26Z18:30:00"),
+      },
+      {
+        id: 5,
+        from: new Date("2020-04-26Z18:15:00"),
+        to: new Date("2020-04-26Z18:30:00"),
+      },
     ]}
   />
 );
