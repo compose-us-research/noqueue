@@ -16,7 +16,7 @@ In general Javascript, Frontend with Typescript, Backend tba.
 # Team 🧝🏻‍♀️🧝🏻‍♀️🧝🏻🧝🏻 #
 Platzhalter.io is a project started at ITC1's digital hackathon.
 
-Stefanie Susser, UX/UI & Product Design
-Thomas Bergwinkl, Backend
-Jörn Bernhardt, Frontend
-Kristina Juse, Marketing & Project Management
+- Stefanie Susser, UX/UI & Product Design
+- Thomas Bergwinkl, Backend
+- Jörn Bernhardt, Frontend
+- Kristina Juse, Marketing & Project Management
