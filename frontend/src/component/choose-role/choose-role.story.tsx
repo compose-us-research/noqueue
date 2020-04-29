@@ -3,7 +3,7 @@ import ChooseRole from "./choose-role";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Screens|ChooseRole",
+  title: "Screens/ChooseRole",
   component: ChooseRole,
 };
 

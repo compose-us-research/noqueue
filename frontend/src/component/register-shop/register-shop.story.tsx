@@ -2,7 +2,7 @@ import React from "react";
 import RegisterShop from "./register-shop";
 
 export default {
-  title: "Screens|RegisterShop",
+  title: "Screens/RegisterShop",
   component: RegisterShop,
 };
 

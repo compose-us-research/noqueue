@@ -2,7 +2,7 @@ import React from "react";
 import ChooseDay from "./choose-day";
 
 export default {
-  title: "Screens|ChooseDay",
+  title: "Screens/ChooseDay",
   component: ChooseDay,
 };
 
