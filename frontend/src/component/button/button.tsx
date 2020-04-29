@@ -8,6 +8,7 @@ export type ButtonType = "button" | "submit";
 
 interface ButtonProps {
   children?: React.ReactNode;
+  className?: string;
   disabled?: boolean;
   onClick?: () => void;
   type?: ButtonType;
@@ -18,6 +19,7 @@ const noop = () => {};
 
 const Button: React.FC<ButtonProps> = ({
   children,
+  className = undefined,
   disabled = false,
   onClick = noop,
   type = "button",
@@ -30,7 +32,8 @@ const Button: React.FC<ButtonProps> = ({
         variant === "primary" && styles.primary,
         variant === "secondary" && styles.secondary,
         variant === "unselected" && styles.unselected,
-        disabled && styles.disabled
+        disabled && styles.disabled,
+        className
       )}
       onClick={onClick}
       type={type}

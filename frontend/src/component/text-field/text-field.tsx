@@ -9,6 +9,7 @@ interface TextFieldProps {
   label: string;
   name: string;
   required?: boolean;
+  type?: "number" | "tel" | "text";
 }
 
 const TextField: React.FC<TextFieldProps> = ({
@@ -16,6 +17,7 @@ const TextField: React.FC<TextFieldProps> = ({
   label,
   name,
   required = false,
+  type = "text",
 }) => {
   const { errors, register } = useFormContext();
   const placeholder = required ? `${label}*` : label;
@@ -28,6 +30,7 @@ const TextField: React.FC<TextFieldProps> = ({
         name={name}
         ref={register({ required })}
         placeholder={placeholder}
+        type={type}
       />
     </div>
   );
