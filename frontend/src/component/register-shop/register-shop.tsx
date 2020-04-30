@@ -23,36 +23,17 @@ const RegisterShop: React.FC<RegisterShopProps> = () => {
       <form onSubmit={methods.handleSubmit(handleSubmit)}>
         <FormContext {...methods}>
           <div className={styles.fields}>
+            <TextField name="name" label="Name deines Geschäfts" required />
             <TextField
-              className={styles.regular}
-              name="name"
-              label="Name deines Geschäfts"
-              required
-            />
-            <TextField
-              className={styles.regular}
               name="streetAddress"
               label="Straße, Hausnummer"
               required
             />
-            <TextField
-              className={styles.half}
-              name="postalCode"
-              label="PLZ"
-              required
-            />
-            <TextField
-              className={styles.half}
-              name="city"
-              label="Ort"
-              required
-            />
-            <TextField
-              className={styles.regular}
-              name="email"
-              label="E-Mail"
-              required
-            />
+            <div className={styles.postal}>
+              <TextField name="postalCode" label="PLZ" required />
+              <TextField name="city" label="Ort" required />
+            </div>
+            <TextField name="email" label="E-Mail" required />
             <Checkbox
               name="recordingNecessary"
               label="Das Geschäft unterliegt der Aufzeichnungspflicht, um im Falle einer Infektion Kontaktpersonen ausfindig machen zu können."

@@ -15,13 +15,15 @@
   flex-flow: wrap;
   max-width: 600px;
   padding: 25px;
+}
+
+.fields > * {
+  margin: 25px;
   width: 100%;
 }
 
-.regular {
-  width: 100%;
-}
-
-.half {
-  width: 50%;
+.postal {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 25px;
 }

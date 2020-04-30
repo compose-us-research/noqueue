@@ -7,6 +7,7 @@ import styles from "./reservable-times.module.css";
 import RangeSlider from "../multi-slider/range-slider";
 import TextField from "../text-field/text-field";
 import { FormContext, useForm } from "react-hook-form";
+import DaySelector from "../day-selector/day-selector";
 
 interface ReservableTimesProps {
   ranges: Timerange[];
@@ -41,7 +42,8 @@ const ReservableTimes: React.FC<ReservableTimesProps> = () => {
         <form onSubmit={methods.handleSubmit(handleSubmit)}>
           <div className={styles.fields}>
             <div>stub: Selector</div>
-            <div>stub: Day selector</div>
+            <DaySelector name="day" />
+
             <div className={styles.timeframe}>
               <TextField label="Uhrzeit von" name="timeFrom" required />
               <TextField label="Uhrzeit bis" name="timeUntil" required />
@@ -58,7 +60,7 @@ const ReservableTimes: React.FC<ReservableTimesProps> = () => {
             <RangeSlider min={5} max={120} />
 
             <Button
-              className={styles.button}
+              className={styles.addButton}
               onClick={addTimerange}
               variant="secondary"
             >
@@ -66,7 +68,7 @@ const ReservableTimes: React.FC<ReservableTimesProps> = () => {
               <PlusIcon />
             </Button>
 
-            <Button className={styles.button} type="submit">
+            <Button className={styles.submit} type="submit">
               Fertig! Erzähl es deinen Kunden!
             </Button>
           </div>

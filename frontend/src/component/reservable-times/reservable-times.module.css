@@ -26,12 +26,21 @@
 .timeframe {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-column-gap: 25px;
 }
 
-.button {
+.addButton {
   align-items: center;
   display: flex;
   justify-content: space-between;
+  text-align: center;
+  width: 100%;
+}
+
+.submit {
+  align-items: center;
+  display: flex;
+  justify-content: center;
   width: 100%;
 }
 

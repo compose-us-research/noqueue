@@ -1,12 +1,11 @@
 /* elements */
 .root {
   border-radius: 28.5px;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 25px 1fr;
+  grid-column-gap: 25px;
   font-size: 16px;
   font-weight: 600;
-  padding: 17px 39px;
 }
 
 .input {
@@ -17,8 +16,7 @@
 }
 
 .label {
-  color: #AFAFBD;
-  padding-left: 25px;
+  color: #afafbd;
 }
 
 /* modifiers */
