@@ -2,7 +2,6 @@ import React, { useCallback, useEffect } from "react";
 import { useForm, FormContext } from "react-hook-form";
 
 import Button from "../button/button";
-import Checkbox from "../checkbox/checkbox";
 import TextField from "../text-field/text-field";
 
 import styles from "./register-customer.module.css";
@@ -24,13 +23,13 @@ const RegisterCustomer: React.FC<RegisterCustomerProps> = () => {
       <form onSubmit={methods.handleSubmit(handleSubmit)}>
         <FormContext {...methods}>
           <div className={styles.fields}>
-            <div className={styles.info}>
+            <p>
               Um die Verbreitung des Corona-Virus weiter einzudämmen, müssen
               manche Unternehmen Aufzeichnungen darüber führen, wer zu welcher
               Uhrzeit in ihrem Geschäft war. Deine Kontaktdaten benötigen wir
               nur für den Fall, dass Kontaktpersonen ausfindig gemacht werden
               müssen. Sie werden nach 14 Tagen automatisch gelöscht.
-            </div>
+            </p>
             <TextField name="name" label="Vor / Nachname" required />
             <TextField
               name="streetAddress"

@@ -8,9 +8,9 @@
   min-height: 100vh;
   padding: 25px;
 }
-
-.info {
-  /* padding: 25px; */
+.root h2,
+.root h3 {
+  text-align: center;
 }
 
 .fields {
