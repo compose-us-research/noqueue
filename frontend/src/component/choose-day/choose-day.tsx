@@ -35,6 +35,16 @@ const ChooseDay: React.FC<ChooseDayProps> = ({ children }) => {
           name="Buchhandlung Pustet"
         />
       </Header>
+      <div className={styles.duration}>
+        <h2>Wie viel Zeit benötigst Du?</h2>
+        <Slider
+          onChange={(value) => {
+            if (value) {
+              setDuration(value as number);
+            }
+          }}
+        />
+      </div>
       <div className={styles.day}>
         <h2>Wann möchtest Du einkaufen?</h2>
         <div className={styles.daySelect}>
@@ -51,16 +61,6 @@ const ChooseDay: React.FC<ChooseDayProps> = ({ children }) => {
             Morgen
           </Button>
         </div>
-      </div>
-      <div className={styles.duration}>
-        <h2>Wie viel Zeit benötigst Du?</h2>
-        <Slider
-          onChange={(value) => {
-            if (value) {
-              setDuration(value as number);
-            }
-          }}
-        />
       </div>
       <Suspense fallback={<Loader />}>
         <BookTimeslot duration={duration} day={day} />

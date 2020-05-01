@@ -1,0 +1,32 @@
+.root {
+  align-items: center;
+  color: #000;
+  display: flex;
+  align-self: center;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 25px;
+}
+
+.info {
+  /* padding: 25px; */
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  flex-flow: wrap;
+  max-width: 600px;
+}
+
+.fields > * {
+  margin: 25px;
+  width: 100%;
+}
+
+.postal {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 25px;
+}

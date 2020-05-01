@@ -1,24 +1,27 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import cn from "classnames";
 
 import styles from "./day-selector.module.css";
 import { useFormContext } from "react-hook-form";
 
+type DayOption = "Mo" | "Di" | "Mi" | "Do" | "Fr" | "Sa" | "So";
+
 interface DaySelectorProps {
   className?: string;
+  defaultValue?: DayOption;
   disabled?: boolean;
   name: string;
 }
 
-const options = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+const options: DayOption[] = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
 
 function DaySelector({
   className = undefined,
+  defaultValue = "Mo",
   disabled = false,
   name,
 }: DaySelectorProps) {
   const { register, setValue, unregister, watch } = useFormContext();
-  const defaultValue = "Mo";
   const selected = watch(name, defaultValue);
 
   useEffect(() => {
@@ -26,7 +29,7 @@ function DaySelector({
     setValue(name, defaultValue);
 
     return () => unregister(name);
-  }, [register]);
+  }, [defaultValue, name, register, setValue, unregister]);
 
   return (
     <div className={cn(styles.root, disabled && styles.disabled, className)}>
