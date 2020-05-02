@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 
 import { ReactComponent as PlusIcon } from "../../asset/image/plus-icon.svg";
-import Flavor from "../../service/flavor";
+import { Timerange } from "../../service/domain";
 import Button from "../button/button";
 import styles from "./reservable-times.module.css";
 import RangeSlider from "../multi-slider/range-slider";
@@ -12,20 +12,6 @@ import Spacer from "../spacer/spacer";
 
 interface ReservableTimesProps {
   ranges: Timerange[];
-}
-
-export type Day = "Mo" | "Di" | "Mi" | "Do" | "Fr" | "Sa" | "So";
-export type Time = Flavor<string, "Time">;
-export type Minutes = Flavor<number, "Minutes">;
-export type Amount = Flavor<number, "Amount">;
-
-export interface Timerange {
-  day: Day;
-  timeFrom: Time;
-  timeTo: Time;
-  amountOfPeopleInShop: Amount;
-  timeframeFrom: Minutes;
-  timeframeTo: Minutes;
 }
 
 // const ReservableTimes: React.FC<ReservableTimesProps> = ({ ranges }) => {

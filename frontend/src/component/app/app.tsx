@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import ChooseRole from "../choose-role/choose-role";
 import CustomerApp from "../customer-app/customer-app";
-import RegisterShop from "../register-shop/register-shop";
+import ShopApp from "../shop-app/shop-app";
 import styles from "./app.module.css";
 
 interface AppProps {}
@@ -19,7 +19,7 @@ const App: React.FC<AppProps> = () => {
           selectCustomerRole={() => setRole("customer")}
         />
       ) : role === "shop" ? (
-        <RegisterShop backToIndex={() => setRole(null)} />
+        <ShopApp backToIndex={() => setRole(null)} />
       ) : (
         <CustomerApp backToIndex={() => setRole(null)} />
       )}

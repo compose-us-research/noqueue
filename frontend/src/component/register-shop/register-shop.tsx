@@ -7,15 +7,16 @@ import TextField from "../text-field/text-field";
 
 import styles from "./register-shop.module.css";
 import Spacer from "../spacer/spacer";
+import { Shop } from "../../service/domain";
 
 interface RegisterShopProps {
-  backToIndex: () => void;
+  onRegister: (newShop: Shop) => void;
 }
 
-const RegisterShop: React.FC<RegisterShopProps> = () => {
+const RegisterShop: React.FC<RegisterShopProps> = ({ onRegister }) => {
   const methods = useForm();
   const handleSubmit = useCallback((values) => {
-    console.log("submitting", { values });
+    onRegister(values);
   }, []);
   useEffect(() => {
     console.log(methods.errors);
