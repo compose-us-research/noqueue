@@ -3,10 +3,11 @@ import React, { useState, useCallback } from "react";
 import useSWR from "swr";
 
 import styles from "./book-timeslot.module.css";
-import { Customer, Timeslot, Shop } from "../../service/domain";
+import { Customer, Timeslot } from "../../service/domain";
 import { fetcher } from "../../service/fetcher/fetcher";
 import ChooseSlot from "../choose-slot/choose-slot";
 import RegisterCustomer from "../register-customer/register-customer";
+import useShop from "../../service/use-shop";
 
 interface BookTimeslotProps {
   bookTicketForSlot: (props: {
@@ -15,15 +16,6 @@ interface BookTimeslotProps {
   }) => void;
   day: Date;
   duration: number;
-}
-
-function useShop(): Shop {
-  return {
-    "@id": "1",
-    address: "Bahnhofstr. 1, 94032 Passau",
-    name: "Fitnessstudio zum goldenen Bizeps",
-    needsRegistration: true,
-  };
 }
 
 const BookTimeslot: React.FC<BookTimeslotProps> = ({
