@@ -10,7 +10,7 @@ export default {
 export const Simple = () => (
   <Suspense fallback={<div>Loading</div>}>
     <BookTimeslot
-      bookTicket={action("book ticket")}
+      bookTicketForSlot={action("book ticket")}
       day={new Date()}
       duration={5}
     />

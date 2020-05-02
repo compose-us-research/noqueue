@@ -5,6 +5,7 @@ const shop = {
   address: "Am Bahnhofsplatz, 94032 Passau",
   icon: <BookIcon />,
   name: "Buchhandlung Pustet",
+  needsRegistration: true,
 };
 
 const useShop = () => {

@@ -3,15 +3,20 @@ import React, { useState, useCallback } from "react";
 import Button from "../button/button";
 
 import styles from "./choose-slot.module.css";
-import { Timeslot } from "../../service/fetcher/fetcher";
+import { Timeslot } from "../../service/domain";
 import Spacer from "../spacer/spacer";
 
 interface ChooseSlotProps {
-  slots: Timeslot[];
+  needsRegistration?: boolean;
   onSelect: (id: number) => void;
+  slots: Timeslot[];
 }
 
-const ChooseSlot: React.FC<ChooseSlotProps> = ({ onSelect, slots }) => {
+const ChooseSlot: React.FC<ChooseSlotProps> = ({
+  needsRegistration = false,
+  onSelect,
+  slots,
+}) => {
   const [selectedSlot, setSelectedSlot] = useState<number | null>(null);
   const chooseSlot = useCallback(
     (id) => {
@@ -53,7 +58,7 @@ const ChooseSlot: React.FC<ChooseSlotProps> = ({ onSelect, slots }) => {
             }
           }}
         >
-          Zeitraum verbindlich buchen
+          Zeitraum {!needsRegistration && "verbindlich"} buchen
         </Button>
       </div>
     </div>

@@ -1,8 +1,4 @@
-export interface Timeslot {
-  id: number;
-  from: Date;
-  to: Date;
-}
+import { Timeslot } from "../domain";
 
 /**
  * Fetches data from the API server.

@@ -6,14 +6,25 @@ import TextField from "../text-field/text-field";
 
 import styles from "./register-customer.module.css";
 import Spacer from "../spacer/spacer";
+import { Customer } from "../../service/domain";
 
-interface RegisterCustomerProps {}
+interface RegisterCustomerProps {
+  onRegister: (customer: Customer) => void;
+}
 
-const RegisterCustomer: React.FC<RegisterCustomerProps> = () => {
+const RegisterCustomer: React.FC<RegisterCustomerProps> = ({ onRegister }) => {
   const methods = useForm();
-  const handleSubmit = useCallback((values) => {
-    console.log("submitting", { values });
-  }, []);
+  const handleSubmit = useCallback(
+    (values) => {
+      const customer: Customer = {
+        address: `${values.streetAddress}, ${values.postalCode} ${values.city}`,
+        name: values.name,
+        phone: values.phone,
+      };
+      onRegister(customer);
+    },
+    [onRegister]
+  );
   useEffect(() => {
     console.log(methods.errors);
   });

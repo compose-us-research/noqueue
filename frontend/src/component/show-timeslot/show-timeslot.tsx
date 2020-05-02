@@ -3,16 +3,17 @@ import React from "react";
 import { ReactComponent as BookmarkIcon } from "../../asset/image/bookmark-icon.svg";
 import { ReactComponent as EditIcon } from "../../asset/image/edit-icon.svg";
 
-import { Timeslot } from "../../service/fetcher/fetcher";
+import { Timeslot, Customer } from "../../service/domain";
 import styles from "./show-timeslot.module.css";
 import Button from "../button/button";
 import Spacer from "../spacer/spacer";
 
 interface ShowTimeslotProps {
+  customer?: Customer;
   timeslot: Timeslot;
 }
 
-const ShowTimeslot: React.FC<ShowTimeslotProps> = ({ timeslot }) => {
+const ShowTimeslot: React.FC<ShowTimeslotProps> = ({ customer, timeslot }) => {
   return (
     <div className={styles.root}>
       <h2>Erledigt! Dein Ticket ist jetzt verfügbar.</h2>
