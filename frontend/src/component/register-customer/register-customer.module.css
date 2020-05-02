@@ -5,9 +5,8 @@
   align-self: center;
   flex-direction: column;
   justify-content: center;
-  min-height: 100%;
-  padding: 25px;
 }
+
 .root h2,
 .root h3 {
   text-align: center;
@@ -17,11 +16,9 @@
   display: flex;
   flex-direction: column;
   flex-flow: wrap;
-  max-width: 600px;
 }
 
 .fields > * {
-  margin: 25px;
   width: 100%;
 }
 

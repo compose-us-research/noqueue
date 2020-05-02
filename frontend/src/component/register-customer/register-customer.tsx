@@ -5,6 +5,7 @@ import Button from "../button/button";
 import TextField from "../text-field/text-field";
 
 import styles from "./register-customer.module.css";
+import Spacer from "../spacer/spacer";
 
 interface RegisterCustomerProps {}
 
@@ -30,18 +31,23 @@ const RegisterCustomer: React.FC<RegisterCustomerProps> = () => {
               nur für den Fall, dass Kontaktpersonen ausfindig gemacht werden
               müssen. Sie werden nach 14 Tagen automatisch gelöscht.
             </p>
+            <Spacer />
             <TextField name="name" label="Vor / Nachname" required />
+            <Spacer />
             <TextField
               name="streetAddress"
               label="Straße, Hausnummer"
               required
             />
+            <Spacer />
             <div className={styles.postal}>
               <TextField name="postalCode" label="PLZ" required />
               <TextField name="city" label="Ort" required />
             </div>
+            <Spacer />
             <TextField name="phone" label="Telefonnummer" required />
-            <Button type="submit">Tiecketbuchung abschließen</Button>
+            <Spacer />
+            <Button type="submit">Ticketbuchung abschließen</Button>
           </div>
         </FormContext>
       </form>
