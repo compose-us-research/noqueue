@@ -1,5 +1,4 @@
 import React from "react";
-import { action } from "@storybook/addon-actions";
 import CurrentShop from "./current-shop";
 
 export default {

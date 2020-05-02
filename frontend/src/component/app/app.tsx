@@ -1,19 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 
 import ChooseRole from "../choose-role/choose-role";
+import CustomerApp from "../customer-app/customer-app";
+import RegisterShop from "../register-shop/register-shop";
+import styles from "./app.module.css";
 
 interface AppProps {}
 
-const noop = () => {};
+type Roles = "customer" | "shop";
 
 const App: React.FC<AppProps> = () => {
-  const selectShopRole = noop;
-  const selectCustomerRole = noop;
+  const [role, setRole] = useState<Roles | null>(null);
   return (
-    <ChooseRole
-      selectShopRole={selectShopRole}
-      selectCustomerRole={selectCustomerRole}
-    />
+    <div className={styles.root}>
+      {role === null ? (
+        <ChooseRole
+          selectShopRole={() => setRole("shop")}
+          selectCustomerRole={() => setRole("customer")}
+        />
+      ) : role === "shop" ? (
+        <RegisterShop backToIndex={() => setRole(null)} />
+      ) : (
+        <CustomerApp backToIndex={() => setRole(null)} />
+      )}
+    </div>
   );
 };
 

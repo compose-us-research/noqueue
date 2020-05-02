@@ -1,16 +1,16 @@
 import React, { Suspense } from "react";
-import BookTimeslot from "./book-timeslot";
+import AvailableTimeslots from "./available-timeslots";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "BookTimeslot",
-  component: BookTimeslot,
+  title: "AvailableTimeslots",
+  component: AvailableTimeslots,
 };
 
 export const Simple = () => (
   <Suspense fallback={<div>Loading</div>}>
-    <BookTimeslot
-      bookTicket={action("book ticket")}
+    <AvailableTimeslots
+      navigateToSlotSelection={action("navigate to slot selection")}
       day={new Date()}
       duration={5}
     />

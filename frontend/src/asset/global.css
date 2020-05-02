@@ -1,15 +1,5 @@
 @import "./font/montserrat/montserrat.css";
 
-body {
-  background-color: #f3f6ff;
-  font-family: Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-    "Helvetica Neue", sans-serif;
-  margin: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 * {
   box-sizing: border-box;
   font-family: Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI",
@@ -17,6 +7,16 @@ body {
     "Helvetica Neue", sans-serif;
   font-size: 14px;
   letter-spacing: 0.25px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body,
+#root {
+  background-color: #f3f6ff;
+  height: 100%;
+  margin: 0;
 }
 
 code {
@@ -27,5 +27,6 @@ code {
 h1,
 h2 {
   font-size: 24px;
-  font-weight: 600px;
+  font-weight: 600;
+  text-align: center;
 }

@@ -2,16 +2,17 @@ import React, { useState, useCallback, Suspense } from "react";
 
 import Button from "../button/button";
 import Slider from "../slider/slider";
-import BookTimeslot from "../book-timeslot/book-timeslot";
+import AvailableTimeslots from "../available-timeslots/available-timeslots";
 
 import styles from "./choose-day.module.css";
 import Loader from "../loader/loader";
+import Spacer from "../spacer/spacer";
 
 interface ChooseDayProps {
-  children?: React.ReactNode;
+  chooseSlot: (props: { day: Date; duration: number }) => void;
 }
 
-const ChooseDay: React.FC<ChooseDayProps> = ({ children }) => {
+const ChooseDay: React.FC<ChooseDayProps> = ({ chooseSlot }) => {
   const [today] = useState(new Date());
   const [tomorrow] = useState(new Date());
   const [day, setDay] = useState<Date>(today);
@@ -35,6 +36,7 @@ const ChooseDay: React.FC<ChooseDayProps> = ({ children }) => {
           }}
         />
       </div>
+      <Spacer />
       <div className={styles.day}>
         <h2>Wann möchtest Du einkaufen?</h2>
         <div className={styles.daySelect}>
@@ -52,8 +54,13 @@ const ChooseDay: React.FC<ChooseDayProps> = ({ children }) => {
           </Button>
         </div>
       </div>
+      <Spacer />
       <Suspense fallback={<Loader />}>
-        <BookTimeslot duration={duration} day={day} />
+        <AvailableTimeslots
+          duration={duration}
+          day={day}
+          navigateToSlotSelection={() => chooseSlot({ day, duration })}
+        />
       </Suspense>
     </div>
   );

@@ -3,9 +3,6 @@
   align-items: center;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  padding-bottom: 25px;
-  text-align: center;
 }
 
 .buttons {
@@ -16,11 +13,11 @@
 }
 
 .info {
-  padding: 25px;
+  text-align: center;
 }
 
 .action {
-  padding: 0 25px 25px;
+  padding: 0 25px;
 }
 
 /* modifiers */
