@@ -19,7 +19,7 @@ const RegisterShop: React.FC<RegisterShopProps> = ({ onRegister }) => {
     onRegister(values);
   }, []);
   useEffect(() => {
-    console.log(methods.errors);
+    console.log("errors", methods.errors);
   });
   return (
     <div className={styles.root}>
