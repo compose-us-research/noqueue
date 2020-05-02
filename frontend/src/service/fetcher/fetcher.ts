@@ -29,7 +29,7 @@ export const fetcher = async (url: string) => {
             },
           ].map((o) => ({ ...o, from: new Date(o.from), to: new Date(o.to) }))
         ),
-      2000
+      500
     );
   });
 };
