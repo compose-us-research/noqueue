@@ -1,7 +1,8 @@
 const absoluteUrl = require('absolute-url')
 const express = require('express')
 const bodyParser = require('body-parser')
-const slot = require('./slot')
+const ticket = require('./ticket')
+const timeslot = require('./timeslot')
 
 function shop ({ db }) {
   const router = new express.Router()
@@ -17,8 +18,7 @@ function shop ({ db }) {
 
     res.json({
       '@id': req.absoluteUrl(),
-      label: config.label,
-      maxCustomers: config.maxCustomers,
+      label: config.label
     })
   })
 
@@ -32,7 +32,8 @@ function shop ({ db }) {
     res.status(201).end()
   })
 
-  router.use('/slot', slot({ db }))
+  router.use('/ticket', ticket({ db }))
+  router.use('/timeslot', timeslot({ db }))
 
   return router
 }
