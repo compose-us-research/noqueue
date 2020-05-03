@@ -1,25 +1,34 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 
 import { ReactComponent as PlusIcon } from "../../asset/image/plus-icon.svg";
 import { Timerange } from "../../service/domain";
 import Button from "../button/button";
 import styles from "./reservable-times.module.css";
-import RangeSlider from "../multi-slider/range-slider";
-import TextField from "../text-field/text-field";
 import { FormContext, useForm } from "react-hook-form";
-import DaySelector from "../day-selector/day-selector";
 import Spacer from "../spacer/spacer";
+import TimerangeSetter from "../timerange-setter/timerange-setter";
 
 interface ReservableTimesProps {
   ranges: Timerange[];
 }
 
-// const ReservableTimes: React.FC<ReservableTimesProps> = ({ ranges }) => {
-// const [currentTimerange, setCurrentTimerange] = useState<Timerange>(
-//   ranges[0]
-// );
-const ReservableTimes: React.FC<ReservableTimesProps> = () => {
-  const addTimerange = useCallback(() => {}, []);
+function createNewTimerange(lastRange?: Timerange): Timerange {
+  return {
+    amountOfPeopleInShop: lastRange?.amountOfPeopleInShop || 0,
+    day: lastRange?.day || "Mo",
+    timeFrom: lastRange?.timeFrom,
+    timeTo: lastRange?.timeTo,
+    timeframeFrom: lastRange?.timeframeFrom,
+    timeframeTo: lastRange?.timeframeTo,
+  };
+}
+
+const ReservableTimes: React.FC<ReservableTimesProps> = ({ ranges }) => {
+  const [currentRanges, setCurrentRanges] = useState(ranges);
+  const addTimerange = useCallback(
+    () => setCurrentRanges((rs) => [...rs, createNewTimerange()]),
+    [setCurrentRanges]
+  );
   const handleSubmit = useCallback(() => {}, []);
   const methods = useForm();
   return (
@@ -27,35 +36,19 @@ const ReservableTimes: React.FC<ReservableTimesProps> = () => {
       <h2>Buchbare Zeiten hinterlegen</h2>
       <FormContext {...methods}>
         <form onSubmit={methods.handleSubmit(handleSubmit)}>
+          <Spacer />
           <div className={styles.fields}>
-            <div>stub: Selector</div>
-            <Spacer />
-
-            <DaySelector name="day" />
-
-            <Spacer />
-
-            <div className={styles.timeframe}>
-              <TextField label="Uhrzeit von" name="timeFrom" required />
-              <Spacer direction="column" />
-              <TextField label="Uhrzeit bis" name="timeUntil" required />
-            </div>
-
-            <Spacer />
-
-            <TextField
-              label="Anzahl der Personen im Geschäft"
-              name="amountOfCustomers"
-              required
-              type="number"
-            />
-
-            <Spacer />
-
-            <h3>Wählbarer Zeitraum</h3>
-            <RangeSlider min={5} max={120} />
-
-            <Spacer />
+            {currentRanges.map((range, index) => (
+              <TimerangeSetter
+                key={index}
+                label={`Zeitraum ${index + 1}`}
+                remover={() =>
+                  setCurrentRanges((current) =>
+                    current.filter((r) => r !== range)
+                  )
+                }
+              />
+            ))}
 
             <Button
               className={styles.addButton}
@@ -65,9 +58,7 @@ const ReservableTimes: React.FC<ReservableTimesProps> = () => {
               <span>Zeitraum hinzufügen</span>
               <PlusIcon />
             </Button>
-
             <Spacer />
-
             <Button className={styles.submit} type="submit">
               Fertig! Erzähl es deinen Kunden!
             </Button>

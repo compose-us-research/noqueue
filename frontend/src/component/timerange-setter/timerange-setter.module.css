@@ -7,6 +7,10 @@
   justify-content: center;
 }
 
+.chevron {
+  transform: rotate(180deg);
+}
+
 .fields {
   display: flex;
   flex-direction: column;
@@ -20,14 +24,25 @@
   width: 100%;
 }
 
-.range {
+.expander {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
-.expander {
+.expandText {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  width: 100%;
 }
 
 .remover {
-  padding: 25px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .details {
@@ -60,6 +75,10 @@
 
 /* modifiers */
 
-.details.open {
+.open .details {
   display: block;
+}
+
+.open .chevron {
+  transform: rotate(0deg);
 }
