@@ -26,17 +26,24 @@
 
 .expander {
   align-items: center;
+  border-radius: 0;
   display: flex;
   justify-content: space-between;
-  width: 100%;
+  width: 100vw;
 }
 
 .expandText {
-  align-items: center;
   display: flex;
-  justify-content: space-between;
-  text-align: center;
-  width: 100%;
+  flex-direction: column;
+  max-width: 600px;
+}
+
+.label {
+  text-align: left;
+}
+
+.slots {
+  color: #fff;
 }
 
 .remover {

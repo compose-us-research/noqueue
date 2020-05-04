@@ -25,7 +25,7 @@ export interface Shop {
 export type Time = Flavor<string, "Time">;
 
 export interface Timerange {
-  day: Day;
+  days: Set<Day>;
   timeFrom: Time;
   timeTo: Time;
   amountOfPeopleInShop: Amount;

@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 
 import { ReactComponent as PlusIcon } from "../../asset/image/plus-icon.svg";
-import { Timerange } from "../../service/domain";
+import { Timerange, Day } from "../../service/domain";
 import Button from "../button/button";
 import styles from "./reservable-times.module.css";
 import { FormContext, useForm } from "react-hook-form";
@@ -15,11 +15,11 @@ interface ReservableTimesProps {
 function createNewTimerange(lastRange?: Timerange): Timerange {
   return {
     amountOfPeopleInShop: lastRange?.amountOfPeopleInShop || 0,
-    day: lastRange?.day || "Mo",
-    timeFrom: lastRange?.timeFrom,
-    timeTo: lastRange?.timeTo,
-    timeframeFrom: lastRange?.timeframeFrom,
-    timeframeTo: lastRange?.timeframeTo,
+    days: lastRange?.days || new Set<Day>(["Mo", "Di", "Mi", "Do", "Fr"]),
+    timeFrom: lastRange?.timeFrom || "08:00",
+    timeTo: lastRange?.timeTo || "18:00",
+    timeframeFrom: lastRange?.timeframeFrom || 5,
+    timeframeTo: lastRange?.timeframeTo || 120,
   };
 }
 
@@ -42,6 +42,7 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ ranges }) => {
               <TimerangeSetter
                 key={index}
                 label={`Zeitraum ${index + 1}`}
+                range={range}
                 remover={() =>
                   setCurrentRanges((current) =>
                     current.filter((r) => r !== range)

@@ -9,14 +9,22 @@ import TextField from "../text-field/text-field";
 import RangeSlider from "../multi-slider/range-slider";
 import styles from "./timerange-setter.module.css";
 import Button from "../button/button";
+import { Timerange, Day } from "../../service/domain";
 
 interface TimerangeSetter {
   label: string;
+  range: Timerange;
   remover: () => void;
 }
 
-const TimerangeSetter: React.FC<TimerangeSetter> = ({ label, remover }) => {
+const TimerangeSetter: React.FC<TimerangeSetter> = ({
+  label,
+  range,
+  remover,
+}) => {
   const [isOpen, setOpen] = useState<boolean>(false);
+  const days = daysToString(range.days);
+  const slots = `${days} ${range.timeFrom} - ${range.timeTo} Uhr`;
   const toggleOpen = useCallback(() => setOpen((open) => !open), [setOpen]);
   return (
     <div className={cn(styles.root, isOpen && styles.open)}>
@@ -25,7 +33,10 @@ const TimerangeSetter: React.FC<TimerangeSetter> = ({ label, remover }) => {
         onClick={toggleOpen}
         variant="secondary"
       >
-        <span className={styles.expandText}>{label}</span>
+        <div className={styles.expandText}>
+          <div className={styles.label}>{label}</div>
+          <div className={styles.slots}>{slots}</div>
+        </div>
         <span className={styles.chevron}>
           <ChevronIcon />
         </span>
