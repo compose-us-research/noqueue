@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import cn from "classnames";
 
 import { ReactComponent as ChevronIcon } from "../../asset/image/chevron-icon.svg";
+import { ReactComponent as RemoveIcon } from "../../asset/image/remove-icon.svg";
 import DaySelector from "../day-selector/day-selector";
 import Spacer from "../spacer/spacer";
 import TextField from "../text-field/text-field";
@@ -62,7 +63,9 @@ const TimerangeSetter: React.FC<TimerangeSetter> = ({ label, remover }) => {
           onClick={remover}
           variant="secondary"
         >
-          Zeitraum löschen
+          <RemoveIcon />
+          <Spacer direction="column" />
+          Löschen
         </Button>
 
         <Spacer />
