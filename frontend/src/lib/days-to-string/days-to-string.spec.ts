@@ -35,8 +35,7 @@ describe("daysToString", () => {
     expect(result).toBe("Mo, Mi, Do, So");
   });
 
-  // TODO should work (create array of days, use as sort index)
-  it.skip("converts a random list of week days into the expected comma separated list", () => {
+  it("converts a random list of week days into the expected comma separated list", () => {
     const doMoSoMi = new Set<Day>(["Do", "Mo", "So", "Mi"]);
     const result = daysToString(doMoSoMi);
     expect(result).toBe("Mo, Mi, Do, So");
