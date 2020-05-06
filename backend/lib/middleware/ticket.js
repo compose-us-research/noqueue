@@ -3,7 +3,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const urlResolve = require('../urlResolve')
 
-function slot ({ db }) {
+function ticket ({ db }) {
   const router = new express.Router()
 
   router.use(absoluteUrl())
@@ -13,7 +13,7 @@ function slot ({ db }) {
       return next()
     }
 
-    const result = await db.addTimeslot({
+    const result = await db.addTicket({
       user: 'default',
       start: req.body.start,
       end: req.body.end
@@ -27,19 +27,19 @@ function slot ({ db }) {
       return next()
     }
 
-    const result = await db.availableTimeslots({})
+    const result = await db.availableTickets({})
 
     res.json(result)
   })
 
-  router.get('/:id', bodyParser.json(), async (req, res, next) => {
+  router.get('/:id', async (req, res, next) => {
     if (req.accepts('html')) {
       return next()
     }
 
-    const timeslot = await db.getTimeslot(parseInt(req.params.id))
+    const ticket = await db.getTicket(parseInt(req.params.id))
 
-    res.json(timeslot)
+    res.json(ticket)
   })
 
   router.put('/:id', bodyParser.json(), async (req, res, next) => {
@@ -47,7 +47,7 @@ function slot ({ db }) {
       return next()
     }
 
-    await db.setTimeslot({
+    await db.setTicket({
       id: parseInt(req.params.id),
       start: req.body.start,
       end: req.body.end,
@@ -61,4 +61,4 @@ function slot ({ db }) {
   return router
 }
 
-module.exports = slot
+module.exports = ticket

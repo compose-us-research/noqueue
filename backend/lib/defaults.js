@@ -1,7 +1,6 @@
 const defaults = {
   config: {
-    label: 'Shop',
-    maxCustomers: 10
+    label: 'Shop'
   },
   db: {
     user: 'postgres',

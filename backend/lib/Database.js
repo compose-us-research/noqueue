@@ -84,43 +84,81 @@ class Database {
     await this.client.query('DELETE FROM config WHERE "name" = $1', [name])
   }
 
-  async addTimeslot ({ user, start, end }) {
-    const query = 'INSERT INTO timeslots("user", "start", "end") VALUES ($1, $2, $3) RETURNING *'
+  async addTicket ({ user, start, end }) {
+    const query = 'INSERT INTO tickets("user", "start", "end") VALUES ($1, $2, $3) RETURNING *'
     const values = [user, start, end]
     const result = await this.client.query(query, values)
 
     return result.rows[0]
   }
 
-  async setTimeslot ({ id, start, end, ready, used }) {
-    const query = 'UPDATE timeslots SET "start"=$1, "end"=$2, "ready"=$3, "used"=$4 WHERE "id"=$5'
+  async setTicket ({ id, start, end, ready, used }) {
+    const query = 'UPDATE tickets SET "start"=$1, "end"=$2, "ready"=$3, "used"=$4 WHERE "id"=$5'
     const values = [start, end, ready, used, id]
     await this.client.query(query, values)
   }
 
-  async getTimeslot (id) {
-    const query = 'SELECT * FROM timeslots WHERE "id"=$1'
+  async getTicket (id) {
+    const query = 'SELECT * FROM tickets WHERE "id"=$1'
     const values = [id]
     const result = await this.client.query(query, values)
 
     return result.rows[0]
   }
 
-  async availableTimeslots ({ start, end }) {
-    const query = `SELECT DISTINCT t.start, t.end, COUNT(l.*) AS b FROM (
-SELECT * FROM 
-  ( SELECT a.start AS "start" FROM timeslots a UNION SELECT a.end AS "start"  FROM timeslots a ) a,
-  ( SELECT a.start AS "end" FROM timeslots a UNION SELECT a.end AS "end"  FROM timeslots a ) b
-  ORDER BY "start", "end"
-) AS t, timeslots AS l
-WHERE t.start <> t.end AND ( (l.start >= t.start AND l.start < t.end) OR (l.end >= t.start AND l.end < t.end) )
-GROUP BY t.start, t.end`
-
+  async availableTickets ({ start, end }) {
+    const query = `
+SELECT "range"."start", "range"."end", COUNT("booked".*) AS "reserved", "timeslots"."customers" AS "allowed", "timeslots"."customers" - COUNT("booked".*) AS "available" FROM (
+  SELECT "start", MIN("raw_end") AS "end" FROM (
+      SELECT "start" FROM tickets UNION
+      SELECT "end" AS "start" FROM tickets UNION
+      SELECT "start" + current_date AS "start" FROM timeslots
+      ORDER BY "start"
+    ) AS "start", (
+      SELECT "start" AS "raw_end" FROM tickets UNION
+      SELECT "end" AS "raw_end" FROM tickets UNION
+      SELECT "end" + current_date AS "raw_end" FROM timeslots
+      ORDER BY "raw_end"
+    ) AS "end"
+  WHERE "start" < "raw_end"
+  GROUP BY "start"
+) AS "range"
+LEFT JOIN tickets "booked" ON (
+  ("booked"."start" <= "range"."start" AND "booked"."end" > "range"."start") OR
+  ("booked"."start" < "range"."end" AND "booked"."end" >= "range"."end")
+)
+LEFT JOIN timeslots ON (
+  ("timeslots"."start" <= CAST("range"."start" AS time) AND "timeslots"."end" > CAST("range"."start" AS time)) OR
+  ("timeslots"."start" < CAST("range"."end" AS time) AND "timeslots"."end" >= CAST("range"."end" AS time))
+)
+GROUP BY "range"."start", "range"."end", "allowed"
+ORDER BY "range"."start"
+`
     const values = []
-
     const result = await this.client.query(query)
 
     return result.rows
+  }
+
+  async addTimeslot ({ start, end, customers }) {
+    const query = 'INSERT INTO timeslots("start", "end", "customers") VALUES ($1, $2, $3) RETURNING *'
+    const values = [start, end, customers]
+    const result = await this.client.query(query, values)
+
+    return result.rows[0]
+  }
+
+  async setTimeslot ({ id, start, end, customers }) {
+    const query = 'UPDATE timeslots SET "start"=$1, "end"=$2, "customers"=$3 WHERE "id"=$4'
+    const values = [start, end, customers, id]
+    await this.client.query(query, values)
+  }
+
+  async getTimeslots () {
+    const query = 'SELECT * FROM timeslots'
+    const result = await this.client.query(query)
+
+    return result.rows[0]
   }
 }
 

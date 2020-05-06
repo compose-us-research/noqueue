@@ -1,6 +1,7 @@
 #!/bin/bash
 
-./get-shop.sh
-./put-shop.sh
-./post-slot.sh
-./put-slot.sh
+./shop-get.sh
+./shop-put.sh
+./timeslot-post.sh
+./ticket-post.sh
+./ticket-put.sh
