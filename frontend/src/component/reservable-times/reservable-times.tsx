@@ -1,36 +1,41 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 
 import { ReactComponent as PlusIcon } from "../../asset/image/plus-icon.svg";
 import { Timerange, Day } from "../../service/domain";
 import Button from "../button/button";
 import styles from "./reservable-times.module.css";
-import { FormContext, useForm } from "react-hook-form";
+import { FormContext, useForm, OnSubmit, useFieldArray } from "react-hook-form";
 import Spacer from "../spacer/spacer";
 import TimerangeSetter from "../timerange-setter/timerange-setter";
 
 interface ReservableTimesProps {
+  handleSubmit: OnSubmit<Record<string, any>>;
   ranges: Timerange[];
 }
 
+let id = 1;
+
 function createNewTimerange(lastRange?: Timerange): Timerange {
   return {
+    id: `${id++}`,
     amountOfPeopleInShop: lastRange?.amountOfPeopleInShop || 0,
-    days: lastRange?.days || new Set<Day>(["Mo", "Di", "Mi", "Do", "Fr"]),
+    days: lastRange?.days || [true, true, true, true, true, false, false],
     timeFrom: lastRange?.timeFrom || "08:00",
-    timeTo: lastRange?.timeTo || "18:00",
+    timeUntil: lastRange?.timeUntil || "18:00",
     timeframeFrom: lastRange?.timeframeFrom || 5,
     timeframeTo: lastRange?.timeframeTo || 120,
   };
 }
 
-const ReservableTimes: React.FC<ReservableTimesProps> = ({ ranges }) => {
-  const [currentRanges, setCurrentRanges] = useState(ranges);
-  const addTimerange = useCallback(
-    () => setCurrentRanges((rs) => [...rs, createNewTimerange()]),
-    [setCurrentRanges]
-  );
-  const handleSubmit = useCallback(() => {}, []);
-  const methods = useForm();
+const ReservableTimes: React.FC<ReservableTimesProps> = ({
+  handleSubmit,
+  ranges,
+}) => {
+  const methods = useForm({ defaultValues: { ranges } });
+  const { fields, append, remove } = useFieldArray({
+    control: methods.control,
+    name: "ranges",
+  });
   return (
     <div className={styles.root}>
       <h2>Buchbare Zeiten hinterlegen</h2>
@@ -38,22 +43,19 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ ranges }) => {
         <form onSubmit={methods.handleSubmit(handleSubmit)}>
           <Spacer />
           <div className={styles.fields}>
-            {currentRanges.map((range, index) => (
+            {fields.map((range, index) => (
               <TimerangeSetter
                 key={index}
                 label={`Zeitraum ${index + 1}`}
-                range={range}
-                remover={() =>
-                  setCurrentRanges((current) =>
-                    current.filter((r) => r !== range)
-                  )
-                }
+                prefix={`ranges[${index}]`}
+                range={range as Timerange}
+                remover={() => remove(index)}
               />
             ))}
 
             <Button
               className={styles.addButton}
-              onClick={addTimerange}
+              onClick={() => append(createNewTimerange())}
               variant="secondary"
             >
               <span>Zeitraum hinzufügen</span>

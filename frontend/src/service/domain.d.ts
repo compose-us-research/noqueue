@@ -25,10 +25,11 @@ export interface Shop {
 export type Time = Flavor<string, "Time">;
 
 export interface Timerange {
-  days: Set<Day>;
-  timeFrom: Time;
-  timeTo: Time;
   amountOfPeopleInShop: Amount;
+  days: [boolean, boolean, boolean, boolean, boolean, boolean, boolean];
+  id: string;
+  timeFrom: Time;
+  timeUntil: Time;
   timeframeFrom: Minutes;
   timeframeTo: Minutes;
 }

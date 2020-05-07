@@ -15,12 +15,15 @@ interface RegisterShopProps {
 
 const RegisterShop: React.FC<RegisterShopProps> = ({ onRegister }) => {
   const methods = useForm();
-  const handleSubmit = useCallback((values) => {
-    onRegister(values);
-  }, []);
+  const handleSubmit = useCallback(
+    (values) => {
+      onRegister(values);
+    },
+    [onRegister]
+  );
   useEffect(() => {
     console.log("errors", methods.errors);
-  });
+  }, [methods]);
   return (
     <div className={styles.root}>
       <h2>Lege Dein Geschäft auf Platzhalter.io an</h2>

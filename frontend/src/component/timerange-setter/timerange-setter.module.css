@@ -29,7 +29,7 @@
   border-radius: 0;
   display: flex;
   justify-content: space-between;
-  width: 100vw;
+  width: 100%;
 }
 
 .expandText {
@@ -43,7 +43,8 @@
 }
 
 .slots {
-  color: #fff;
+  color: #000;
+  font-weight: normal;
 }
 
 .remover {

@@ -2,10 +2,15 @@ import { Day } from "../../service/domain";
 
 const possibleDays: Day[] = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
 
-export default function daysToString(days: Set<Day>): string {
-  const daysArray = Array.from(days);
-  const sortedDays = daysArray.sort(
-    (a, b) => possibleDays.indexOf(a) - possibleDays.indexOf(b)
+export default function daysToString(
+  days: [boolean, boolean, boolean, boolean, boolean, boolean, boolean]
+): string {
+  const result = days.reduce<Day[]>(
+    (result, isSet, index) => [
+      ...result,
+      ...(isSet ? [possibleDays[index]] : []),
+    ],
+    []
   );
-  return sortedDays.join(", ");
+  return result.join(", ");
 }

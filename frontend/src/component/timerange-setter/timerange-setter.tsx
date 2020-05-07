@@ -9,22 +9,26 @@ import TextField from "../text-field/text-field";
 import RangeSlider from "../multi-slider/range-slider";
 import styles from "./timerange-setter.module.css";
 import Button from "../button/button";
-import { Timerange, Day } from "../../service/domain";
+import { Timerange } from "../../service/domain";
+import daysToString from "../../lib/days-to-string/days-to-string";
+import { useFormContext } from "react-hook-form";
 
 interface TimerangeSetter {
   label: string;
+  prefix: string;
   range: Timerange;
   remover: () => void;
 }
 
 const TimerangeSetter: React.FC<TimerangeSetter> = ({
   label,
+  prefix,
   range,
   remover,
 }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
-  const days = daysToString(range.days);
-  const slots = `${days} ${range.timeFrom} - ${range.timeTo} Uhr`;
+  const [days, setDays] = useState<string>(daysToString(range.days));
+  const slots = `${days} ${range.timeFrom} - ${range.timeUntil} Uhr`;
   const toggleOpen = useCallback(() => setOpen((open) => !open), [setOpen]);
   return (
     <div className={cn(styles.root, isOpen && styles.open)}>
@@ -43,21 +47,35 @@ const TimerangeSetter: React.FC<TimerangeSetter> = ({
       </Button>
       <Spacer />
       <div className={styles.details}>
-        <DaySelector name="day" />
+        {/* <DaySelector
+          defaultValue={range.days}
+          name="day"
+          onChange={(days) => setDays(daysToString(days))}
+        /> */}
 
         <Spacer />
 
         <div className={styles.timeframe}>
-          <TextField label="Uhrzeit von" name="timeFrom" required />
+          <TextField
+            defaultValue={range.timeFrom}
+            label="Uhrzeit von"
+            name={`${prefix}.timeFrom`}
+            required
+          />
           <Spacer direction="column" />
-          <TextField label="Uhrzeit bis" name="timeUntil" required />
+          <TextField
+            defaultValue={range.timeUntil}
+            label="Uhrzeit bis"
+            name={`${prefix}.timeUntil`}
+            required
+          />
         </div>
 
         <Spacer />
 
         <TextField
           label="Anzahl der Personen im Geschäft"
-          name="amountOfCustomers"
+          name={`${prefix}.amountOfCustomers`}
           required
           type="number"
         />
