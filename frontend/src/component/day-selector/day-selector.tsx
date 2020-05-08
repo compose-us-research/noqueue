@@ -1,51 +1,74 @@
-import React, { useEffect } from "react";
+import React from "react";
 import cn from "classnames";
 
 import styles from "./day-selector.module.css";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, Controller } from "react-hook-form";
+import { Day } from "../../service/domain";
 
-type DayOption = "Mo" | "Di" | "Mi" | "Do" | "Fr" | "Sa" | "So";
+type AvailableDays = [
+  boolean,
+  boolean,
+  boolean,
+  boolean,
+  boolean,
+  boolean,
+  boolean
+];
 
 interface DaySelectorProps {
   className?: string;
-  defaultValue?: DayOption;
+  defaultValue?: AvailableDays;
   disabled?: boolean;
   name: string;
+  onChange?: (selectedDays: AvailableDays) => void;
 }
 
-const options: DayOption[] = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+const noop = () => {};
+const options: Day[] = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
 
-function DaySelector({
+const DaySelector: React.FC<DaySelectorProps> = ({
   className = undefined,
-  defaultValue = "Mo",
+  defaultValue = [true, false, false, false, false, false, false],
   disabled = false,
   name,
-}: DaySelectorProps) {
-  const { register, setValue, unregister, watch } = useFormContext();
+  onChange = noop,
+}) => {
+  const { control, setValue, watch } = useFormContext();
   const selected = watch(name, defaultValue);
-
-  useEffect(() => {
-    register({ name });
-    setValue(name, defaultValue);
-
-    return () => unregister(name);
-  }, [defaultValue, name, register, setValue, unregister]);
+  console.log({ selected });
 
   return (
     <div className={cn(styles.root, disabled && styles.disabled, className)}>
-      {options.map((option) => (
-        <button
-          key={option}
-          className={selected === option ? styles.selected : styles.option}
-          disabled={disabled}
-          onClick={() => setValue(name, option)}
-          type="button"
-        >
-          {option}
-        </button>
+      {options.map((option, index) => (
+        <Controller
+          as={
+            <button
+              key={option}
+              className={selected[index] ? styles.selected : styles.option}
+              disabled={disabled}
+              onClick={() => {
+                const newSelected = [
+                  ...selected.slice(0, index),
+                  !selected[index],
+                  ...selected.slice(index + 1),
+                ] as AvailableDays;
+                console.log({ newSelected, index });
+                setValue(name, newSelected);
+                onChange(newSelected);
+              }}
+              type="button"
+            >
+              {option}
+            </button>
+          }
+          control={control}
+          defaultValue={selected[index]}
+          key={index}
+          name={`${name}[${index}]`}
+        />
       ))}
     </div>
   );
-}
+};
 
 export default DaySelector;

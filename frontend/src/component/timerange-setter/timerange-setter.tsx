@@ -47,11 +47,14 @@ const TimerangeSetter: React.FC<TimerangeSetter> = ({
       </Button>
       <Spacer />
       <div className={styles.details}>
-        {/* <DaySelector
+        <DaySelector
           defaultValue={range.days}
-          name="day"
-          onChange={(days) => setDays(daysToString(days))}
-        /> */}
+          name={`${prefix}.day`}
+          onChange={(days) => {
+            console.log({ days });
+            setDays(daysToString(days));
+          }}
+        />
 
         <Spacer />
 
