@@ -6,21 +6,23 @@ import { ReactComponent as RemoveIcon } from "../../asset/image/remove-icon.svg"
 import DaySelector from "../day-selector/day-selector";
 import Spacer from "../spacer/spacer";
 import TextField from "../text-field/text-field";
-import RangeSlider from "../multi-slider/range-slider";
+import TimeslotLength from "../timeslot-length/timeslot-length";
 import styles from "./timerange-setter.module.css";
 import Button from "../button/button";
 import { Timerange } from "../../service/domain";
 import daysToString from "../../lib/days-to-string/days-to-string";
 import { useFormContext } from "react-hook-form";
+import ErrorBoundary from "../error-boundary/error-boundary";
+import { checkTime } from "../../lib/calculate-max-duration/calculate-max-duration";
 
-interface TimerangeSetter {
+interface TimerangeSetterProps {
   label: string;
   prefix: string;
   range: Timerange;
   remover: () => void;
 }
 
-const TimerangeSetter: React.FC<TimerangeSetter> = ({
+const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
   label,
   prefix,
   range,
@@ -28,8 +30,20 @@ const TimerangeSetter: React.FC<TimerangeSetter> = ({
 }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [days, setDays] = useState<string>(daysToString(range.days));
+  const { watch } = useFormContext();
   const slots = `${days} ${range.timeFrom} - ${range.timeUntil} Uhr`;
   const toggleOpen = useCallback(() => setOpen((open) => !open), [setOpen]);
+  const start = watch(`${prefix}.timeFrom`, range.timeFrom);
+  const end = watch(`${prefix}.timeUntil`, range.timeUntil);
+  const checkTimeValidator = useCallback((value) => {
+    try {
+      checkTime(value);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }, []);
+
   return (
     <div className={cn(styles.root, isOpen && styles.open)}>
       <Button
@@ -61,6 +75,7 @@ const TimerangeSetter: React.FC<TimerangeSetter> = ({
             label="Uhrzeit von"
             name={`${prefix}.timeFrom`}
             required
+            validate={checkTimeValidator}
           />
           <Spacer direction="column" />
           <TextField
@@ -68,6 +83,7 @@ const TimerangeSetter: React.FC<TimerangeSetter> = ({
             label="Uhrzeit bis"
             name={`${prefix}.timeUntil`}
             required
+            validate={checkTimeValidator}
           />
         </div>
 
@@ -83,7 +99,14 @@ const TimerangeSetter: React.FC<TimerangeSetter> = ({
         <Spacer />
 
         <h3>Wählbarer Zeitraum</h3>
-        <RangeSlider min={5} max={120} />
+        <ErrorBoundary resetKeys={[start, end]}>
+          <TimeslotLength
+            key={`${prefix}.maxDuration-${isOpen ? "open" : "close"}`}
+            end={end}
+            name={`${prefix}.maxDuration`}
+            start={start}
+          />
+        </ErrorBoundary>
 
         <Spacer />
 

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { ReactComponent as PlusIcon } from "../../asset/image/plus-icon.svg";
-import { Timerange, Day } from "../../service/domain";
+import { Timerange } from "../../service/domain";
 import Button from "../button/button";
 import styles from "./reservable-times.module.css";
 import { FormContext, useForm, OnSubmit, useFieldArray } from "react-hook-form";
@@ -36,6 +36,7 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({
     control: methods.control,
     name: "ranges",
   });
+  console.log("rendering ReservableTimes");
   return (
     <div className={styles.root}>
       <h2>Buchbare Zeiten hinterlegen</h2>

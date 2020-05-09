@@ -7,6 +7,7 @@ export default {
   component: ReservableTimes,
 };
 
-export const Default = () => (
-  <ReservableTimes handleSubmit={action("submit")} ranges={[]} />
-);
+export const Default = () => {
+  console.log("rendering Default");
+  return <ReservableTimes handleSubmit={action("submit")} ranges={[]} />;
+};

@@ -11,6 +11,7 @@ interface TextFieldProps {
   name: string;
   required?: boolean;
   type?: "number" | "tel" | "text";
+  validate?: (value: string) => boolean;
 }
 
 const TextField: React.FC<TextFieldProps> = ({
@@ -20,6 +21,7 @@ const TextField: React.FC<TextFieldProps> = ({
   name,
   required = false,
   type = "text",
+  validate = undefined,
 }) => {
   const { errors, register } = useFormContext();
   const placeholder = required ? `${label}*` : label;
@@ -31,7 +33,7 @@ const TextField: React.FC<TextFieldProps> = ({
         className={styles.input}
         defaultValue={defaultValue}
         name={name}
-        ref={register({ required })}
+        ref={register({ required, validate })}
         placeholder={placeholder}
         type={type}
       />
