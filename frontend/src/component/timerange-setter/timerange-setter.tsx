@@ -50,10 +50,7 @@ const TimerangeSetter: React.FC<TimerangeSetter> = ({
         <DaySelector
           defaultValue={range.days}
           name={`${prefix}.day`}
-          onChange={(days) => {
-            console.log({ days });
-            setDays(daysToString(days));
-          }}
+          onChange={(days) => setDays(daysToString(days))}
         />
 
         <Spacer />

@@ -35,7 +35,6 @@ const DaySelector: React.FC<DaySelectorProps> = ({
 }) => {
   const { control, setValue, watch } = useFormContext();
   const selected = watch(name, defaultValue);
-  console.log({ selected });
 
   return (
     <div className={cn(styles.root, disabled && styles.disabled, className)}>
@@ -52,7 +51,6 @@ const DaySelector: React.FC<DaySelectorProps> = ({
                   !selected[index],
                   ...selected.slice(index + 1),
                 ] as AvailableDays;
-                console.log({ newSelected, index });
                 setValue(name, newSelected);
                 onChange(newSelected);
               }}
