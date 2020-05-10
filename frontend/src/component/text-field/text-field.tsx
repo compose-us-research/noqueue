@@ -1,6 +1,6 @@
 import React from "react";
 import cn from "classnames";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, Validate } from "react-hook-form";
 
 import styles from "./text-field.module.css";
 
@@ -11,7 +11,7 @@ interface TextFieldProps {
   name: string;
   required?: boolean;
   type?: "number" | "tel" | "text";
-  validate?: (value: string) => boolean;
+  validate?: Validate;
 }
 
 const TextField: React.FC<TextFieldProps> = ({

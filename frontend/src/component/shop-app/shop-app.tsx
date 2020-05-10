@@ -28,7 +28,14 @@ const ShopApp: React.FC<ShopAppProps> = () => {
 
   useEffect(() => {
     if (selectedShop) {
-      setCurrentScreen(<ReservableTimes ranges={selectedShop.ranges} />);
+      setCurrentScreen(
+        <ReservableTimes
+          handleSubmit={(ranges) => {
+            console.log("submitting...", { ranges });
+          }}
+          ranges={selectedShop.ranges}
+        />
+      );
     } else {
       setCurrentScreen(
         <RegisterShop
