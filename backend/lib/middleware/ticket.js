@@ -1,6 +1,7 @@
 const absoluteUrl = require('absolute-url')
 const express = require('express')
 const bodyParser = require('body-parser')
+const qrcode = require('./qrcode')
 const urlResolve = require('../urlResolve')
 
 function ticket ({ db }) {
@@ -32,12 +33,22 @@ function ticket ({ db }) {
     res.json(result)
   })
 
-  router.get('/:id', async (req, res, next) => {
+  router.get('/:id', qrcode, async (req, res, next) => {
     if (req.accepts('html')) {
       return next()
     }
 
     const ticket = await db.getTicket(parseInt(req.params.id))
+
+    // not found?
+    if (!ticket) {
+      return next()
+    }
+
+    // sendQrCode is only attached if images are accepted
+    if (res.sendQrCode) {
+      return res.sendQrCode(req.absoluteUrl())
+    }
 
     res.json(ticket)
   })
