@@ -1,7 +1,16 @@
 export default function calculateMaxDuration(from: string, to: string): number {
   const [fromH, fromMin] = checkTime(from);
   const [toH, toMin] = checkTime(to);
-  return (toH - fromH) * 60 + (toMin - fromMin);
+  const fromInMin = fromH * 60 + fromMin;
+  const toInMin = toH * 60 + toMin;
+  const fullDayInMinutes = 24 * 60;
+  if (fromInMin === toInMin) {
+    return fullDayInMinutes;
+  }
+  if (toInMin < fromInMin) {
+    return fullDayInMinutes - fromInMin + toInMin;
+  }
+  return toInMin - fromInMin;
 }
 
 export function checkTime(time: string): [number, number] {
