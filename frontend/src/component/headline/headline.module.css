@@ -1,0 +1,17 @@
+.root {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  position: relative;
+  right: 0;
+  top: 0;
+}
+
+.children {
+  bottom: 0;
+  color: #fff;
+  padding: 25px;
+  position: absolute;
+  text-align: center;
+}

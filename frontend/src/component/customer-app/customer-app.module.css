@@ -1,0 +1,12 @@
+/* elements */
+.root {
+  min-height: 100%;
+}
+
+.screen {
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  max-width: 600px;
+  padding: 0 25px;
+}

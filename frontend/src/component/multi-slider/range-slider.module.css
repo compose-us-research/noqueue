@@ -1,0 +1,56 @@
+/* elements */
+.root {
+  border-radius: 28.5px;
+  font-size: 16px;
+  font-weight: 600;
+  height: 103px;
+  padding: 17px 39px;
+  position: relative;
+  transform: rotate(0deg);
+}
+
+.thumb {
+  background-color: #fe805c;
+  border-radius: 50%;
+  cursor: grab;
+  height: 45px;
+  width: 45px;
+}
+
+.thumbInfo {
+  font-weight: 400;
+  position: fixed;
+  top: 75px;
+  white-space: nowrap;
+}
+
+.thumbInfo1 {
+  left: 50px;
+}
+
+.thumbInfo2 {
+  right: 50px;
+}
+
+.track {
+  background-color: #fff;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  height: 10px;
+  margin: 16px 25px;
+}
+
+.middleTrack {
+  background-color: #4643d3;
+  opacity: 0.6;
+}
+
+/* modifiers */
+
+.disabled {
+  opacity: 0.6;
+}
+
+.disabled .thumb {
+  cursor: default;
+}

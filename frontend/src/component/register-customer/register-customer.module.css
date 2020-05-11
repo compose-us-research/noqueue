@@ -1,0 +1,29 @@
+.root {
+  align-items: center;
+  color: #000;
+  display: flex;
+  align-self: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.root h2,
+.root h3 {
+  text-align: center;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  flex-flow: wrap;
+}
+
+.fields > * {
+  width: 100%;
+}
+
+.postal {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 25px;
+}

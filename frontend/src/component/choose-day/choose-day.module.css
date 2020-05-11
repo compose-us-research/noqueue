@@ -1,0 +1,26 @@
+/* elements */
+.root {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.day {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  text-align: center;
+}
+
+.daySelect {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.duration {
+  text-align: center;
+  width: 100%;
+}
+
+/* modifiers */

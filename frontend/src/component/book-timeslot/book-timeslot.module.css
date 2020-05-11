@@ -1,0 +1,15 @@
+/* elements */
+.root {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.daySelect {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+/* modifiers */

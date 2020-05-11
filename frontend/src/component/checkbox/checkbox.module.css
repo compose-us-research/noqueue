@@ -1,0 +1,22 @@
+/* elements */
+.root {
+  border-radius: 28.5px;
+  display: grid;
+  grid-template-columns: 25px 1fr;
+  grid-column-gap: 25px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.input {
+  border: 1px solid #000;
+  border-radius: 5px;
+  height: 25px;
+  width: 25px;
+}
+
+.label {
+  color: #afafbd;
+}
+
+/* modifiers */
