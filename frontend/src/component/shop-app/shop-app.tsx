@@ -6,6 +6,7 @@ import RegisterShop from "../register-shop/register-shop";
 import Spacer from "../spacer/spacer";
 import styles from "./shop-app.module.css";
 import ReservableTimes from "../reservable-times/reservable-times";
+import ShareShop from "../share-shop/share-shop";
 
 interface ShopAppProps {
   backToIndex: () => void;
@@ -30,8 +31,9 @@ const ShopApp: React.FC<ShopAppProps> = () => {
     if (selectedShop) {
       setCurrentScreen(
         <ReservableTimes
-          handleSubmit={(ranges) => {
+          handleSubmit={async (ranges) => {
             console.log("submitting...", { ranges });
+            setCurrentScreen(<ShareShop />);
           }}
           ranges={selectedShop.ranges}
         />

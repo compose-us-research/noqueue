@@ -7,6 +7,7 @@ import styles from "./text-field.module.css";
 interface TextFieldProps {
   className?: string;
   defaultValue?: string;
+  disabled?: boolean;
   label: string;
   name: string;
   required?: boolean;
@@ -17,6 +18,7 @@ interface TextFieldProps {
 const TextField: React.FC<TextFieldProps> = ({
   className = undefined,
   defaultValue = undefined,
+  disabled = false,
   label,
   name,
   required = false,
@@ -32,6 +34,7 @@ const TextField: React.FC<TextFieldProps> = ({
       <input
         className={styles.input}
         defaultValue={defaultValue}
+        disabled={disabled}
         name={name}
         ref={register({ required, validate })}
         placeholder={placeholder}
