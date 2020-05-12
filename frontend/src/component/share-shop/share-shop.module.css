@@ -7,20 +7,30 @@
   padding: 0 25px;
 }
 
-.fields {
-  color: #fff;
+.button {
+  align-items: center;
   display: flex;
-  flex-direction: column;
-  flex-flow: wrap;
+  justify-content: left;
   max-width: 600px;
-}
-
-.fields > * {
   width: 100%;
 }
 
-.postal {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-column-gap: 25px;
+.icon {
+  align-items: center;
+  background-color: #4643d3;
+  border-radius: 5px;
+  display: inline-flex;
+  justify-content: center;
+  padding: 5px;
+}
+
+.iframeText {
+  align-items: center;
+  border: 0;
+  border-radius: 5px;
+  display: flex;
+  justify-content: left;
+  max-height: auto;
+  max-width: 600px;
+  width: 100%;
 }

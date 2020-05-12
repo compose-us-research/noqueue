@@ -17,21 +17,46 @@ const ShareShop: React.FC<ShareShopProps> = () => {
   const shareOnLinkedIn = useCallback(() => {
     console.log("share linkedin...");
   }, []);
+  const shareIframeText = `<iframe ...${shop.name}></iframe>`;
   return (
     <div className={styles.root}>
       <h2>Erzähle es deinen Kunden!</h2>
       <Spacer />
-      <Button onClick={shareOnFacebook}>
-        <ShareIcon /> Auf Facebook teilen
+      <Button
+        className={styles.button}
+        onClick={shareOnFacebook}
+        variant="secondary"
+      >
+        <span className={styles.icon}>
+          <ShareIcon />
+        </span>
+        <Spacer direction="column" />
+        Auf Facebook teilen
       </Button>
       <Spacer />
-      <Button onClick={shareOnLinkedIn}>
-        <ShareIcon /> Auf LinkedIn teilen
+      <Button
+        className={styles.button}
+        onClick={shareOnLinkedIn}
+        variant="secondary"
+      >
+        <span className={styles.icon}>
+          <ShareIcon />
+        </span>
+        <Spacer direction="column" />
+        Auf LinkedIn teilen
       </Button>
       <Spacer />
       <h3>...oder direkt auf der Webseite einbinden:</h3>
       <Spacer />
-      <Button>&lt;iframe ...{shop.name}&gt;&lt;/iframe&gt;</Button>
+      <textarea
+        className={styles.iframeText}
+        cols={100}
+        rows={10}
+        contentEditable={false}
+        disabled
+      >
+        {shareIframeText}
+      </textarea>
     </div>
   );
 };
