@@ -110,14 +110,18 @@ class Database {
     const query = `
 SELECT "range"."start", "range"."end", COUNT("booked".*) AS "reserved", "timeslots"."customers" AS "allowed", "timeslots"."customers" - COUNT("booked".*) AS "available" FROM (
   SELECT "start", MIN("raw_end") AS "end" FROM (
-      SELECT "start" FROM tickets UNION
-      SELECT "end" AS "start" FROM tickets UNION
-      SELECT "start" + current_date AS "start" FROM timeslots
+      SELECT "start" FROM tickets WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+      SELECT "end" AS "start" FROM tickets WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+      SELECT "range"."day" + "timeslots"."start" AS "start" FROM (
+        SELECT generate_series AS "day" FROM generate_series($1::timestamp, $2, '24 hours')
+      ) AS "range", timeslots WHERE timeslots.day = EXTRACT(DOW FROM "range"."day")
       ORDER BY "start"
     ) AS "start", (
-      SELECT "start" AS "raw_end" FROM tickets UNION
-      SELECT "end" AS "raw_end" FROM tickets UNION
-      SELECT "end" + current_date AS "raw_end" FROM timeslots
+      SELECT "start" AS "raw_end" FROM tickets WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+      SELECT "end" AS "raw_end" FROM tickets WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+      SELECT "range"."day" + "timeslots"."end" AS "end" FROM (
+        SELECT generate_series AS "day" FROM generate_series($1::timestamp, $2, '24 hours')
+      ) AS "range", timeslots WHERE timeslots.day = EXTRACT(DOW FROM "range"."day")
       ORDER BY "raw_end"
     ) AS "end"
   WHERE "start" < "raw_end"
@@ -134,23 +138,23 @@ LEFT JOIN timeslots ON (
 GROUP BY "range"."start", "range"."end", "allowed"
 ORDER BY "range"."start"
 `
-    const values = []
-    const result = await this.client.query(query)
+    const values = [start.toISOString(), end.toISOString()]
+    const result = await this.client.query(query, values)
 
     return result.rows
   }
 
-  async addTimeslot ({ start, end, customers }) {
-    const query = 'INSERT INTO timeslots("start", "end", "customers") VALUES ($1, $2, $3) RETURNING *'
-    const values = [start, end, customers]
+  async addTimeslot ({ day, start, end, customers }) {
+    const query = 'INSERT INTO timeslots("day", "start", "end", "customers") VALUES ($1, $2, $3, $4) RETURNING *'
+    const values = [day, start, end, customers]
     const result = await this.client.query(query, values)
 
     return result.rows[0]
   }
 
-  async setTimeslot ({ id, start, end, customers }) {
-    const query = 'UPDATE timeslots SET "start"=$1, "end"=$2, "customers"=$3 WHERE "id"=$4'
-    const values = [start, end, customers, id]
+  async setTimeslot ({ id, day, start, end, customers }) {
+    const query = 'UPDATE timeslots SET "day"=$1 "start"=$2, "end"=$3, "customers"=$4 WHERE "id"=$5'
+    const values = [day, start, end, customers, id]
     await this.client.query(query, values)
   }
 
