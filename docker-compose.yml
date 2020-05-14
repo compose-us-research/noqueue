@@ -3,7 +3,7 @@ services:
 
   noqueue:
     container_name: noqueue
-    image: noqueue
+    build: .
     restart: unless-stopped
     environment:
       DB_PASSWORD: "abcd"
@@ -22,4 +22,4 @@ services:
     ports:
       - "0.0.0.0:5432:5432"
     volumes:
-      - /srv/postgres:/var/lib/postgresql/data
+      - ./data:/var/lib/postgresql/data
