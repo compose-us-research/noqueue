@@ -1,8 +1,8 @@
 # API
 
-## Routes
+## Shop
 
-### GET /shop/:shop/
+### GET /shop/:shop
 
 Returns the shop configuration.
 
@@ -15,7 +15,7 @@ Example response:
 }
 ```
 
-### PUT /shop/:shop/
+### PUT /shop/:shop
 
 Updates the shop configuration.
 
@@ -26,6 +26,8 @@ Example request:
   "label": "Cat food"
 }
 ```
+
+## Tickets
 
 ### POST /shop/:shop/ticket/
 
@@ -98,7 +100,12 @@ Example request:
 }
 ```
 
-### GET /shop/:shop/timeslot/
+## Time Slots
+
+Time slots are defined for day of the week.
+Because JSON/JavaScript lacks a good data type to represent parts of a timestamp, a `Date` is used where only the day of the week and time is evaluated.
+
+### GET /shop/:shop/timeslot
 
 Returns all time slots.
 
@@ -107,13 +114,11 @@ Example response:
 ```json
 [{
   "@id": "http://noqueue.example.org/shop/cat-food/timeslot/1",
-  "day": 1,
   "start": "2020-05-01T08:00:00Z",
   "end": "2020-05-01T12:00:00Z",
   "customers": 2
 }, {
   "@id": "http://noqueue.example.org/shop/cat-food/timeslot/2",
-  "day": 1,
   "start": "2020-05-01T13:00:00Z",
   "end": "2020-05-01T17:00:00Z",
   "customers": 4
@@ -128,7 +133,6 @@ Example request:
 
 ```json
 {
-  "day": 1,
   "start": "2020-05-01T08:00:00Z",
   "end": "2020-05-01T12:00:00Z",
   "customers": 2
@@ -143,7 +147,6 @@ Example request:
 
 ```json
 {
-  "day": 1,
   "start": "2020-05-01T08:00:00Z",
   "end": "2020-05-01T12:00:00Z",
   "customers": 3
