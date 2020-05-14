@@ -21,7 +21,7 @@ const ShowTimeslot: React.FC<ShowTimeslotProps> = ({ customer, timeslot }) => {
         Komm zur angegebenen Zeit ins Geschäft, scanne deinen QR-Code und geh
         entspannt einkaufen - ohne in der Schlange zu warten.
       </p>
-      <div>stub: &lt;QrCode timeslot={timeslot.id} /></div>
+      <div>stub: &lt;QrCode timeslot={timeslot.id} /&gt;</div>
 
       <Spacer />
 
