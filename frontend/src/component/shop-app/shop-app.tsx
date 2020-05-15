@@ -9,7 +9,7 @@ import Spacer from "../spacer/spacer";
 import styles from "./shop-app.module.css";
 import ReservableTimes from "../reservable-times/reservable-times";
 import ShareShop from "../share-shop/share-shop";
-import { updateShop } from "../../service/server/push";
+import { updateShop, updateOpeningHours } from "../../service/server/push";
 import useShop from "../../service/use-shop";
 
 interface ShopAppProps {
@@ -31,8 +31,9 @@ const ShopApp: React.FC<ShopAppProps> = () => {
           </Route>
           <Route path={`${match.path}/slots`}>
             <ReservableTimes
-              handleSubmit={async (ranges) => {
+              handleSubmit={async ({ ranges }) => {
                 console.log("submitting...", { ranges });
+                await updateOpeningHours(shop["@id"], ranges);
                 push(`${match.path}/share`);
               }}
             />

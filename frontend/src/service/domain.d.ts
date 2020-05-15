@@ -6,10 +6,9 @@ export interface Customer {
 
 export type Day = "Mo" | "Di" | "Mi" | "Do" | "Fr" | "Sa" | "So";
 
-export type Amount = Flavor<number, "Amount">;
 export type Address = Flavor<string, "Address">;
+export type AmountOfPeople = Flavor<number, "AmountOfPeople">;
 export type EMail = Flavor<string, "EMail">;
-export type ShopId = Flavor<string, "ShopId">;
 export type Minutes = Flavor<number, "Minutes">;
 export type Name = Flavor<string, "Name">;
 export type Phone = Flavor<string, "Phone">;
@@ -17,6 +16,7 @@ export type ShopId = Flavor<string, "ShopId">;
 export type ShopName = Flavor<string, "ShopName">;
 export type Slug = Flavor<string, "Slug">;
 export type Time = Flavor<string, "Time">;
+export type TimeslotId = Flavor<string, "TimeslotId">;
 
 export interface BaseShopConfig {
   address: Address;
@@ -32,7 +32,7 @@ export interface UpdateShopConfig extends BaseShopConfig {
 export interface ShopConfig extends BaseShopConfig, UpdateShopConfig {}
 
 export interface Timerange {
-  amountOfPeopleInShop: Amount;
+  amountOfPeopleInShop: AmountOfPeople;
   days: [boolean, boolean, boolean, boolean, boolean, boolean, boolean];
   id: string;
   timeFrom: Time;
@@ -45,4 +45,10 @@ export interface Timeslot {
   id: number;
   from: Date;
   to: Date;
+}
+
+export interface OpeningHours {
+  start: Date;
+  end: Date;
+  customers: AmountOfPeople;
 }
