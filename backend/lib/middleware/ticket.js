@@ -28,7 +28,10 @@ function ticket ({ db }) {
       return next()
     }
 
-    const result = await db.availableTickets({})
+    const start = (req.query.start && new Date(req.query.start)) || new Date(Date.now() - 24 * 60 * 60 * 1000)
+    const end = (req.query.end && new Date(req.query.end)) || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+
+    const result = await db.availableTickets({ start, end })
 
     res.json(result)
   })
