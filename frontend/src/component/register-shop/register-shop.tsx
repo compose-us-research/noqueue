@@ -7,10 +7,10 @@ import TextField from "../text-field/text-field";
 
 import styles from "./register-shop.module.css";
 import Spacer from "../spacer/spacer";
-import { Shop } from "../../service/domain";
+import { ShopConfig } from "../../service/domain";
 
 interface RegisterShopProps {
-  onRegister: (newShop: Shop) => void;
+  onRegister: (newShop: ShopConfig) => void;
 }
 
 const RegisterShop: React.FC<RegisterShopProps> = ({ onRegister }) => {

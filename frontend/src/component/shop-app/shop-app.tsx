@@ -1,59 +1,52 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, Suspense } from "react";
+
+import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 
 import { ReactComponent as BookIcon } from "../../asset/image/book-icon.svg";
-import { RegisteredShop, Shop } from "../../service/domain";
+import { UpdateShopConfig, ShopConfig } from "../../service/domain";
 import RegisterShop from "../register-shop/register-shop";
 import Spacer from "../spacer/spacer";
 import styles from "./shop-app.module.css";
 import ReservableTimes from "../reservable-times/reservable-times";
 import ShareShop from "../share-shop/share-shop";
+import { updateShop } from "../../service/server/push";
+import useShop from "../../service/use-shop";
 
 interface ShopAppProps {
   backToIndex: () => void;
 }
 
 const ShopApp: React.FC<ShopAppProps> = () => {
-  const [currentScreen, setCurrentScreen] = useState<JSX.Element>();
-  const [selectedShop, setSelectedShop] = useState<RegisteredShop>();
-  const registerShop: (shop: Shop) => Promise<RegisteredShop> = useCallback(
-    async (shop) => {
-      return {
-        ...shop,
-        icon: <BookIcon />,
-        ranges: [],
-        "@id": "54235",
-      };
-    },
-    []
-  );
-
-  useEffect(() => {
-    if (selectedShop) {
-      setCurrentScreen(
-        <ReservableTimes
-          handleSubmit={async (ranges) => {
-            console.log("submitting...", { ranges });
-            setCurrentScreen(<ShareShop />);
-          }}
-          ranges={selectedShop.ranges}
-        />
-      );
-    } else {
-      setCurrentScreen(
-        <RegisterShop
-          onRegister={async (shop) => {
-            console.log("registered shop", shop);
-            const registeredShop = await registerShop(shop);
-            setSelectedShop(registeredShop);
-          }}
-        />
-      );
-    }
-  }, [registerShop, selectedShop, setCurrentScreen]);
+  const { push } = useHistory();
+  const match = useRouteMatch();
+  const shop = useShop();
+  console.log({ shop });
 
   return (
     <div className={styles.root}>
-      <div className={styles.screen}>{currentScreen}</div>
+      <div className={styles.screen}>
+        <Switch>
+          <Route path="/share">
+            <ShareShop />
+          </Route>
+          <Route path="/slots">
+            <ReservableTimes
+              handleSubmit={async (ranges) => {
+                console.log("submitting...", { ranges });
+                push(`${match.path}/share`);
+              }}
+            />
+          </Route>
+          <Route path="/">
+            <RegisterShop
+              onRegister={async (values) => {
+                await updateShop({ ...shop, ...values });
+                push(`${match.path}/slots`);
+              }}
+            />
+          </Route>
+        </Switch>
+      </div>
       <Spacer />
     </div>
   );

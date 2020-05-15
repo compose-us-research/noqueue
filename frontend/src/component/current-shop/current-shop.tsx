@@ -1,4 +1,5 @@
 import React from "react";
+import { ReactComponent as BookIcon } from "../../asset/image/book-icon.svg";
 import Header from "../header/header";
 import StoreItem from "../store-item/store-item";
 import useShop from "../../service/use-shop";
@@ -10,7 +11,7 @@ const CurrentShop: React.FC<CurrentShopProps> = () => {
 
   return (
     <Header>
-      <StoreItem address={shop.address} icon={shop.icon} name={shop.name} />
+      <StoreItem address={shop.address} icon={<BookIcon />} name={shop.name} />
     </Header>
   );
 };

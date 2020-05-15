@@ -1,28 +1,35 @@
-export type Amount = Flavor<number, "Amount">;
-
 export interface Customer {
-  name: string;
-  address: string;
-  phone: string;
+  name: Name;
+  address: Address;
+  phone: Phone;
 }
 
 export type Day = "Mo" | "Di" | "Mi" | "Do" | "Fr" | "Sa" | "So";
 
+export type Amount = Flavor<number, "Amount">;
+export type Address = Flavor<string, "Address">;
+export type EMail = Flavor<string, "EMail">;
+export type ShopId = Flavor<string, "ShopId">;
 export type Minutes = Flavor<number, "Minutes">;
+export type Name = Flavor<string, "Name">;
+export type Phone = Flavor<string, "Phone">;
+export type ShopId = Flavor<string, "ShopId">;
+export type ShopName = Flavor<string, "ShopName">;
+export type Slug = Flavor<string, "Slug">;
+export type Time = Flavor<string, "Time">;
 
-export interface RegisteredShop extends Shop {
-  "@id": string;
-  icon: JSX.Element;
-  ranges: Timerange[];
-}
-
-export interface Shop {
-  address: string;
-  name: string;
+export interface BaseShopConfig {
+  address: Address;
+  mail: EMail;
+  name: ShopName;
   needsRegistration: boolean;
 }
 
-export type Time = Flavor<string, "Time">;
+export interface UpdateShopConfig extends BaseShopConfig {
+  "@id": ShopId;
+}
+
+export interface ShopConfig extends BaseShopConfig, UpdateShopConfig {}
 
 export interface Timerange {
   amountOfPeopleInShop: Amount;
