@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { action } from "@storybook/addon-actions";
 import RangeSlider from "./range-slider";
-import ReactSlider from "react-slider";
 
 export default {
   title: "RangeSlider",
