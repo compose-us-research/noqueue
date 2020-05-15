@@ -23,6 +23,7 @@ const tables = {
     clear: 'TRUNCATE timeslots;',
     create: `CREATE TABLE timeslots (
       "id" serial PRIMARY KEY,
+      "day" integer,
       "start" time,
       "end" time,
       "customers" integer

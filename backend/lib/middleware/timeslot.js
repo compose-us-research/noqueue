@@ -1,6 +1,7 @@
 const absoluteUrl = require('absolute-url')
-const express = require('express')
 const bodyParser = require('body-parser')
+const express = require('express')
+const HttpError = require('http-errors')
 const urlResolve = require('../urlResolve')
 
 function timeslot ({ db }) {
@@ -13,9 +14,17 @@ function timeslot ({ db }) {
       return next()
     }
 
+    const startDay = (new Date(req.body.start)).getDay()
+    const endDay = (new Date(req.body.start)).getDay()
+
+    if (startDay !== endDay) {
+      return next(new HttpError(400, 'start and end must be the same day'))
+    }
+
     const result = await db.addTimeslot({
-      start: req.body.start,
-      end: req.body.end,
+      day: startDay,
+      start: (new Date(req.body.start)).toISOString().slice(11),
+      end: (new Date(req.body.end)).toISOString().slice(11),
       customers: req.body.customers
     })
 
