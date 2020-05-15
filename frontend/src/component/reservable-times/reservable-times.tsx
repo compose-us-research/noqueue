@@ -31,8 +31,8 @@ function createNewTimerange(lastRange?: Timerange): Timerange {
 
 const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
   const shop = useShop();
-  const ranges = useSWR<Timerange[]>(`${shop["@id"]}/timeslot`, fetcher);
-  const methods = useForm({ defaultValues: { ranges } });
+  const { data } = useSWR<Timerange[]>(`${shop["@id"]}/timeslot`, fetcher);
+  const methods = useForm({ defaultValues: { ranges: data } });
   const { fields, append, remove } = useFieldArray({
     control: methods.control,
     name: "ranges",

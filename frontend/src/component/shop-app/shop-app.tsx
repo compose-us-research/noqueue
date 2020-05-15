@@ -26,10 +26,10 @@ const ShopApp: React.FC<ShopAppProps> = () => {
     <div className={styles.root}>
       <div className={styles.screen}>
         <Switch>
-          <Route path="/share">
+          <Route path={`${match.path}/share`}>
             <ShareShop />
           </Route>
-          <Route path="/slots">
+          <Route path={`${match.path}/slots`}>
             <ReservableTimes
               handleSubmit={async (ranges) => {
                 console.log("submitting...", { ranges });
