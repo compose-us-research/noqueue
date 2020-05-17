@@ -56,3 +56,8 @@ export const useShop: () => ShopConfig = () => {
   const data = useFetch(`/shop/${currentShopId}`);
   return data!;
 };
+
+export const usePush = () => {
+  const { connection } = useContext(FetcherContext);
+  return connection.push;
+};

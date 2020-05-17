@@ -9,10 +9,6 @@ export default {
 
 export const Simple = () => (
   <Suspense fallback={<div>Loading</div>}>
-    <AvailableTimeslots
-      navigateToSlotSelection={action("navigate to slot selection")}
-      day={new Date()}
-      duration={5}
-    />
+    <AvailableTimeslots duration={5} onSelect={action("onSelect")} />
   </Suspense>
 );

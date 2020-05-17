@@ -8,6 +8,7 @@ interface CurrentShopProps {}
 
 const CurrentShop: React.FC<CurrentShopProps> = () => {
   const shop = useShop();
+  console.log({ shop });
 
   return (
     <Header>

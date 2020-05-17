@@ -13,5 +13,8 @@ export const fetcher: fetcherFn<any> = async (url: string) => {
       "Content-Type": "application/json",
     },
   });
+  if (!response.ok) {
+    throw Error("could not fetch");
+  }
   return response.json();
 };

@@ -1,58 +1,59 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState } from "react";
 
-import { Customer, Timeslot } from "../../service/domain";
+import { Timeslot } from "../../service/domain";
 import CurrentShop from "../current-shop/current-shop";
-import ChooseDay from "../choose-day/choose-day";
-import BookTimeslot from "../book-timeslot/book-timeslot";
-import ShowTimeslot from "../show-timeslot/show-timeslot";
 import Spacer from "../spacer/spacer";
 import styles from "./customer-app.module.css";
+import { useRouteMatch, Switch, Route, useHistory } from "react-router-dom";
+import RegisterCustomer from "../register-customer/register-customer";
+import AvailableTimeslots from "../available-timeslots/available-timeslots";
+import ChooseDuration from "../choose-duration/choose-duration";
+import { connection, useShop } from "../../service/server/connection";
 
 interface CustomerAppProps {
   backToIndex: () => void;
 }
 
 const CustomerApp: React.FC<CustomerAppProps> = () => {
-  const [currentScreen, setCurrentScreen] = useState<JSX.Element>();
-
-  const showTimeslot: (props: {
-    customer?: Customer;
-    timeslot: Timeslot;
-  }) => void = useCallback(
-    ({ customer, timeslot }) =>
-      setCurrentScreen(
-        <ShowTimeslot customer={customer} timeslot={timeslot} />
-      ),
-    [setCurrentScreen]
-  );
-
-  const showChooseSlot: (props: {
-    day: Date;
-    duration: number;
-  }) => void = useCallback(
-    ({ day, duration }) => {
-      setCurrentScreen(
-        <BookTimeslot
-          day={day}
-          duration={duration}
-          bookTicketForSlot={showTimeslot}
-        />
-      );
-    },
-    [setCurrentScreen, showTimeslot]
-  );
-
-  useEffect(() => setCurrentScreen(<ChooseDay chooseSlot={showChooseSlot} />), [
-    setCurrentScreen,
-    showChooseSlot,
-  ]);
+  const { push } = useHistory();
+  const match = useRouteMatch();
+  const shop = useShop();
+  const [duration, setDuration] = useState<number>(15);
+  const [slot, setSlot] = useState<Timeslot>();
 
   return (
     <div className={styles.root}>
-      <CurrentShop />
-      <Spacer />
-      <div className={styles.screen}>{currentScreen}</div>
-      <Spacer />
+      <Switch>
+        <Route path={`${match.path}/`} exact>
+          <CurrentShop />
+          <Spacer />
+          <div className={styles.screen}>
+            <ChooseDuration defaultValue={duration} onChange={setDuration} />
+            <Spacer />
+            <AvailableTimeslots
+              duration={duration}
+              onSelect={(slot) => {
+                setSlot(slot);
+                if (shop.needsRegistration) {
+                  push(`${match.path}/register`);
+                } else {
+                  connection.push.registerTicket(shop["@id"], slot);
+                }
+              }}
+            />
+          </div>
+        </Route>
+        <Route path={`${match.path}/register`}>
+          <CurrentShop />
+          <Spacer />
+          <RegisterCustomer
+            onRegister={(values) => {
+              console.log("registering slot", { slot, values });
+              connection.push.registerTicket(shop["@id"], slot!, values);
+            }}
+          />
+        </Route>
+      </Switch>
     </div>
   );
 };

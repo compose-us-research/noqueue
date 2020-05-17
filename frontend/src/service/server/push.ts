@@ -1,4 +1,10 @@
-import { OpeningHourSlot, ShopId, UpdateShopConfig } from "../domain";
+import {
+  OpeningHourSlot,
+  ShopId,
+  UpdateShopConfig,
+  Timeslot,
+  Customer,
+} from "../domain";
 
 export async function putData(url: string, data: any): Promise<void> {
   const res = await fetch(url, {
@@ -23,5 +29,13 @@ export async function updateOpeningHours(
   shopId: ShopId,
   data: OpeningHourSlot[]
 ): Promise<void> {
-  await putData(`${shopId}/opening-hours/`, data);
+  await putData(`/shop/${shopId}/opening-hours/`, data);
+}
+
+export async function registerTicket(
+  shopId: ShopId,
+  slot: Timeslot,
+  customer?: Customer
+): Promise<void> {
+  await putData(`/shop/${shopId}/ticket/${slot.id}`, customer);
 }

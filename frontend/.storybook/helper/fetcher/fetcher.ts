@@ -9,13 +9,14 @@ const shop: ShopConfig = {
 };
 
 export const fetcher = async (url: string) => {
-  if (/\/shop\/([^/]?)\/?$/.test(url)) {
+  console.log("fetching", { url });
+  if (/\/shop\/([^/]+?)\/?$/.test(url)) {
     return shop;
   }
-  if (/\/shop\/([^/]?)\/timeslot\/?$/.test(url)) {
+  if (/\/shop\/([^/]+?)\/timeslot\/?$/.test(url)) {
     return [];
   }
-  if (/\/shop\/([^/]?)\/ticket\/?$/.test(url)) {
+  if (/\/shop\/([^/]+?)\/ticket\/?$/.test(url)) {
     return [];
   }
   return [];

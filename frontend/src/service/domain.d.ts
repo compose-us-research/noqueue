@@ -21,6 +21,7 @@ export type TimeslotId = Flavor<string, "TimeslotId">;
 export interface BaseShopConfig {
   address: Address;
   mail: EMail;
+  maxDuration: Minutes;
   name: ShopName;
   needsRegistration: boolean;
 }
