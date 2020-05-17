@@ -1,16 +1,14 @@
-import React, { useState, useEffect, useCallback, Suspense } from "react";
+import React from "react";
 
 import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 
-import { ReactComponent as BookIcon } from "../../asset/image/book-icon.svg";
-import { UpdateShopConfig, ShopConfig } from "../../service/domain";
 import RegisterShop from "../register-shop/register-shop";
 import Spacer from "../spacer/spacer";
 import styles from "./shop-app.module.css";
 import ReservableTimes from "../reservable-times/reservable-times";
 import ShareShop from "../share-shop/share-shop";
 import { updateShop, updateOpeningHours } from "../../service/server/push";
-import useShop from "../../service/use-shop";
+import { useShop } from "../../service/server/connection";
 
 interface ShopAppProps {
   backToIndex: () => void;
@@ -34,6 +32,7 @@ const ShopApp: React.FC<ShopAppProps> = () => {
               handleSubmit={async ({ ranges }) => {
                 console.log("submitting...", { ranges });
                 await updateOpeningHours(shop["@id"], ranges);
+                console.log("pushing...");
                 push(`${match.path}/share`);
               }}
             />

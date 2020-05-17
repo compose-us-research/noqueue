@@ -1,13 +1,10 @@
 import React, { useState, useCallback } from "react";
 
-import useSWR from "swr";
-
 import styles from "./book-timeslot.module.css";
 import { Customer, Timeslot } from "../../service/domain";
-import { fetcher } from "../../service/fetcher/fetcher";
+import { useFetch, useShop } from "../../service/server/connection";
 import ChooseSlot from "../choose-slot/choose-slot";
 import RegisterCustomer from "../register-customer/register-customer";
-import useShop from "../../service/use-shop";
 
 interface BookTimeslotProps {
   bookTicketForSlot: (props: {
@@ -24,12 +21,8 @@ const BookTimeslot: React.FC<BookTimeslotProps> = ({
   duration,
 }) => {
   const shop = useShop();
-  const { data } = useSWR(
-    `/shop/${shop["@id"]}/slots?day=${day}&duration=${duration}`,
-    fetcher,
-    {
-      suspense: true,
-    }
+  const data = useFetch(
+    `/shop/${shop["@id"]}/slots?day=${day}&duration=${duration}`
   );
   const [timeslot, setTimeslot] = useState<Timeslot>();
   const onSelect = useCallback(

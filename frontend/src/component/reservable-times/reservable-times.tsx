@@ -7,9 +7,7 @@ import styles from "./reservable-times.module.css";
 import { FormContext, useForm, OnSubmit, useFieldArray } from "react-hook-form";
 import Spacer from "../spacer/spacer";
 import TimerangeSetter from "../timerange-setter/timerange-setter";
-import useSWR from "swr";
-import useShop from "../../service/use-shop";
-import { fetcher } from "../../service/fetcher/fetcher";
+import { useFetch, useShop } from "../../service/server/connection";
 
 interface ReservableTimesProps {
   handleSubmit: OnSubmit<Record<string, any>>;
@@ -31,7 +29,7 @@ function createNewTimerange(lastRange?: Timerange): Timerange {
 
 const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
   const shop = useShop();
-  const { data } = useSWR<Timerange[]>(`${shop["@id"]}/timeslot`, fetcher);
+  const data = useFetch(`/shop/${shop["@id"]}/timeslot`);
   const methods = useForm({ defaultValues: { ranges: data } });
   const { fields, append, remove } = useFieldArray({
     control: methods.control,

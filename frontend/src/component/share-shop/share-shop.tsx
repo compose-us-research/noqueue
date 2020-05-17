@@ -5,7 +5,7 @@ import { ReactComponent as ShareIcon } from "../../asset/image/share-icon.svg";
 
 import styles from "./share-shop.module.css";
 import Spacer from "../spacer/spacer";
-import useShop from "../../service/use-shop";
+import { useShop } from "../../service/server/connection";
 
 interface ShareShopProps {}
 
@@ -54,9 +54,8 @@ const ShareShop: React.FC<ShareShopProps> = () => {
         rows={10}
         contentEditable={false}
         disabled
-      >
-        {shareIframeText}
-      </textarea>
+        value={shareIframeText}
+      />
     </div>
   );
 };

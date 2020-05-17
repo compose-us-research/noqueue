@@ -1,10 +1,9 @@
 import React from "react";
 
-import useSWR from "swr";
 import Button from "../button/button";
 
 import styles from "./available-timeslots.module.css";
-import { fetcher } from "../../service/fetcher/fetcher";
+import { useFetch } from "../../service/server/connection";
 
 interface AvailableTimeslotsProps {
   navigateToSlotSelection: () => void;
@@ -26,12 +25,8 @@ const AvailableTimeslots: React.FC<AvailableTimeslotsProps> = ({
   duration,
 }) => {
   const shop = useShop();
-  const { data } = useSWR(
-    `/shop/${shop["@id"]}/slots?day=${day}&duration=${duration}`,
-    fetcher,
-    {
-      suspense: true,
-    }
+  const data = useFetch(
+    `/shop/${shop["@id"]}/slots?day=${day}&duration=${duration}`
   );
   const availableSlots = data?.length || 0;
   const hasSlots = availableSlots > 0;

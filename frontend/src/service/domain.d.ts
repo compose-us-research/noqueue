@@ -47,8 +47,10 @@ export interface Timeslot {
   to: Date;
 }
 
-export interface OpeningHours {
+export interface OpeningHourSlot {
   start: Date;
   end: Date;
   customers: AmountOfPeople;
+  durationMax: Minutes;
+  durationMin: Minutes;
 }

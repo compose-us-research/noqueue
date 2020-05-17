@@ -1,4 +1,4 @@
-import React, { useState, Suspense } from "react";
+import React, { Suspense } from "react";
 
 import {
   BrowserRouter as Router,
@@ -12,10 +12,14 @@ import CustomerApp from "../customer-app/customer-app";
 import ShopApp from "../shop-app/shop-app";
 import styles from "./app.module.css";
 import Loader from "../loader/loader";
+import {
+  FetcherProvider,
+  connection as defaultConnection,
+} from "../../service/server/connection";
 
-interface AppProps {}
-
-type Roles = "customer" | "shop";
+interface AppProps {
+  connection?: typeof defaultConnection;
+}
 
 const RoutedApp = () => {
   const history = useHistory();
@@ -37,12 +41,14 @@ const RoutedApp = () => {
   );
 };
 
-const App: React.FC<AppProps> = () => {
+const App: React.FC<AppProps> = ({ connection = defaultConnection }) => {
   return (
     <div className={styles.root}>
       <Suspense fallback={<Loader />}>
         <Router>
-          <RoutedApp />
+          <FetcherProvider connection={connection}>
+            <RoutedApp />
+          </FetcherProvider>
         </Router>
       </Suspense>
     </div>
