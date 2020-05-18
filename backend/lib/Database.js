@@ -164,6 +164,36 @@ ORDER BY "range"."start"
 
     return result.rows[0]
   }
+
+  async addUser ({ id, label, token, admin }) {
+    const query = 'INSERT INTO users("id", "label", "token", "admin") VALUES ($1, $2, $3, $4) RETURNING *'
+    const values = [id, label, token, admin]
+    const result = await this.client.query(query, values)
+
+    return result.rows[0]
+  }
+
+  async setUser ({ id, label, token, admin }) {
+    const query = 'UPDATE users SET "label"=$1, "token"=$2, "admin"=$3 WHERE "id"=$4'
+    const values = [label, token, admin, id]
+    await this.client.query(query, values)
+  }
+
+  async getUser (id) {
+    const query = 'SELECT * FROM users WHERE "id"=$1'
+    const values = [id]
+    const result = await this.client.query(query, values)
+
+    return result.rows[0]
+  }
+
+  async getUserByToken (token) {
+    const query = 'SELECT * FROM users WHERE "token"=$1'
+    const values = [token]
+    const result = await this.client.query(query, values)
+
+    return result.rows[0]
+  }
 }
 
 module.exports = Database

@@ -8,6 +8,17 @@ const defaults = {
     database: 'postgres',
     password: null,
     port: null,
+  },
+  express: {
+    session: {
+      key: 'random'
+    }
+  },
+  auth: {
+    operator: {
+      user: 'operator',
+      password: 'operator'
+    }
   }
 }
 

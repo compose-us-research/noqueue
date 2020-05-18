@@ -47,3 +47,12 @@ See the create script for more details about the data types and keys.
 - `start`: Start of the time slot as a date object.
 - `end`: End of the time slot as a date object.
 - `customers`: Maximum number of customers for this time slot.
+
+### users
+
+`users` contains all registered users.
+
+- `id`: Id of the user as an integer.
+- `label`: Name of the user as string.
+- `token`: Bearer token for login using `access_token` query parameter.
+- `admin`: Flag if the user has admin right as boolean.

@@ -152,3 +152,11 @@ Example request:
   "customers": 3
 }
 ```
+
+## Users
+
+### GET /shop/:shop/user/:id
+
+### POST /shop/:shop/user/
+
+### PUT /shop/:shop/user/:id

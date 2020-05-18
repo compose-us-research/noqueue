@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "mocha"
+  },
   "author": "Thomas Bergwinkl <bergi@axolotlfarm.org> (https://www.bergnet.org/people/bergi/card#me)",
   "license": "MIT",
   "dependencies": {
@@ -11,9 +13,19 @@
     "body-parser": "^1.19.0",
     "debug": "^4.1.1",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
     "http-errors": "^1.7.3",
     "morgan": "^1.10.0",
+    "passport": "^0.4.1",
+    "passport-http": "^0.3.0",
+    "passport-http-bearer": "^1.0.1",
+    "passport-local": "^1.0.0",
     "pg": "^8.0.3",
-    "qrcode": "^1.4.4"
+    "qrcode": "^1.4.4",
+    "uuid": "^8.0.0"
+  },
+  "devDependencies": {
+    "cross-fetch": "^3.0.4",
+    "mocha": "^7.1.2"
   }
 }
