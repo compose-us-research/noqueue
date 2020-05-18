@@ -3,17 +3,17 @@ import React from "react";
 import { ReactComponent as BookmarkIcon } from "../../asset/image/bookmark-icon.svg";
 import { ReactComponent as EditIcon } from "../../asset/image/edit-icon.svg";
 
-import { Timeslot, Customer } from "../../service/domain";
-import styles from "./show-timeslot.module.css";
+import { Customer, RegisteredTicket } from "../../service/domain";
+import styles from "./show-ticket.module.css";
 import Button from "../button/button";
 import Spacer from "../spacer/spacer";
 
-interface ShowTimeslotProps {
+interface ShowTicketProps {
   customer?: Customer;
-  timeslot: Timeslot;
+  ticket: RegisteredTicket;
 }
 
-const ShowTimeslot: React.FC<ShowTimeslotProps> = ({ customer, timeslot }) => {
+const ShowTicket: React.FC<ShowTicketProps> = ({ customer, ticket }) => {
   return (
     <div className={styles.root}>
       <h2>Erledigt! Dein Ticket ist jetzt verfügbar.</h2>
@@ -21,7 +21,7 @@ const ShowTimeslot: React.FC<ShowTimeslotProps> = ({ customer, timeslot }) => {
         Komm zur angegebenen Zeit ins Geschäft, scanne deinen QR-Code und geh
         entspannt einkaufen - ohne in der Schlange zu warten.
       </p>
-      <div>stub: &lt;QrCode timeslot={timeslot.id} /&gt;</div>
+      <div>stub: &lt;QrCode ticket={ticket.id} /&gt;</div>
 
       <Spacer />
 
@@ -40,4 +40,4 @@ const ShowTimeslot: React.FC<ShowTimeslotProps> = ({ customer, timeslot }) => {
   );
 };
 
-export default ShowTimeslot;
+export default ShowTicket;

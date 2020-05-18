@@ -2,13 +2,16 @@ import {
   OpeningHourSlot,
   ShopId,
   UpdateShopConfig,
-  Timeslot,
   Customer,
+  Ticket,
 } from "../domain";
 
-export async function putData(url: string, data: any): Promise<void> {
+export const putData = (url: string, data: any) => sendData("PUT", url, data);
+export const postData = (url: string, data: any) => sendData("POST", url, data);
+
+async function sendData(method: string, url: string, data: any): Promise<void> {
   const res = await fetch(url, {
-    method: "PUT",
+    method,
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
@@ -34,8 +37,8 @@ export async function updateOpeningHours(
 
 export async function registerTicket(
   shopId: ShopId,
-  slot: Timeslot,
+  ticket: Ticket,
   customer?: Customer
 ): Promise<void> {
-  await putData(`/shop/${shopId}/ticket/${slot.id}`, customer);
+  await postData(`/shop/${shopId}/ticket/`, { customer, ticket });
 }

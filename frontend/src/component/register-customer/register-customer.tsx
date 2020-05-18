@@ -6,14 +6,22 @@ import TextField from "../text-field/text-field";
 
 import styles from "./register-customer.module.css";
 import Spacer from "../spacer/spacer";
-import { Customer } from "../../service/domain";
+import { Customer, Ticket } from "../../service/domain";
+import { push } from "../../../.storybook/helper/fetcher/connection";
+import { useHistory, useRouteMatch } from "react-router-dom";
 
 interface RegisterCustomerProps {
   onRegister: (customer: Customer) => void;
+  ticket?: Ticket;
 }
 
-const RegisterCustomer: React.FC<RegisterCustomerProps> = ({ onRegister }) => {
+const RegisterCustomer: React.FC<RegisterCustomerProps> = ({
+  onRegister,
+  ticket,
+}) => {
   const methods = useForm();
+  const { push } = useHistory();
+  const match = useRouteMatch();
   const handleSubmit = useCallback(
     (values) => {
       const customer: Customer = {
@@ -27,6 +35,9 @@ const RegisterCustomer: React.FC<RegisterCustomerProps> = ({ onRegister }) => {
   );
   useEffect(() => {
     console.log(methods.errors);
+    if (!ticket) {
+      push(`${match.path}/..`);
+    }
   });
   return (
     <div className={styles.root}>

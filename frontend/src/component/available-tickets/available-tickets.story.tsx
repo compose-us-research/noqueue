@@ -1,14 +1,14 @@
 import React, { Suspense } from "react";
-import AvailableTimeslots from "./available-timeslots";
+import AvailableTickets from "./available-tickets";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "AvailableTimeslots",
-  component: AvailableTimeslots,
+  title: "AvailableTickets",
+  component: AvailableTickets,
 };
 
 export const Simple = () => (
   <Suspense fallback={<div>Loading</div>}>
-    <AvailableTimeslots duration={5} onSelect={action("onSelect")} />
+    <AvailableTickets duration={5} onSelect={action("onSelect")} />
   </Suspense>
 );

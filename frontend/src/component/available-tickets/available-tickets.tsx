@@ -2,20 +2,20 @@ import React, { useMemo, useState } from "react";
 
 import Button from "../button/button";
 
-import styles from "./available-timeslots.module.css";
+import styles from "./available-Tickets.module.css";
 import { useFetch, useShop } from "../../service/server/connection";
-import { Timeslot } from "../../service/domain";
+import { Ticket } from "../../service/domain";
 
-interface AvailableTimeslotsProps {
+interface AvailableTicketsProps {
   duration: number;
-  onSelect: (slot: Timeslot) => void;
+  onSelect: (slot: Ticket) => void;
 }
 
-const AvailableTimeslots: React.FC<AvailableTimeslotsProps> = ({
+const AvailableTickets: React.FC<AvailableTicketsProps> = ({
   duration,
   onSelect,
 }) => {
-  const [selectedSlot, setSelectedSlot] = useState<Timeslot>();
+  const [selectedSlot, setSelectedSlot] = useState<Ticket>();
   const shop = useShop();
   const day = useMemo(() => new Date(), []);
   const data = useFetch(
@@ -34,10 +34,10 @@ const AvailableTimeslots: React.FC<AvailableTimeslotsProps> = ({
           <div className={styles.daySelect}>
             <h4>Heute ({day.getDate()})</h4>
             {data
-              .filter((slot: Timeslot) => slot.from.getDate() === day.getDate())
-              .map((slot: Timeslot) => (
+              .filter((slot: Ticket) => slot.start.getDate() === day.getDate())
+              .map((slot: Ticket) => (
                 <Button
-                  key={slot.id}
+                  key={slot.start.toISOString()}
                   onClick={() => {
                     setSelectedSlot(slot);
                     onSelect(slot);
@@ -48,17 +48,17 @@ const AvailableTimeslots: React.FC<AvailableTimeslotsProps> = ({
                       : "unselected"
                   }
                 >
-                  {slot.from.getHours()}:{slot.from.getMinutes()}
+                  {slot.start.getHours()}:{slot.start.getMinutes()}
                 </Button>
               ))}
             <h4>Morgen ({day.getDate() + 1})</h4>
             {data
               .filter(
-                (slot: Timeslot) => slot.from.getDate() === day.getDate() + 1
+                (slot: Ticket) => slot.start.getDate() === day.getDate() + 1
               )
-              .map((slot: Timeslot) => (
+              .map((slot: Ticket) => (
                 <Button
-                  key={slot.id}
+                  key={slot.start.toISOString()}
                   onClick={() => {
                     setSelectedSlot(slot);
                     onSelect(slot);
@@ -69,7 +69,7 @@ const AvailableTimeslots: React.FC<AvailableTimeslotsProps> = ({
                       : "unselected"
                   }
                 >
-                  {slot.from.getHours()}:{slot.from.getMinutes()}
+                  {slot.start.getHours()}:{slot.start.getMinutes()}
                 </Button>
               ))}
           </div>
@@ -80,4 +80,4 @@ const AvailableTimeslots: React.FC<AvailableTimeslotsProps> = ({
   );
 };
 
-export default AvailableTimeslots;
+export default AvailableTickets;

@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 
-import { Timeslot } from "../../service/domain";
+import { Ticket } from "../../service/domain";
 import CurrentShop from "../current-shop/current-shop";
 import Spacer from "../spacer/spacer";
 import styles from "./customer-app.module.css";
 import { useRouteMatch, Switch, Route, useHistory } from "react-router-dom";
 import RegisterCustomer from "../register-customer/register-customer";
-import AvailableTimeslots from "../available-timeslots/available-timeslots";
-import ChooseDuration from "../choose-duration/choose-duration";
-import { connection, useShop } from "../../service/server/connection";
+import { useShop, usePush } from "../../service/server/connection";
+import ChooseTicket from "../choose-ticket/choose-ticket";
 
 interface CustomerAppProps {
   backToIndex: () => void;
@@ -18,8 +17,8 @@ const CustomerApp: React.FC<CustomerAppProps> = () => {
   const { push } = useHistory();
   const match = useRouteMatch();
   const shop = useShop();
-  const [duration, setDuration] = useState<number>(15);
-  const [slot, setSlot] = useState<Timeslot>();
+  const connection = usePush();
+  const [ticket, setTicket] = useState<Ticket>();
 
   return (
     <div className={styles.root}>
@@ -28,16 +27,13 @@ const CustomerApp: React.FC<CustomerAppProps> = () => {
           <CurrentShop />
           <Spacer />
           <div className={styles.screen}>
-            <ChooseDuration defaultValue={duration} onChange={setDuration} />
-            <Spacer />
-            <AvailableTimeslots
-              duration={duration}
-              onSelect={(slot) => {
-                setSlot(slot);
+            <ChooseTicket
+              onSelect={(ticket: Ticket) => {
+                setTicket(ticket);
                 if (shop.needsRegistration) {
                   push(`${match.path}/register`);
                 } else {
-                  connection.push.registerTicket(shop["@id"], slot);
+                  connection.registerTicket(shop["@id"], ticket);
                 }
               }}
             />
@@ -48,8 +44,8 @@ const CustomerApp: React.FC<CustomerAppProps> = () => {
           <Spacer />
           <RegisterCustomer
             onRegister={(values) => {
-              console.log("registering slot", { slot, values });
-              connection.push.registerTicket(shop["@id"], slot!, values);
+              console.log("registering ticket", { ticket, values });
+              connection.registerTicket(shop["@id"], ticket!, values);
             }}
           />
         </Route>

@@ -4,6 +4,7 @@ const shop: ShopConfig = {
   address: "Am Bahnhofsplatz, 94032 Passau",
   "@id": "/shop/default",
   mail: "someone@example.org",
+  maxDuration: 120,
   name: "Buchhandlung Pustet",
   needsRegistration: true,
 };

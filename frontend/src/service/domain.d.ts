@@ -32,6 +32,11 @@ export interface UpdateShopConfig extends BaseShopConfig {
 
 export interface ShopConfig extends BaseShopConfig, UpdateShopConfig {}
 
+export interface Ticket {
+  start: Date;
+  end: Date;
+}
+
 export interface Timerange {
   amountOfPeopleInShop: AmountOfPeople;
   days: [boolean, boolean, boolean, boolean, boolean, boolean, boolean];
@@ -42,10 +47,10 @@ export interface Timerange {
   timeframeTo: Minutes;
 }
 
-export interface Timeslot {
+export interface RegisteredTicket {
   id: number;
-  from: Date;
-  to: Date;
+  start: Date;
+  end: Date;
 }
 
 export interface OpeningHourSlot {
