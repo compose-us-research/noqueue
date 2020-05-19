@@ -35,9 +35,12 @@ const CustomerApp: React.FC<CustomerAppProps> = () => {
                 if (shop.needsRegistration) {
                   push(`${match.path}/register`);
                 } else {
-                  const registeredTicket = await connection.registerTicket(shop["@id"], ticket);
-                  setRegisteredTicket(registeredTicket);
-                  push(`${match.path}/show-ticket`)
+                  const result = await connection.registerTicket(
+                    shop["@id"],
+                    ticket
+                  );
+                  setRegisteredTicket(result);
+                  push(`${match.path}/show-ticket`);
                 }
               }}
             />
@@ -47,14 +50,19 @@ const CustomerApp: React.FC<CustomerAppProps> = () => {
           <CurrentShop />
           <Spacer />
           <RegisterCustomer
-            onRegister={(values) => {
+            onRegister={async (values) => {
               console.log("registering ticket", { ticket, values });
-              connection.registerTicket(shop["@id"], ticket!, values);
+              const result = await connection.registerTicket(
+                shop["@id"],
+                ticket!,
+                values
+              );
+              setRegisteredTicket(result);
             }}
           />
         </Route>
         <Route path={`${match.path}/show-ticket`}>
-          <ShowTicket ticket={registeredTicket} />
+          <ShowTicket ticket={registeredTicket!} />
         </Route>
       </Switch>
     </div>
