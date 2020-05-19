@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 
 import Button from "../button/button";
 
-import styles from "./available-Tickets.module.css";
+import styles from "./available-tickets.module.css";
 import { useFetch, useShop } from "../../service/server/connection";
 import { Ticket } from "../../service/domain";
 
