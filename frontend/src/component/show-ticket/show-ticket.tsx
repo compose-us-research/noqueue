@@ -7,6 +7,7 @@ import { Customer, RegisteredTicket } from "../../service/domain";
 import styles from "./show-ticket.module.css";
 import Button from "../button/button";
 import Spacer from "../spacer/spacer";
+import { useShop } from "../../service/server/connection";
 
 interface ShowTicketProps {
   customer?: Customer;
@@ -14,6 +15,7 @@ interface ShowTicketProps {
 }
 
 const ShowTicket: React.FC<ShowTicketProps> = ({ customer, ticket }) => {
+  const shop = useShop();
   return (
     <div className={styles.root}>
       <h2>Erledigt! Dein Ticket ist jetzt verfügbar.</h2>
@@ -21,7 +23,9 @@ const ShowTicket: React.FC<ShowTicketProps> = ({ customer, ticket }) => {
         Komm zur angegebenen Zeit ins Geschäft, scanne deinen QR-Code und geh
         entspannt einkaufen - ohne in der Schlange zu warten.
       </p>
-      <div>stub: &lt;QrCode ticket={ticket.id} /&gt;</div>
+      <div>
+        <img src={`/shop/${shop.id}/ticket/${ticket.id}`} />
+      </div>
 
       <Spacer />
 
