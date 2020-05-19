@@ -4,12 +4,13 @@ import {
   UpdateShopConfig,
   Customer,
   Ticket,
+  RegisteredTicket,
 } from "../domain";
 
 export const putData = (url: string, data: any) => sendData("PUT", url, data);
 export const postData = (url: string, data: any) => sendData("POST", url, data);
 
-async function sendData(method: string, url: string, data: any): Promise<void> {
+async function sendData(method: string, url: string, data: any): Promise<any> {
   const res = await fetch(url, {
     method,
     headers: {
@@ -21,6 +22,7 @@ async function sendData(method: string, url: string, data: any): Promise<void> {
   if (!res.ok) {
     throw Error("could not update");
   }
+  return res;
 }
 
 export async function updateShop(data: UpdateShopConfig): Promise<void> {
@@ -39,6 +41,8 @@ export async function registerTicket(
   shopId: ShopId,
   ticket: Ticket,
   customer?: Customer
-): Promise<void> {
-  await postData(`/shop/${shopId}/ticket/`, { customer, ticket });
+): Promise<RegisteredTicket> {
+  const res = await postData(`/shop/${shopId}/ticket/`, { customer, ticket });
+  const ticketUrl = res.headers.location;
+  return { ...ticket, ticketUrl };
 }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Ticket } from "../../service/domain";
+import { Ticket, RegisteredTicket } from "../../service/domain";
 import CurrentShop from "../current-shop/current-shop";
 import Spacer from "../spacer/spacer";
 import styles from "./customer-app.module.css";
@@ -8,6 +8,7 @@ import { useRouteMatch, Switch, Route, useHistory } from "react-router-dom";
 import RegisterCustomer from "../register-customer/register-customer";
 import { useShop, usePush } from "../../service/server/connection";
 import ChooseTicket from "../choose-ticket/choose-ticket";
+import ShowTicket from "../show-ticket/show-ticket";
 
 interface CustomerAppProps {
   backToIndex: () => void;
@@ -19,6 +20,7 @@ const CustomerApp: React.FC<CustomerAppProps> = () => {
   const shop = useShop();
   const connection = usePush();
   const [ticket, setTicket] = useState<Ticket>();
+  const [registeredTicket, setRegisteredTicket] = useState<RegisteredTicket>();
 
   return (
     <div className={styles.root}>
@@ -28,12 +30,14 @@ const CustomerApp: React.FC<CustomerAppProps> = () => {
           <Spacer />
           <div className={styles.screen}>
             <ChooseTicket
-              onSelect={(ticket: Ticket) => {
+              onSelect={async (ticket: Ticket) => {
                 setTicket(ticket);
                 if (shop.needsRegistration) {
                   push(`${match.path}/register`);
                 } else {
-                  connection.registerTicket(shop["@id"], ticket);
+                  const registeredTicket = await connection.registerTicket(shop["@id"], ticket);
+                  setRegisteredTicket(registeredTicket);
+                  push(`${match.path}/show-ticket`)
                 }
               }}
             />
@@ -48,6 +52,9 @@ const CustomerApp: React.FC<CustomerAppProps> = () => {
               connection.registerTicket(shop["@id"], ticket!, values);
             }}
           />
+        </Route>
+        <Route path={`${match.path}/show-ticket`}>
+          <ShowTicket ticket={registeredTicket} />
         </Route>
       </Switch>
     </div>

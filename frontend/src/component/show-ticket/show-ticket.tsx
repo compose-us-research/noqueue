@@ -24,7 +24,7 @@ const ShowTicket: React.FC<ShowTicketProps> = ({ customer, ticket }) => {
         entspannt einkaufen - ohne in der Schlange zu warten.
       </p>
       <div>
-        <img src={`/shop/${shop.id}/ticket/${ticket.id}`} />
+        <img src={ticket.ticketUrl} />
       </div>
 
       <Spacer />

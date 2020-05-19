@@ -48,7 +48,7 @@ export interface Timerange {
 }
 
 export interface RegisteredTicket {
-  id: number;
+  ticketUrl: string;
   start: Date;
   end: Date;
 }
