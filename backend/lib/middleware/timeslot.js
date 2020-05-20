@@ -2,6 +2,7 @@ const absoluteUrl = require('absolute-url')
 const bodyParser = require('body-parser')
 const express = require('express')
 const HttpError = require('http-errors')
+const { requiresAdmin }  = require('./authz')
 const urlResolve = require('../urlResolve')
 
 function timeslot ({ db }) {
@@ -9,7 +10,7 @@ function timeslot ({ db }) {
 
   router.use(absoluteUrl())
 
-  router.post('/', bodyParser.json(), async (req, res, next) => {
+  router.post('/', requiresAdmin, bodyParser.json(), async (req, res, next) => {
     if (req.accepts('html')) {
       return next()
     }
@@ -41,7 +42,7 @@ function timeslot ({ db }) {
     res.json(timeslot)
   })
 
-  router.put('/:id', bodyParser.json(), async (req, res, next) => {
+  router.put('/:id', requiresAdmin, bodyParser.json(), async (req, res, next) => {
     if (req.accepts('html')) {
       return next()
     }

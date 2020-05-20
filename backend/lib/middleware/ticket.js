@@ -1,6 +1,7 @@
 const absoluteUrl = require('absolute-url')
 const express = require('express')
 const bodyParser = require('body-parser')
+const { requiresAdmin } = require('./authz')
 const qrcode = require('./qrcode')
 const urlResolve = require('../urlResolve')
 
@@ -56,7 +57,7 @@ function ticket ({ db }) {
     res.json(ticket)
   })
 
-  router.put('/:id', bodyParser.json(), async (req, res, next) => {
+  router.put('/:id', requiresAdmin, bodyParser.json(), async (req, res, next) => {
     if (req.accepts('html')) {
       return next()
     }

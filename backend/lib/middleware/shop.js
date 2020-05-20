@@ -2,6 +2,7 @@ const absoluteUrl = require('absolute-url')
 const bodyParser = require('body-parser')
 const express = require('express')
 const passport = require('passport')
+const { requiresAdmin } = require('./authz')
 const ticket = require('./ticket')
 const timeslot = require('./timeslot')
 const user = require('./user')
@@ -26,7 +27,7 @@ function shop ({ db }) {
     })
   })
 
-  router.put('/', bodyParser.json(), async (req, res, next) => {
+  router.put('/', requiresAdmin, bodyParser.json(), async (req, res, next) => {
     if (req.accepts('html')) {
       return next()
     }
