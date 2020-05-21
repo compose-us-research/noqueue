@@ -1,5 +1,4 @@
 import { AvailableSlot } from "../../service/domain";
-import { stringify } from "querystring";
 import dayStringFromTime from "../../service/day-string-from-time/day-string-from-time";
 
 type SlotsPerDay = { [day: string]: AvailableSlot[] };

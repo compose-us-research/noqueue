@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 
-import { Ticket, RegisteredTicket, AvailableSlot } from "../../service/domain";
+import { RegisteredTicket, AvailableSlot } from "../../service/domain";
 import CurrentShop from "../current-shop/current-shop";
 import Spacer from "../spacer/spacer";
 import styles from "./customer-app.module.css";
