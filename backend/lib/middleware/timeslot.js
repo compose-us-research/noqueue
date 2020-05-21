@@ -41,6 +41,16 @@ function timeslot ({ db }) {
     res.json(timeslot)
   })
 
+  router.put('/', bodyParser.json(), async (req, res, next) => {
+    if (req.accepts('html')) {
+      return next()
+    }
+
+    await db.replaceTimeslots(req.body)
+
+    res.status(201).end()
+  })
+
   router.put('/:id', bodyParser.json(), async (req, res, next) => {
     if (req.accepts('html')) {
       return next()
@@ -48,6 +58,7 @@ function timeslot ({ db }) {
 
     await db.setTimeslot({
       id: parseInt(req.params.id),
+      day: req.body.day,
       start: req.body.start,
       end: req.body.end,
       customers: req.body.customers

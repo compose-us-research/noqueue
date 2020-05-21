@@ -158,11 +158,25 @@ ORDER BY "range"."start"
     await this.client.query(query, values)
   }
 
+  async replaceTimeslots (listOfSlots) {
+    const query = `WITH inserted_ids AS (INSERT INTO timeslots("day", "start", "end", "customers") VALUES ${
+      listOfSlots.map((_slot, idx) => {
+        const row = idx * 4;
+        return `($${row + 1}, $${row + 2}, $${row + 3}, $${row + 4})`
+      }).join(',')
+    } RETURNING id) DELETE FROM timeslots WHERE id NOT IN (SELECT id FROM inserted_ids)`;
+    const values = listOfSlots.reduce(
+      (acc, {day, start, end, customers}) => [...acc, day, start, end, customers],
+      []
+    )
+    await this.client.query(query, values)
+  }
+
   async getTimeslots () {
     const query = 'SELECT * FROM timeslots'
     const result = await this.client.query(query)
 
-    return result.rows[0]
+    return result.rows
   }
 }
 
