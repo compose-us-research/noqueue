@@ -4,10 +4,17 @@ import styles from "./header.module.css";
 
 interface HeaderProps {
   children?: React.ReactNode;
+  onClick?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ children }) => {
-  return <div className={styles.root}>{children}</div>;
+const noop = () => {};
+
+const Header: React.FC<HeaderProps> = ({ children, onClick = noop }) => {
+  return (
+    <div className={styles.root} onClick={onClick}>
+      {children}
+    </div>
+  );
 };
 
 export default Header;

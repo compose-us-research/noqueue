@@ -7,7 +7,6 @@ import TextField from "../text-field/text-field";
 import styles from "./register-customer.module.css";
 import Spacer from "../spacer/spacer";
 import { Customer, Ticket } from "../../service/domain";
-import { push } from "../../../.storybook/helper/fetcher/connection";
 import { useHistory, useRouteMatch } from "react-router-dom";
 
 interface RegisterCustomerProps {

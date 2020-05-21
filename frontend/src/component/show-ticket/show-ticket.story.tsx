@@ -9,7 +9,7 @@ export default {
 export const Simple = () => (
   <ShowTicket
     ticket={{
-      id: 1,
+      ticketUrl: "/shop/default/ticket/1",
       start: new Date("2020-04-26Z15:30:00"),
       end: new Date("2020-04-26Z16:30:00"),
     }}

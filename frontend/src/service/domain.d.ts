@@ -8,6 +8,7 @@ export type Day = "Mo" | "Di" | "Mi" | "Do" | "Fr" | "Sa" | "So";
 
 export type Address = Flavor<string, "Address">;
 export type AmountOfPeople = Flavor<number, "AmountOfPeople">;
+export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 export type EMail = Flavor<string, "EMail">;
 export type Minutes = Flavor<number, "Minutes">;
 export type Name = Flavor<string, "Name">;
@@ -33,30 +34,36 @@ export interface UpdateShopConfig extends BaseShopConfig {
 export interface ShopConfig extends BaseShopConfig, UpdateShopConfig {}
 
 export interface Ticket {
-  start: Date;
+  allowed: number;
+  available: number;
   end: Date;
+  reserved: number;
+  start: Date;
+}
+
+export interface AvailableSlot {
+  end: Date;
+  start: Date;
 }
 
 export interface Timerange {
   amountOfPeopleInShop: AmountOfPeople;
   days: [boolean, boolean, boolean, boolean, boolean, boolean, boolean];
-  id: string;
-  timeFrom: Time;
-  timeUntil: Time;
-  timeframeFrom: Minutes;
-  timeframeTo: Minutes;
+  start: Time;
+  end: Time;
+  minDuration: Minutes;
+  maxDuration: Minutes;
+}
+
+export interface Timeslot {
+  customers: AmountOfPeople;
+  day: DayOfWeek;
+  start: Time;
+  end: Time;
 }
 
 export interface RegisteredTicket {
   ticketUrl: string;
   start: Date;
   end: Date;
-}
-
-export interface OpeningHourSlot {
-  start: Date;
-  end: Date;
-  customers: AmountOfPeople;
-  durationMax: Minutes;
-  durationMin: Minutes;
 }

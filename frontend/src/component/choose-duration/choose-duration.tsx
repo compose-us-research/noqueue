@@ -12,6 +12,8 @@ interface ChooseDurationProps {
 
 const ChooseDuration: React.FC<ChooseDurationProps> = ({ onChange }) => {
   const shop = useShop();
+  console.log("rendering ChooseDuration");
+
   return (
     <div className={styles.root}>
       <div className={styles.duration}>

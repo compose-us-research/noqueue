@@ -4,14 +4,16 @@ import Header from "../header/header";
 import StoreItem from "../store-item/store-item";
 import { useShop } from "../../service/server/connection";
 
-interface CurrentShopProps {}
+interface CurrentShopProps {
+  onClick?: () => void;
+}
 
-const CurrentShop: React.FC<CurrentShopProps> = () => {
+const CurrentShop: React.FC<CurrentShopProps> = ({ onClick }) => {
   const shop = useShop();
-  console.log({ shop });
+  console.log("rendering CurrentShop", { shop });
 
   return (
-    <Header>
+    <Header onClick={onClick}>
       <StoreItem address={shop.address} icon={<BookIcon />} name={shop.name} />
     </Header>
   );

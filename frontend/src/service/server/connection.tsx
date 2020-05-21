@@ -10,6 +10,8 @@ export type ShopFetcher = (shopId: ShopId) => Promise<ShopConfig>;
 
 export type Connection = typeof connection;
 
+const BASE_URL = (window as any).config?.BASE_URL || "/";
+
 interface FetcherContextProps {
   connection: Connection;
   currentShopId: ShopId;
@@ -18,7 +20,7 @@ interface FetcherContextProps {
 
 const FetcherContext = React.createContext<FetcherContextProps>({
   connection,
-  currentShopId: undefined,
+  currentShopId: "default",
   setCurrentShopId: () => {
     throw Error("fetcher context not initialized");
   },
@@ -33,7 +35,7 @@ export const FetcherProvider: React.FC<FetcherProviderProps> = ({
   children,
   connection,
 }) => {
-  const [currentShopId, setCurrentShopId] = useState<ShopId>();
+  const [currentShopId, setCurrentShopId] = useState<ShopId>("default");
   return (
     <FetcherContext.Provider
       value={{ connection, currentShopId, setCurrentShopId }}
@@ -43,9 +45,9 @@ export const FetcherProvider: React.FC<FetcherProviderProps> = ({
   );
 };
 
-export const useFetch = (url: string) => {
+const useFetch = (path: string) => {
   const { connection } = useContext(FetcherContext);
-  const { data } = useSWR(url, connection.fetcher.fetcher, {
+  const { data } = useSWR(`${BASE_URL}${path}`, connection.fetcher.fetcher, {
     suspense: true,
   });
   return data;
@@ -56,6 +58,19 @@ export const useShop: () => ShopConfig = () => {
   const data = useFetch(`/shop/${currentShopId}`);
   return data!;
 };
+
+function idFn<T>(a: T): T {
+  return a;
+}
+
+export function useShopFetch<T>(
+  path: string,
+  mapper: (from: any) => T = idFn
+): T {
+  const { currentShopId } = useContext(FetcherContext);
+  const data = useFetch(`/shop/${currentShopId}${path}`);
+  return mapper(data!);
+}
 
 export const usePush = () => {
   const { connection } = useContext(FetcherContext);

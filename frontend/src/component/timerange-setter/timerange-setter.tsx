@@ -31,10 +31,10 @@ const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
   const [isOpen, setOpen] = useState<boolean>(false);
   const [days, setDays] = useState<string>(daysToString(range.days));
   const { watch } = useFormContext();
-  const slots = `${days} ${range.timeFrom} - ${range.timeUntil} Uhr`;
+  const slots = `${days} ${range.start} - ${range.end} Uhr`;
   const toggleOpen = useCallback(() => setOpen((open) => !open), [setOpen]);
-  const start = watch(`${prefix}.timeFrom`, range.timeFrom);
-  const end = watch(`${prefix}.timeUntil`, range.timeUntil);
+  const start = watch(`${prefix}.start`, range.start);
+  const end = watch(`${prefix}.end`, range.end);
   const checkTimeValidator = useCallback<Validate>((value) => {
     try {
       checkTime(value);
@@ -66,7 +66,7 @@ const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
       <div className={styles.details}>
         <DaySelector
           defaultValue={range.days}
-          name={`${prefix}.day`}
+          name={`${prefix}.days`}
           onChange={(days) => setDays(daysToString(days))}
         />
 
@@ -74,17 +74,17 @@ const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
 
         <div className={styles.timeframe}>
           <TextField
-            defaultValue={range.timeFrom}
+            defaultValue={range.start}
             label="Uhrzeit von"
-            name={`${prefix}.timeFrom`}
+            name={`${prefix}.start`}
             required
             validate={checkTimeValidator}
           />
           <Spacer direction="column" />
           <TextField
-            defaultValue={range.timeUntil}
+            defaultValue={range.end}
             label="Uhrzeit bis"
-            name={`${prefix}.timeUntil`}
+            name={`${prefix}.end`}
             required
             validate={checkTimeValidator}
           />
@@ -94,7 +94,7 @@ const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
 
         <TextField
           label="Anzahl der Personen im Geschäft"
-          name={`${prefix}.amountOfCustomers`}
+          name={`${prefix}.amountOfPeopleInShop`}
           required
           type="number"
         />
@@ -104,9 +104,9 @@ const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
         <h3>Wählbarer Zeitraum</h3>
         <ErrorBoundary resetKeys={[start, end]}>
           <TimeslotLength
-            key={`${prefix}.maxDuration-${isOpen ? "open" : "close"}`}
+            key={`${prefix}.duration-${isOpen ? "open" : "close"}`}
             end={end}
-            name={`${prefix}.maxDuration`}
+            name={`${prefix}.duration`}
             start={start}
           />
         </ErrorBoundary>

@@ -1,10 +1,10 @@
 import {
-  OpeningHourSlot,
   ShopId,
   UpdateShopConfig,
   Customer,
-  Ticket,
   RegisteredTicket,
+  Timeslot,
+  AvailableSlot,
 } from "../domain";
 
 export const putData = (url: string, data: any) => sendData("PUT", url, data);
@@ -32,17 +32,17 @@ export async function updateShop(data: UpdateShopConfig): Promise<void> {
 
 export async function updateOpeningHours(
   shopId: ShopId,
-  data: OpeningHourSlot[]
+  data: Timeslot[]
 ): Promise<void> {
-  await putData(`/shop/${shopId}/opening-hours/`, data);
+  await putData(`${shopId}/timeslot/`, data);
 }
 
 export async function registerTicket(
   shopId: ShopId,
-  ticket: Ticket,
+  ticket: AvailableSlot,
   customer?: Customer
 ): Promise<RegisteredTicket> {
-  const res = await postData(`/shop/${shopId}/ticket/`, { customer, ticket });
+  const res = await postData(`${shopId}/ticket/`, { customer, ticket });
   const ticketUrl = res.headers.location;
   return { ...ticket, ticketUrl };
 }

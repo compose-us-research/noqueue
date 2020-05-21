@@ -16,6 +16,7 @@ import {
   FetcherProvider,
   connection as defaultConnection,
 } from "../../service/server/connection";
+import useLocalTickets from "../../service/tickets/use-local-tickets";
 
 interface AppProps {
   connection?: typeof defaultConnection;
@@ -23,6 +24,7 @@ interface AppProps {
 
 const RoutedApp = () => {
   const history = useHistory();
+  const { hasTickets } = useLocalTickets();
   return (
     <Switch>
       <Route path="/owner">
@@ -35,6 +37,8 @@ const RoutedApp = () => {
         <ChooseRole
           selectShopRole={() => history.push("owner")}
           selectCustomerRole={() => history.push("customer")}
+          hasTickets={hasTickets}
+          selectShowTickets={() => history.push("show-tickets")}
         />
       </Route>
     </Switch>

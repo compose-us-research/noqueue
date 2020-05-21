@@ -2,7 +2,7 @@ import { ShopConfig } from "../../../src/service/domain";
 
 const shop: ShopConfig = {
   address: "Am Bahnhofsplatz, 94032 Passau",
-  "@id": "/shop/default",
+  "@id": "http://localhost:8080/shop/default",
   mail: "someone@example.org",
   maxDuration: 120,
   name: "Buchhandlung Pustet",
