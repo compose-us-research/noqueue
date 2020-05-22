@@ -17,8 +17,8 @@ function shop ({ db }) {
     const config = await db.getConfig()
 
     res.json({
+      ...config,
       '@id': req.absoluteUrl(),
-      label: config.label
     })
   })
 
