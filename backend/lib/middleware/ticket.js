@@ -20,7 +20,13 @@ function ticket ({ db }) {
       end: req.body.end
     })
 
-    res.status(201).set('location', urlResolve(req.absoluteUrl(), result.id)).end()
+    const location = urlResolve(req.absoluteUrl(), result.id)
+
+    res
+      .status(201)
+      .set('access-control-expose-headers', 'location')
+      .set('location', location)
+      .end()
   })
 
   router.get('/available', async (req, res, next) => {
@@ -37,8 +43,9 @@ function ticket ({ db }) {
   })
 
   router.get('/:id', qrcode, async (req, res, next) => {
-    if (req.accepts('html')) {
-      return next()
+    const supportedContent = req.accepts('image/png') || req.accepts('application/json')
+    if (!supportedContent) {
+      next()
     }
 
     const ticket = await db.getTicket(parseInt(req.params.id))
@@ -48,9 +55,15 @@ function ticket ({ db }) {
       return next()
     }
 
+    console.log('inside get /ticket/:id', !!res.sendQrCode)
     // sendQrCode is only attached if images are accepted
     if (res.sendQrCode) {
-      return res.sendQrCode(req.absoluteUrl())
+      console.log("headers sent?", res.headersSent)
+      res
+        .set('content-type', 'image/png')
+        .sendQrCode(req.absoluteUrl())
+      console.log("headers sent?", res.headersSent)
+      return
     }
 
     res.json(ticket)
