@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 
-import { RegisteredTicket, AvailableSlot } from "../../service/domain";
+import { AvailableSlot } from "../../service/domain";
 import CurrentShop from "../current-shop/current-shop";
 import Spacer from "../spacer/spacer";
 import styles from "./customer-app.module.css";
@@ -9,6 +9,7 @@ import RegisterCustomer from "../register-customer/register-customer";
 import { useShop, usePush } from "../../service/server/connection";
 import ChooseTicket from "../choose-ticket/choose-ticket";
 import ShowTicket from "../show-ticket/show-ticket";
+import useLocalTickets from "../../service/tickets/use-local-tickets";
 
 interface CustomerAppProps {
   backToIndex: () => void;
@@ -20,18 +21,18 @@ const CustomerApp: React.FC<CustomerAppProps> = ({ backToIndex }) => {
   const shop = useShop();
   const api = usePush();
   const [ticket, setTicket] = useState<AvailableSlot>();
-  const [registeredTicket, setRegisteredTicket] = useState<RegisteredTicket>();
+  const { saveTickets, tickets } = useLocalTickets();
   const onRegisterCustomer = useCallback(
     async (values) => {
       console.log("registering ticket", { ticket, values });
-      const result = await api.registerTicket({
-        shopId: shop["@id"],
+      const registeredTicket = await api.registerTicket({
+        shop,
         ticket: ticket!,
         customer: values,
       });
-      setRegisteredTicket(result);
+      saveTickets({ ...tickets, [registeredTicket.id]: registeredTicket });
     },
-    [api, shop, ticket]
+    [api, saveTickets, shop, ticket, tickets]
   );
   const onTicketSelect = useCallback(
     async (ticket: AvailableSlot) => {
@@ -39,15 +40,15 @@ const CustomerApp: React.FC<CustomerAppProps> = ({ backToIndex }) => {
       if (shop.needsRegistration) {
         push(`${match.path}/register`);
       } else {
-        const result = await api.registerTicket({
-          shopId: shop["@id"],
+        const registeredTicket = await api.registerTicket({
+          shop,
           ticket,
         });
-        setRegisteredTicket(result);
-        push(`${match.path}/show-ticket`);
+        saveTickets({ ...tickets, [registeredTicket.id]: registeredTicket });
+        push(`${match.path}/show-ticket/${registeredTicket.id}`);
       }
     },
-    [api, match.path, push, setRegisteredTicket, setTicket, shop]
+    [api, match.path, push, saveTickets, setTicket, shop, tickets]
   );
   console.log("rendering CustomerApp");
 
@@ -66,8 +67,8 @@ const CustomerApp: React.FC<CustomerAppProps> = ({ backToIndex }) => {
           <Spacer />
           <RegisterCustomer onRegister={onRegisterCustomer} />
         </Route>
-        <Route path={`${match.path}/show-ticket`}>
-          <ShowTicket backToIndex={backToIndex} ticket={registeredTicket!} />
+        <Route path={`${match.path}/show-ticket/:id`}>
+          <ShowTicket backToIndex={backToIndex} />
         </Route>
       </Switch>
     </div>

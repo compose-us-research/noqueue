@@ -1,18 +1,18 @@
 import React from "react";
 import { action } from "@storybook/addon-actions";
 import { ReactComponent as BookIcon } from "../../asset/image/book-icon.svg";
-import StoreItem from "./store-item";
+import ListItem from "./list-item";
 
 export default {
-  title: "StoreItem",
-  component: StoreItem,
+  title: "ListItem",
+  component: ListItem,
 };
 
 export const Default = () => (
-  <StoreItem
-    address="Am Bahnhofsplatz, 94032 Passau"
+  <ListItem
     icon={<BookIcon />}
-    name="Buchhandlung Pustet"
+    label="Buchhandlung Pustet"
     onClick={action("clicked")}
+    text="Am Bahnhofsplatz, 94032 Passau"
   />
 );

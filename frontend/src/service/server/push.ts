@@ -1,5 +1,5 @@
 import {
-  ShopId,
+  ShopConfig,
   UpdateShopConfig,
   Customer,
   RegisteredTicket,
@@ -31,25 +31,24 @@ export async function updateShop(data: UpdateShopConfig): Promise<void> {
 }
 
 export async function updateOpeningHours(
-  shopId: ShopId,
+  shop: ShopConfig,
   data: Timeslot[]
 ): Promise<void> {
-  await putData(`${shopId}/timeslot/`, data);
+  await putData(`${shop["@id"]}/timeslot/`, data);
 }
 
 type RegisterTicketParams = {
-  shopId: ShopId;
+  shop: ShopConfig;
   ticket: AvailableSlot;
   customer?: Customer;
 };
 
 export async function registerTicket({
-  shopId,
+  shop,
   ticket,
   customer,
 }: RegisterTicketParams): Promise<RegisteredTicket> {
-  const res = await postData(`${shopId}/ticket/`, { customer, ticket });
-  res.headers.forEach(console.log);
+  const res = await postData(`${shop["@id"]}/ticket/`, { customer, ticket });
   const ticketUrl = res.headers.get("location");
-  return { ...ticket, ticketUrl };
+  return { ...ticket, id: ticketUrl, ticketUrl, shop };
 }

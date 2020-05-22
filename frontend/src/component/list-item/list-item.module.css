@@ -7,17 +7,17 @@
   justify-content: left;
 }
 
-.storeInfo {
+.info {
   display: flex;
   flex-direction: column;
 }
 
-.name {
+.label {
   font-size: 15px;
   font-weight: 600;
 }
 
-.address {
+.text {
   font-size: 10px;
 }
 

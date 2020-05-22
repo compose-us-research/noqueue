@@ -16,7 +16,10 @@ import {
   FetcherProvider,
   connection as defaultConnection,
 } from "../../service/server/connection";
-import useLocalTickets from "../../service/tickets/use-local-tickets";
+import useLocalTickets, {
+  LocalTicketsProvider,
+} from "../../service/tickets/use-local-tickets";
+import ShowTickets from "../show-tickets/show-tickets";
 
 interface AppProps {
   connection?: typeof defaultConnection;
@@ -24,7 +27,8 @@ interface AppProps {
 
 const RoutedApp = () => {
   const history = useHistory();
-  const { hasTickets } = useLocalTickets();
+  const { hasTickets, tickets } = useLocalTickets();
+  console.log({ hasTickets, tickets });
   return (
     <Switch>
       <Route path="/owner">
@@ -32,6 +36,9 @@ const RoutedApp = () => {
       </Route>
       <Route path="/customer">
         <CustomerApp backToIndex={() => history.push("/")} />
+      </Route>
+      <Route path="/show-tickets">
+        <ShowTickets backToIndex={() => history.push("/")} tickets={tickets} />
       </Route>
       <Route path="/">
         <ChooseRole
@@ -51,7 +58,9 @@ const App: React.FC<AppProps> = ({ connection = defaultConnection }) => {
       <Suspense fallback={<Loader />}>
         <Router>
           <FetcherProvider connection={connection}>
-            <RoutedApp />
+            <LocalTicketsProvider>
+              <RoutedApp />
+            </LocalTicketsProvider>
           </FetcherProvider>
         </Router>
       </Suspense>

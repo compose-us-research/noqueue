@@ -1,39 +1,31 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { ReactComponent as BookmarkIcon } from "../../asset/image/bookmark-icon.svg";
 import { ReactComponent as EditIcon } from "../../asset/image/edit-icon.svg";
 
-import { Customer, RegisteredTicket } from "../../service/domain";
+import { Customer } from "../../service/domain";
 import styles from "./show-ticket.module.css";
 import Button from "../button/button";
 import Spacer from "../spacer/spacer";
 import useLocalTickets from "../../service/tickets/use-local-tickets";
+import { useParams } from "react-router-dom";
 
 interface ShowTicketProps {
   backToIndex: () => void;
   customer?: Customer;
-  ticket: RegisteredTicket;
 }
 
-const ShowTicket: React.FC<ShowTicketProps> = ({
-  backToIndex,
-  customer,
-  ticket,
-}) => {
-  const { saveTickets, tickets } = useLocalTickets();
-
-  useEffect(() => {
-    saveTickets([...tickets, ticket]);
-  }, [saveTickets, ticket, tickets]);
-
+const ShowTicket: React.FC<ShowTicketProps> = ({ backToIndex, customer }) => {
+  const { ticketId } = useParams();
+  const { tickets } = useLocalTickets();
+  const ticket = tickets[ticketId];
   return (
     <div className={styles.root}>
-      <h2>
-        Erledigt! Dein Ticket {JSON.stringify(ticket)} ist jetzt verfügbar.
-      </h2>
+      <h2>Erledigt! Dein Ticket ist jetzt verfügbar.</h2>
       <p>
-        Komm zur angegebenen Zeit ins Geschäft, scanne deinen QR-Code und geh
-        entspannt einkaufen - ohne in der Schlange zu warten.
+        Komm zur angegebenen Zeit ({ticket.start.toLocaleTimeString()}) ins
+        Geschäft ({ticket.shop.name}), scanne deinen QR-Code und geh entspannt
+        einkaufen - ohne in der Schlange zu warten.
       </p>
       <div>
         <img

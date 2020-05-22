@@ -11,10 +11,11 @@ import { ShopConfig } from "../../service/domain";
 
 interface RegisterShopProps {
   onRegister: (newShop: ShopConfig) => void;
+  shop?: ShopConfig;
 }
 
-const RegisterShop: React.FC<RegisterShopProps> = ({ onRegister }) => {
-  const methods = useForm();
+const RegisterShop: React.FC<RegisterShopProps> = ({ onRegister, shop }) => {
+  const methods = useForm({ defaultValues: shop });
   const handleSubmit = useCallback(
     (values) => {
       onRegister(values);
@@ -43,10 +44,10 @@ const RegisterShop: React.FC<RegisterShopProps> = ({ onRegister }) => {
               <TextField name="city" label="Ort" required />
             </div>
             <Spacer />
-            <TextField name="email" label="E-Mail" required />
+            <TextField name="mail" label="E-Mail" required />
             <Spacer />
             <Checkbox
-              name="recordingNecessary"
+              name="needsRegistration"
               label="Das Geschäft unterliegt der Aufzeichnungspflicht, um im Falle einer Infektion Kontaktpersonen ausfindig machen zu können."
             />
             <Spacer />

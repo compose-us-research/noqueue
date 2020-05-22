@@ -1,7 +1,7 @@
 import React from "react";
 import { action } from "@storybook/addon-actions";
 import { ReactComponent as BookIcon } from "../../asset/image/book-icon.svg";
-import StoreItem from "../store-item/store-item";
+import ListItem from "../list-item/list-item";
 import Header from "./header";
 
 export default {
@@ -11,13 +11,13 @@ export default {
 
 export const Simple = () => <Header>This is a simple header.</Header>;
 
-export const WithStoreItem = () => (
+export const WithListItem = () => (
   <Header>
-    <StoreItem
-      address="Am Bahnhofsplatz, 94032 Passau"
+    <ListItem
       icon={<BookIcon />}
-      name="Buchhandlung Pustet"
+      label="Buchhandlung Pustet"
       onClick={action("clicked")}
+      text="Am Bahnhofsplatz, 94032 Passau"
     />
   </Header>
 );

@@ -62,8 +62,12 @@ export interface Timeslot {
   end: Time;
 }
 
+export type TicketMap = { [id: string]: RegisteredTicket };
+
 export interface RegisteredTicket {
+  id: string;
   ticketUrl: string;
+  shop: ShopConfig;
   start: Date;
   end: Date;
 }
