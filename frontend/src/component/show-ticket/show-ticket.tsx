@@ -28,15 +28,18 @@ const ShowTicket: React.FC<ShowTicketProps> = ({
 
   return (
     <div className={styles.root}>
-      <h2>Erledigt! Dein Ticket ist jetzt verfügbar.</h2>
+      <h2>
+        Erledigt! Dein Ticket {JSON.stringify(ticket)} ist jetzt verfügbar.
+      </h2>
       <p>
         Komm zur angegebenen Zeit ins Geschäft, scanne deinen QR-Code und geh
         entspannt einkaufen - ohne in der Schlange zu warten.
       </p>
       <div>
         <img
-          src={ticket.ticketUrl}
           alt={`Ticket QR code with embedded url ${ticket.ticketUrl}`}
+          crossOrigin="anonymous"
+          src={ticket.ticketUrl}
         />
       </div>
 

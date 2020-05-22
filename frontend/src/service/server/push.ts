@@ -37,12 +37,19 @@ export async function updateOpeningHours(
   await putData(`${shopId}/timeslot/`, data);
 }
 
-export async function registerTicket(
-  shopId: ShopId,
-  ticket: AvailableSlot,
-  customer?: Customer
-): Promise<RegisteredTicket> {
+type RegisterTicketParams = {
+  shopId: ShopId;
+  ticket: AvailableSlot;
+  customer?: Customer;
+};
+
+export async function registerTicket({
+  shopId,
+  ticket,
+  customer,
+}: RegisterTicketParams): Promise<RegisteredTicket> {
   const res = await postData(`${shopId}/ticket/`, { customer, ticket });
-  const ticketUrl = res.headers.location;
+  res.headers.forEach(console.log);
+  const ticketUrl = res.headers.get("location");
   return { ...ticket, ticketUrl };
 }

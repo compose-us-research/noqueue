@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import Button from "../button/button";
 
@@ -7,11 +7,13 @@ import { useShopFetch } from "../../service/server/connection";
 import { Ticket, AvailableSlot } from "../../service/domain";
 import generateSlotsFromData from "../../lib/generate-slots-from-data/generate-slots-from-data";
 import slotsPerDays from "../../lib/slots-per-days/slots-per-days";
+import tdf from "../../lib/two-digit-format/two-digit-format";
 
 interface AvailableTicketsProps {
   duration: number;
   end: Date;
   onSelect: (slot: AvailableSlot) => void;
+  selectedSlot?: AvailableSlot;
   start: Date;
 }
 
@@ -29,12 +31,12 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
   duration,
   end,
   onSelect,
+  selectedSlot,
   start,
 }) => {
   const url = `/ticket/available?start=${start.toISOString()}&end=${end.toISOString()}`;
   const data = useShopFetch<Ticket[]>(url, mapper);
   const slots = generateSlotsFromData(data, duration);
-  const [selectedSlot, setSelectedSlot] = useState<AvailableSlot>();
   const hasSlots = slots.length > 0;
   const noSlots = !hasSlots;
   const dailySlots = slotsPerDays(slots);
@@ -43,29 +45,32 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
       {hasSlots && (
         <>
           <h3>Wähle deine Zeit aus</h3>
-          <div className={styles.daySelect}>
+          <div className={styles.day}>
             {Object.entries(dailySlots).map(([day, slots]) => (
-              <>
-                <h4 key={day}>{day}</h4>
-                <div className={styles.daySelect}>
+              <React.Fragment key={day}>
+                <h4>{day}</h4>
+                <div className={styles.selectInDay}>
                   {slots.map((slot) => (
                     <Button
-                      key={slot.start.toISOString()}
+                      key={`${slot.start.toISOString()}-button`}
+                      className={styles.button}
                       onClick={() => {
-                        setSelectedSlot(slot);
                         onSelect(slot);
                       }}
                       variant={
-                        selectedSlot && selectedSlot === slot
+                        selectedSlot &&
+                        +selectedSlot.start === +slot.start &&
+                        +selectedSlot.end === +slot.end
                           ? "primary"
                           : "unselected"
                       }
                     >
-                      {slot.start.getHours()}:{slot.start.getMinutes()}
+                      {tdf(slot.start.getHours())}:
+                      {tdf(slot.start.getMinutes())}
                     </Button>
                   ))}
                 </div>
-              </>
+              </React.Fragment>
             ))}
           </div>
         </>

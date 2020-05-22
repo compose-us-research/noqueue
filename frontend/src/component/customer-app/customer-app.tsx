@@ -24,7 +24,11 @@ const CustomerApp: React.FC<CustomerAppProps> = ({ backToIndex }) => {
   const onRegisterCustomer = useCallback(
     async (values) => {
       console.log("registering ticket", { ticket, values });
-      const result = await api.registerTicket(shop["@id"], ticket!, values);
+      const result = await api.registerTicket({
+        shopId: shop["@id"],
+        ticket: ticket!,
+        customer: values,
+      });
       setRegisteredTicket(result);
     },
     [api, shop, ticket]
@@ -35,7 +39,10 @@ const CustomerApp: React.FC<CustomerAppProps> = ({ backToIndex }) => {
       if (shop.needsRegistration) {
         push(`${match.path}/register`);
       } else {
-        const result = await api.registerTicket(shop["@id"], ticket);
+        const result = await api.registerTicket({
+          shopId: shop["@id"],
+          ticket,
+        });
         setRegisteredTicket(result);
         push(`${match.path}/show-ticket`);
       }

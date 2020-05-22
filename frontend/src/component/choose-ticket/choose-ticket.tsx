@@ -19,7 +19,7 @@ const ChooseTicket: React.FC<ChooseTicketProps> = ({ onSelect }) => {
   const [selectedTicket, setSelectedTicket] = useState<AvailableSlot>();
   const start = useMemo(() => new Date(Date.now()), []);
   const end = useMemo(() => new Date(+start + duration), [duration, start]);
-  console.log("rendering ChooseTicket");
+
   return (
     <div className={styles.root}>
       <ChooseDuration defaultValue={duration} onChange={setDuration} />
@@ -29,6 +29,7 @@ const ChooseTicket: React.FC<ChooseTicketProps> = ({ onSelect }) => {
           duration={duration}
           end={end}
           onSelect={setSelectedTicket}
+          selectedSlot={selectedTicket}
           start={start}
         />
       </Suspense>

@@ -4,12 +4,17 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  margin-bottom: 150px;
+  margin-bottom: 200px;
 }
 
 .bottomSubmit {
-  position: fixed;
+  background-color: #f3f6ff;
   bottom: 0;
+  box-shadow: 0 -10px 25px #f3f6ff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
 }
 
 /* modifiers */
