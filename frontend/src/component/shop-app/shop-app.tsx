@@ -33,7 +33,7 @@ const ShopApp: React.FC<ShopAppProps> = () => {
               handleSubmit={async ({ ranges }) => {
                 try {
                   await updateOpeningHours(
-                    shop["@id"],
+                    shop,
                     generateTimeslotsFromTimeranges(ranges)
                   );
                   push(`${match.path}/share`);
