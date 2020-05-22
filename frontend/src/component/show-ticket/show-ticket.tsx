@@ -57,6 +57,8 @@ const ShowTicket: React.FC<ShowTicketProps> = ({
         <span>Ticket bearbeiten / stornieren</span>
       </Button>
 
+      <Spacer />
+
       <Button
         className={styles.button}
         variant="secondary"
