@@ -3,24 +3,22 @@ import React from "react";
 import { ReactComponent as BookmarkIcon } from "../../asset/image/bookmark-icon.svg";
 import { ReactComponent as EditIcon } from "../../asset/image/edit-icon.svg";
 
-import { Customer } from "../../service/domain";
+import { Customer, RegisteredTicket } from "../../service/domain";
 import styles from "./show-ticket.module.css";
 import Button from "../button/button";
 import Spacer from "../spacer/spacer";
-import useLocalTickets from "../../service/tickets/use-local-tickets";
-import { useParams } from "react-router-dom";
 
 interface ShowTicketProps {
   backToIndex: () => void;
   customer?: Customer;
+  ticket: RegisteredTicket;
 }
 
-const ShowTicket: React.FC<ShowTicketProps> = ({ backToIndex, customer }) => {
-  const { ticketId: ticketIdParam } = useParams();
-  const ticketId = decodeURIComponent(ticketIdParam);
-  const { tickets } = useLocalTickets();
-  console.log({ ticketId });
-  const ticket = tickets[ticketId];
+const ShowTicket: React.FC<ShowTicketProps> = ({
+  backToIndex,
+  customer,
+  ticket,
+}) => {
   return (
     <div className={styles.root}>
       <h2>Erledigt! Dein Ticket ist jetzt verfügbar.</h2>

@@ -10,7 +10,8 @@ export type ShopFetcher = (shopId: ShopId) => Promise<ShopConfig>;
 
 export type Connection = typeof connection;
 
-const BASE_URL = (window as any).config?.BASE_URL || "/";
+const BASE_URL = (window as any).config?.BASE_URL || "";
+console.log({ BASE_URL });
 
 interface FetcherContextProps {
   connection: Connection;
@@ -46,8 +47,10 @@ export const FetcherProvider: React.FC<FetcherProviderProps> = ({
 };
 
 const useFetch = (path: string) => {
+  const url = `${BASE_URL}${path}`;
+  console.log("fetching", { url });
   const { connection } = useContext(FetcherContext);
-  const { data } = useSWR(`${BASE_URL}${path}`, connection.fetcher.fetcher, {
+  const { data } = useSWR(url, connection.fetcher.fetcher, {
     suspense: true,
   });
   return data;

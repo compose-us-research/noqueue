@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import { useForm, FormContext } from "react-hook-form";
 
 import Button from "../button/button";
@@ -6,8 +6,7 @@ import TextField from "../text-field/text-field";
 
 import styles from "./register-customer.module.css";
 import Spacer from "../spacer/spacer";
-import { Customer, Ticket, AvailableSlot } from "../../service/domain";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { AvailableSlot, Customer } from "../../service/domain";
 import useLocalTickets from "../../service/tickets/use-local-tickets";
 
 interface RegisterCustomerProps {
@@ -19,14 +18,11 @@ const RegisterCustomer: React.FC<RegisterCustomerProps> = ({
   onRegister,
   ticket,
 }) => {
-  const { push } = useHistory();
-  const { customer, tickets } = useLocalTickets();
-  const match = useRouteMatch();
+  const { customer } = useLocalTickets();
   const methods = useForm({ defaultValues: customer });
   const { errors, watch } = methods;
   const handleSubmit = useCallback(
     (values) => {
-      console.log("submitting customer", { values });
       const valueAddress = values?.contact?.address;
       const address =
         (valueAddress?.streetAddress &&
@@ -69,12 +65,7 @@ const RegisterCustomer: React.FC<RegisterCustomerProps> = ({
       "Mindestens eine Kontaktmöglichkeit wird benötigt (Telefon, E-Mail oder Adresse)"
     );
   };
-  useEffect(() => {
-    console.log({ errors });
-    if (!ticket) {
-      push(`${match.path}/..`);
-    }
-  }, [errors]);
+
   return (
     <div className={styles.root}>
       <h2>Achtung!</h2>

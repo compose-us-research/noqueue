@@ -37,7 +37,7 @@ export async function updateOpeningHours(
   await putData(`${shop["@id"]}/timeslot/`, data);
 }
 
-type RegisterTicketParams = {
+export type RegisterTicketParams = {
   shop: ShopConfig;
   ticket: AvailableSlot;
   customer?: Customer;

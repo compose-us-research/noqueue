@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 
-import { AvailableSlot } from "../../service/domain";
+import { AvailableSlot, Customer } from "../../service/domain";
 import CurrentShop from "../current-shop/current-shop";
 import Spacer from "../spacer/spacer";
 import styles from "./customer-app.module.css";
@@ -8,8 +8,8 @@ import { useRouteMatch, Switch, Route, useHistory } from "react-router-dom";
 import RegisterCustomer from "../register-customer/register-customer";
 import { useShop, usePush } from "../../service/server/connection";
 import ChooseTicket from "../choose-ticket/choose-ticket";
-import ShowTicket from "../show-ticket/show-ticket";
 import useLocalTickets from "../../service/tickets/use-local-tickets";
+import ShowTicketRoute from "../show-ticket-route/show-ticket-route";
 
 interface CustomerAppProps {
   backToIndex: () => void;
@@ -20,26 +20,24 @@ const CustomerApp: React.FC<CustomerAppProps> = ({ backToIndex }) => {
   const match = useRouteMatch();
   const shop = useShop();
   const api = usePush();
+  const [customer, setCustomer] = useState<Customer>();
   const [ticket, setTicket] = useState<AvailableSlot>();
   const { saveCustomer, saveTickets, tickets } = useLocalTickets();
-  console.log({ shop });
   const onRegisterCustomer = useCallback(
-    async (customer) => {
-      console.log("registering ticket", { ticket, customer });
+    async (customer: Customer) => {
       const registeredTicket = await api.registerTicket({
         shop,
         ticket: ticket!,
         customer,
       });
-      if (customer) {
-        saveCustomer(customer);
-      }
+      setCustomer(customer);
+      saveCustomer(customer);
       saveTickets({ ...tickets, [registeredTicket.id]: registeredTicket });
       push(
         `${match.path}/show-ticket/${encodeURIComponent(registeredTicket.id)}`
       );
     },
-    [api, saveTickets, shop, ticket, tickets]
+    [api, match.path, push, saveCustomer, saveTickets, shop, ticket, tickets]
   );
   const onTicketSelect = useCallback(
     async (ticket: AvailableSlot) => {
@@ -59,7 +57,6 @@ const CustomerApp: React.FC<CustomerAppProps> = ({ backToIndex }) => {
     },
     [api, match.path, push, saveTickets, setTicket, shop, tickets]
   );
-  console.log("rendering CustomerApp");
 
   return (
     <div className={styles.root}>
@@ -77,7 +74,7 @@ const CustomerApp: React.FC<CustomerAppProps> = ({ backToIndex }) => {
           <RegisterCustomer onRegister={onRegisterCustomer} ticket={ticket!} />
         </Route>
         <Route path={`${match.path}/show-ticket/:ticketId`}>
-          <ShowTicket backToIndex={backToIndex} />
+          <ShowTicketRoute backToIndex={backToIndex} customer={customer} />
         </Route>
       </Switch>
     </div>
