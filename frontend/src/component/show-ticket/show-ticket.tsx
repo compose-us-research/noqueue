@@ -16,8 +16,10 @@ interface ShowTicketProps {
 }
 
 const ShowTicket: React.FC<ShowTicketProps> = ({ backToIndex, customer }) => {
-  const { ticketId } = useParams();
+  const { ticketId: ticketIdParam } = useParams();
+  const ticketId = decodeURIComponent(ticketIdParam);
   const { tickets } = useLocalTickets();
+  console.log({ ticketId });
   const ticket = tickets[ticketId];
   return (
     <div className={styles.root}>

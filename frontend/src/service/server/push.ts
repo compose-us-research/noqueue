@@ -50,5 +50,7 @@ export async function registerTicket({
 }: RegisterTicketParams): Promise<RegisteredTicket> {
   const res = await postData(`${shop["@id"]}/ticket/`, { customer, ticket });
   const ticketUrl = res.headers.get("location");
-  return { ...ticket, id: ticketUrl, ticketUrl, shop };
+  const registeredTicket = { ...ticket, id: ticketUrl, ticketUrl, shop };
+  console.log({ registeredTicket });
+  return registeredTicket;
 }

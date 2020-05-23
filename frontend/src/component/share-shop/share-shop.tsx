@@ -7,9 +7,11 @@ import styles from "./share-shop.module.css";
 import Spacer from "../spacer/spacer";
 import { useShop } from "../../service/server/connection";
 
-interface ShareShopProps {}
+interface ShareShopProps {
+  backToIndex: () => void;
+}
 
-const ShareShop: React.FC<ShareShopProps> = () => {
+const ShareShop: React.FC<ShareShopProps> = ({ backToIndex }) => {
   const shop = useShop();
   const shareOnFacebook = useCallback(() => {
     console.log("share fb...");
@@ -56,6 +58,16 @@ const ShareShop: React.FC<ShareShopProps> = () => {
         disabled
         value={shareIframeText}
       />
+
+      <Spacer />
+      <Button
+        className={styles.button}
+        onClick={backToIndex}
+        variant="secondary"
+      >
+        Zurück zur Auswahl
+      </Button>
+      <Spacer />
     </div>
   );
 };

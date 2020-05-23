@@ -52,7 +52,7 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
                 <div className={styles.selectInDay}>
                   {slots.map((slot) => (
                     <Button
-                      key={`${slot.start.toISOString()}-button`}
+                      key={`${slot.start.toISOString()}-${slot.end.toISOString()}-button`}
                       className={styles.button}
                       onClick={() => {
                         onSelect(slot);

@@ -21,16 +21,23 @@ const CustomerApp: React.FC<CustomerAppProps> = ({ backToIndex }) => {
   const shop = useShop();
   const api = usePush();
   const [ticket, setTicket] = useState<AvailableSlot>();
-  const { saveTickets, tickets } = useLocalTickets();
+  const { saveCustomer, saveTickets, tickets } = useLocalTickets();
+  console.log({ shop });
   const onRegisterCustomer = useCallback(
-    async (values) => {
-      console.log("registering ticket", { ticket, values });
+    async (customer) => {
+      console.log("registering ticket", { ticket, customer });
       const registeredTicket = await api.registerTicket({
         shop,
         ticket: ticket!,
-        customer: values,
+        customer,
       });
+      if (customer) {
+        saveCustomer(customer);
+      }
       saveTickets({ ...tickets, [registeredTicket.id]: registeredTicket });
+      push(
+        `${match.path}/show-ticket/${encodeURIComponent(registeredTicket.id)}`
+      );
     },
     [api, saveTickets, shop, ticket, tickets]
   );
@@ -45,7 +52,9 @@ const CustomerApp: React.FC<CustomerAppProps> = ({ backToIndex }) => {
           ticket,
         });
         saveTickets({ ...tickets, [registeredTicket.id]: registeredTicket });
-        push(`${match.path}/show-ticket/${registeredTicket.id}`);
+        push(
+          `${match.path}/show-ticket/${encodeURIComponent(registeredTicket.id)}`
+        );
       }
     },
     [api, match.path, push, saveTickets, setTicket, shop, tickets]
@@ -65,9 +74,9 @@ const CustomerApp: React.FC<CustomerAppProps> = ({ backToIndex }) => {
         <Route path={`${match.path}/register`}>
           <CurrentShop onClick={backToIndex} />
           <Spacer />
-          <RegisterCustomer onRegister={onRegisterCustomer} />
+          <RegisterCustomer onRegister={onRegisterCustomer} ticket={ticket!} />
         </Route>
-        <Route path={`${match.path}/show-ticket/:id`}>
+        <Route path={`${match.path}/show-ticket/:ticketId`}>
           <ShowTicket backToIndex={backToIndex} />
         </Route>
       </Switch>

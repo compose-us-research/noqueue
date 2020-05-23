@@ -55,15 +55,15 @@ const RoutedApp = () => {
 const App: React.FC<AppProps> = ({ connection = defaultConnection }) => {
   return (
     <div className={styles.root}>
-      <Suspense fallback={<Loader />}>
-        <Router>
+      <Router>
+        <Suspense fallback={<Loader />}>
           <FetcherProvider connection={connection}>
             <LocalTicketsProvider>
               <RoutedApp />
             </LocalTicketsProvider>
           </FetcherProvider>
-        </Router>
-      </Suspense>
+        </Suspense>
+      </Router>
     </div>
   );
 };

@@ -14,7 +14,7 @@ interface ShopAppProps {
   backToIndex: () => void;
 }
 
-const ShopApp: React.FC<ShopAppProps> = () => {
+const ShopApp: React.FC<ShopAppProps> = ({ backToIndex }) => {
   const { push } = useHistory();
   const match = useRouteMatch();
   const shop = useShop();
@@ -26,7 +26,7 @@ const ShopApp: React.FC<ShopAppProps> = () => {
       <div className={styles.screen}>
         <Switch>
           <Route path={`${match.path}/share`}>
-            <ShareShop />
+            <ShareShop backToIndex={backToIndex} />
           </Route>
           <Route path={`${match.path}/slots`}>
             <ReservableTimes

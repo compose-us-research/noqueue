@@ -20,7 +20,8 @@ const ShowTickets: React.FC<ShowTicketsProps> = ({ backToIndex, tickets }) => {
           id: ticket.id,
           label: `${ticket.shop.name}`,
           text: `${ticket.start.toTimeString()}-${ticket.end.toTimeString()}`,
-          action: () => push(`/customer/show-ticket/${ticket.id}`),
+          action: () =>
+            push(`/customer/show-ticket/${encodeURIComponent(ticket.id)}`),
         };
       })}
     />
