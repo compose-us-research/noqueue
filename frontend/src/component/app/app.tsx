@@ -20,8 +20,10 @@ import useLocalTickets, {
   LocalTicketsProvider,
 } from "../../service/tickets/use-local-tickets";
 import ShowTickets from "../show-tickets/show-tickets";
+import getBasename from "../../service/get-basename/get-basename";
 
 interface AppProps {
+  basename?: string;
   connection?: typeof defaultConnection;
 }
 
@@ -52,10 +54,10 @@ const RoutedApp = () => {
   );
 };
 
-const App: React.FC<AppProps> = ({ connection = defaultConnection }) => {
+const App: React.FC<AppProps> = ({ basename = getBasename(), connection = defaultConnection }) => {
   return (
     <div className={styles.root}>
-      <Router>
+      <Router basename={basename}>
         <Suspense fallback={<Loader />}>
           <FetcherProvider connection={connection}>
             <LocalTicketsProvider>

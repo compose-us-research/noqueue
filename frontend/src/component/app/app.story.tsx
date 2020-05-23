@@ -8,5 +8,7 @@ export default {
   component: App,
 };
 
-export const Default = () => <App />;
-export const MockedShop = () => <App connection={mockConnection} />;
+export const Default = () => <App basename="/" />;
+export const MockedShop = () => (
+  <App basename="/" connection={mockConnection} />
+);
