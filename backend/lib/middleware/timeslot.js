@@ -1,70 +1,63 @@
 const absoluteUrl = require('absolute-url')
 const bodyParser = require('body-parser')
 const express = require('express')
-const HttpError = require('http-errors')
-const urlResolve = require('../urlResolve')
 
 function timeslot ({ db }) {
   const router = new express.Router()
 
   router.use(absoluteUrl())
 
-  router.post('/', bodyParser.json(), async (req, res, next) => {
-    if (req.accepts('html')) {
-      return next()
-    }
-
-    const startDay = (new Date(req.body.start)).getDay()
-    const endDay = (new Date(req.body.start)).getDay()
-
-    if (startDay !== endDay) {
-      return next(new HttpError(400, 'start and end must be the same day'))
-    }
-
-    const result = await db.addTimeslot({
-      day: startDay,
-      start: (new Date(req.body.start)).toISOString().slice(11),
-      end: (new Date(req.body.end)).toISOString().slice(11),
-      customers: req.body.customers
-    })
-
-    res.status(201).set('location', urlResolve(req.absoluteUrl(), result.id)).end()
-  })
-
   router.get('/', async (req, res, next) => {
-    if (req.accepts('html')) {
-      return next()
+    try {
+      const timeslots = await db.getTimeslots()
+
+      const result = {
+        member: timeslots.map(timeslot => {
+          return {
+            day: timeslot.day,
+            start: timeslot.start,
+            end: timeslot.end,
+            customers: timeslot.customers,
+            minDuration: timeslot.min_duration,
+            maxDuration: timeslot.max_duration
+          }
+        })
+      }
+
+      res.json(result)
+    } catch (err) {
+      next(err)
     }
-
-    const timeslot = await db.getTimeslots()
-
-    res.json(timeslot)
   })
 
   router.put('/', bodyParser.json(), async (req, res, next) => {
-    if (req.accepts('html')) {
-      return next()
+    
+    try {
+      await db.replaceTimeslots(req.body.member.map(member => ({
+        day: member.day,
+        start: member.start,
+        end: member.end,
+        customers: member.customers,
+        minDuration: member.minDuration,
+        maxDuration: member.maxDuration
+      })))
+      // await db.clearTimeslots()
+
+      // for (const member of req.body.member) {
+      //   await db.addTimeslot({
+      //     day: member.day,
+      //     start: member.start,
+      //     end: member.end,
+      //     customers: member.customers,
+      //     minDuration: member.minDuration,
+      //     maxDuration: member.maxDuration
+      //   })
+      // }
+
+      res.status(201).end()
+    } catch (err) {
+      next(err)
     }
-
-    await db.replaceTimeslots(req.body)
-
-    res.status(201).end()
-  })
-
-  router.put('/:id', bodyParser.json(), async (req, res, next) => {
-    if (req.accepts('html')) {
-      return next()
-    }
-
-    await db.setTimeslot({
-      id: parseInt(req.params.id),
-      day: req.body.day,
-      start: req.body.start,
-      end: req.body.end,
-      customers: req.body.customers
-    })
-
-    res.status(201).end()
   })
 
   return router

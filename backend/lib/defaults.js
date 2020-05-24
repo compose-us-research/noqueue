@@ -7,7 +7,7 @@ const defaults = {
     host: 'localhost',
     database: 'postgres',
     password: null,
-    port: null,
+    port: null
   }
 }
 
