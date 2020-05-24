@@ -23,7 +23,7 @@ class Database {
     }
 
     // check if default config exists otherwise create default config
-    if (!await this.getConfig()) {
+    if (!(await this.getConfig())) {
       debug(`create default config`)
 
       await this.addConfig(defaults.config)
@@ -57,7 +57,8 @@ class Database {
   async addConfig (config, name = 'default') {
     await this.deleteConfig(name)
 
-    const query = 'INSERT INTO config("name", "data") VALUES ($1, $2) RETURNING *'
+    const query =
+      'INSERT INTO config("name", "data") VALUES ($1, $2) RETURNING *'
     const values = [name, config]
     const result = await this.client.query(query, values)
 
@@ -84,17 +85,19 @@ class Database {
     await this.client.query('DELETE FROM config WHERE "name" = $1', [name])
   }
 
-  async addTicket ({ user, start, end }) {
-    const query = 'INSERT INTO tickets("user", "start", "end") VALUES ($1, $2, $3) RETURNING *'
-    const values = [user, start, end]
+  async addTicket ({ id, start, end, contact }) {
+    const query =
+      'INSERT INTO tickets("id", "start", "end", "contact") VALUES ($1, $2, $3, $4) RETURNING *'
+    const values = [id, start, end, contact]
     const result = await this.client.query(query, values)
 
     return result.rows[0]
   }
 
-  async setTicket ({ id, start, end, ready, used }) {
-    const query = 'UPDATE tickets SET "start"=$1, "end"=$2, "ready"=$3, "used"=$4 WHERE "id"=$5'
-    const values = [start, end, ready, used, id]
+  async setTicket ({ id, start, end, contact }) {
+    const query =
+      'UPDATE tickets SET "start"=$1, "end"=$2, "contact"=$3 WHERE "id"=$4'
+    const values = [start, end, contact, id]
     await this.client.query(query, values)
   }
 
@@ -108,7 +111,7 @@ class Database {
 
   async availableTickets ({ start, end }) {
     const query = `
-SELECT "range"."start", "range"."end", COUNT("booked".*) AS "reserved", "timeslots"."customers" AS "allowed", "timeslots"."customers" - COUNT("booked".*) AS "available" FROM (
+SELECT "range"."start", "range"."end", COUNT("booked".*)::integer AS "reserved", COALESCE("timeslots"."customers", 0) AS "allowed", COALESCE("timeslots"."customers", 0) - COUNT("booked".*)::integer AS "available" FROM (
   SELECT "start", MIN("raw_end") AS "end" FROM (
       SELECT "start" FROM tickets WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
       SELECT "end" AS "start" FROM tickets WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
@@ -132,10 +135,10 @@ LEFT JOIN tickets "booked" ON (
   ("booked"."start" < "range"."end" AND "booked"."end" >= "range"."end")
 )
 LEFT JOIN timeslots ON (
-  ("timeslots"."start" <= CAST("range"."start" AS time) AND "timeslots"."end" > CAST("range"."start" AS time)) OR
-  ("timeslots"."start" < CAST("range"."end" AS time) AND "timeslots"."end" >= CAST("range"."end" AS time))
+  ("timeslots"."start" <= CAST("range"."start" AS time) AND "timeslots"."end" > CAST("range"."start" AS time) AND "timeslots"."day" = EXTRACT(DOW FROM "range"."start")) OR
+  ("timeslots"."start" < CAST("range"."end" AS time) AND "timeslots"."end" >= CAST("range"."end" AS time) AND "timeslots"."day" = EXTRACT(DOW FROM "range"."start"))
 )
-GROUP BY "range"."start", "range"."end", "allowed"
+GROUP BY "range"."start", "range"."end", "allowed", "timeslots"."customers"
 ORDER BY "range"."start"
 `
     const values = [start.toISOString(), end.toISOString()]
@@ -144,25 +147,24 @@ ORDER BY "range"."start"
     return result.rows
   }
 
-  async addTimeslot ({ day, start, end, customers }) {
-    const query = 'INSERT INTO timeslots("day", "start", "end", "customers") VALUES ($1, $2, $3, $4) RETURNING *'
-    const values = [day, start, end, customers]
+  async addTimeslot ({ day, start, end, customers, minDuration, maxDuration }) {
+    const query =
+      'INSERT INTO timeslots("day", "start", "end", "customers", "min_duration", "max_duration") VALUES ($1, $2, $3, $4, $5, $6) RETURNING *'
+    const values = [day, start, end, customers, minDuration, maxDuration]
     const result = await this.client.query(query, values)
 
     return result.rows[0]
-  }
-
-  async setTimeslot ({ id, day, start, end, customers }) {
-    const query = 'UPDATE timeslots SET "day"=$1 "start"=$2, "end"=$3, "customers"=$4 WHERE "id"=$5'
-    const values = [day, start, end, customers, id]
-    await this.client.query(query, values)
   }
 
   async getTimeslots () {
     const query = 'SELECT * FROM timeslots'
     const result = await this.client.query(query)
 
-    return result.rows[0]
+    return result.rows
+  }
+
+  async clearTimeslots () {
+    await this.client.query(tables.timeslots.clear)
   }
 }
 
