@@ -14,7 +14,7 @@ const config = {
     host: process.env.DB_HOST || defaults.db.host,
     database: process.env.DB_DATABASE || defaults.db.database,
     password: process.env.DB_PASSWORD || defaults.db.password,
-    port: process.env.DB_PORT || defaults.db.port,
+    port: process.env.DB_PORT || defaults.db.port
   },
   path: process.env.SHOP_PATH || 'default'
 }
@@ -28,15 +28,22 @@ async function init () {
 
     app.use(morgan('combined'))
 
+    const frontendPath = resolve(__dirname, '../frontend/build')
+    debug(`mount frontend from ${frontendPath}`)
+    app.use(express.static(frontendPath))
+    app.use((req, res, next) => {
+      if (!req.accepts('html')) {
+        return next()
+      }
+
+      res.sendFile(resolve(frontendPath, 'index.html'))
+    })
+
     debug('mount admin API at /admin')
     app.use('/admin', admin({ db }))
 
     debug(`mount shop at /shop/${config.path}`)
     app.use(`/shop/${config.path}`, shop({ db }))
-
-    const frontendPath = resolve(__dirname, '../frontend/build')
-    debug(`mount frontend from ${frontendPath}`)
-    app.use(express.static(frontendPath))
 
     const server = app.listen(config.port, () => {
       console.log(`listening at http://localhost:${server.address().port}/`)

@@ -10,10 +10,6 @@ function shop ({ db }) {
   router.use(absoluteUrl())
 
   router.get('/', async (req, res, next) => {
-    if (req.accepts('html')) {
-      return next()
-    }
-
     const config = await db.getConfig()
 
     res.json({
@@ -23,10 +19,6 @@ function shop ({ db }) {
   })
 
   router.put('/', bodyParser.json(), async (req, res, next) => {
-    if (req.accepts('html')) {
-      return next()
-    }
-
     await db.setConfig(req.body)
 
     res.status(201).end()

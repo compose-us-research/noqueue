@@ -10,14 +10,12 @@ const tables = {
   tickets: {
     clear: 'TRUNCATE tickets;',
     create: `CREATE TABLE tickets (
-      "id" serial PRIMARY KEY,
-      "user" character varying(1024),
+      "id" character varying(1024) PRIMARY KEY,
       "start" timestamp,
       "end" timestamp,
-      "ready" boolean DEFAULT false,
-      "used" boolean DEFAULT false
+      "contact" jsonb
     );`,
-    delete: 'DROP TABLE tickets;',
+    delete: 'DROP TABLE tickets;'
   },
   timeslots: {
     clear: 'TRUNCATE timeslots;',
@@ -26,9 +24,11 @@ const tables = {
       "day" integer,
       "start" time,
       "end" time,
-      "customers" integer
+      "customers" integer,
+      "min_duration" integer,
+      "max_duration" integer
     );`,
-    delete: 'DROP TABLE timeslots;',
+    delete: 'DROP TABLE timeslots;'
   }
 }
 

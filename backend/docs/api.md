@@ -39,31 +39,39 @@ Example request:
 ```json
 {
   "start": "2020-05-01T11:00:00Z",
-  "end": "2020-05-01T11:15:00Z"
+  "end": "2020-05-01T11:15:00Z",
+  "contact": {
+    "name": "Max Mustermann"
+  }
 }
 ```
 
 ### GET /shop/:shop/ticket/available?start&end
 
 Returns an overview of issued tickets for the given time frame.
-`start` and `end` must be given as ISO date strings. 
+`start` and `end` must be given as ISO date strings.
 
 Example response:
 
 ```json
-[{
-  "start": "2020-05-01T11:00:00Z",
-  "end": "2020-05-01T11:15:00Z",
-  "reserved": 1,
-  "allowed": 2,
-  "available": 1
-}, {
-  "start": "2020-05-01T11:15:00Z",
-  "end": "2020-05-01T12:00:00Z",
-  "reserved": 0,
-  "allowed": 2,
-  "available": 2
-}]
+{
+  "member": [
+    {
+      "start": "2020-05-01T11:00:00Z",
+      "end": "2020-05-01T11:15:00Z",
+      "reserved": 1,
+      "allowed": 2,
+      "available": 1
+    },
+    {
+      "start": "2020-05-01T11:15:00Z",
+      "end": "2020-05-01T12:00:00Z",
+      "reserved": 0,
+      "allowed": 2,
+      "available": 2
+    }
+  ]
+}
 ```
 
 ### GET /shop/:shop/ticket/:ticket
@@ -74,12 +82,11 @@ Example response:
 
 ```json
 {
-  "@id": "http://noqueue.example.org/shop/cat-food/ticket/6c39f8e5-e085-49d0-a4bc-c4673768c4d2",
-  "user": "default",
   "start": "2020-05-01T11:00:00Z",
   "end": "2020-05-01T11:15:00Z",
-  "ready": false,
-  "used": false
+  "contact": {
+    "name": "Max Mustermann"
+  }
 }
 ```
 
@@ -91,64 +98,65 @@ Example request:
 
 ```json
 {
-  "@id": "http://noqueue.example.org/shop/cat-food/ticket/6c39f8e5-e085-49d0-a4bc-c4673768c4d2",
-  "user": "default",
   "start": "2020-05-01T11:00:00Z",
   "end": "2020-05-01T11:15:00Z",
-  "ready": true,
-  "used": false
+  "contact": {
+    "name": "Max Mustermann"
+  }
 }
 ```
 
 ## Time Slots
 
 Time slots are defined for day of the week.
-Because JSON/JavaScript lacks a good data type to represent parts of a timestamp, a `Date` is used where only the day of the week and time is evaluated.
+The day of the week is an integer as defined in [Date.getDay()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getDay).
 
-### GET /shop/:shop/timeslot
+### GET /shop/:shop/timeslot/
 
 Returns all time slots.
 
 Example response:
 
 ```json
-[{
-  "@id": "http://noqueue.example.org/shop/cat-food/timeslot/1",
-  "start": "2020-05-01T08:00:00Z",
-  "end": "2020-05-01T12:00:00Z",
-  "customers": 2
-}, {
-  "@id": "http://noqueue.example.org/shop/cat-food/timeslot/2",
-  "start": "2020-05-01T13:00:00Z",
-  "end": "2020-05-01T17:00:00Z",
-  "customers": 4
-}]
-```
-
-### POST /shop/:shop/timeslot/
-
-Creates a new time slot.
-
-Example request:
-
-```json
 {
-  "start": "2020-05-01T08:00:00Z",
-  "end": "2020-05-01T12:00:00Z",
-  "customers": 2
+  "member": [
+    {
+      "day": 3,
+      "start": "08:00:00",
+      "end": "12:00:00",
+      "customers": 2,
+      "minDuration": 5,
+      "maxDuration": 30
+    },
+    {
+      "day": 3,
+      "start": "13:00:00",
+      "end": "17:00:00",
+      "customers": 4,
+      "minDuration": 5,
+      "maxDuration": 30
+    }
+  ]
 }
 ```
 
-### PUT /shop/:shop/timeslot/:timeslot
+### PUT /shop/:shop/timeslot/
 
-Updates a time slot.
+Updates all time slots at once.
 
 Example request:
 
 ```json
 {
-  "start": "2020-05-01T08:00:00Z",
-  "end": "2020-05-01T12:00:00Z",
-  "customers": 3
+  "member": [
+    {
+      "day": 3,
+      "start": "08:00:00",
+      "end": "12:00:00",
+      "customers": 3,
+      "minDuration": 5,
+      "maxDuration": 30
+    }
+  ]
 }
 ```
