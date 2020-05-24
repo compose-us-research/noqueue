@@ -5,6 +5,7 @@ import Headline from "../headline/headline";
 
 import styles from "./choose-role.module.css";
 import Spacer from "../spacer/spacer";
+import { useRouteMatch } from "react-router-dom";
 
 interface ChooseRoleProps {
   hasTickets: boolean;
@@ -19,6 +20,8 @@ const ChooseRole: React.FC<ChooseRoleProps> = ({
   hasTickets,
   selectShowTickets,
 }) => {
+  const { path } = useRouteMatch();
+  console.log("in choose role?", { path });
   return (
     <div className={styles.root}>
       <Headline>

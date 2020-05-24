@@ -18,7 +18,7 @@ interface AvailableTicketsProps {
 }
 
 const mapper: (from: any) => Ticket[] = (tickets) => {
-  return tickets.map((ticket: any) => ({
+  return tickets.member.map((ticket: any) => ({
     allowed: ticket.allowed,
     available: ticket.available,
     end: new Date(ticket.end),

@@ -1,33 +1,34 @@
 import React, { useCallback, useEffect } from "react";
 import { useForm, FormContext } from "react-hook-form";
 
+import { ShopConfig } from "../../service/domain";
 import Button from "../button/button";
 import Checkbox from "../checkbox/checkbox";
+import Spacer from "../spacer/spacer";
 import TextField from "../text-field/text-field";
 
-import styles from "./register-shop.module.css";
-import Spacer from "../spacer/spacer";
-import { ShopConfig } from "../../service/domain";
+import styles from "./update-shop.module.css";
 
-interface RegisterShopProps {
-  onRegister: (newShop: ShopConfig) => void;
+interface UpdateShopProps {
+  onSave: (newShop: ShopConfig) => void;
   shop?: ShopConfig;
 }
 
-const RegisterShop: React.FC<RegisterShopProps> = ({ onRegister, shop }) => {
+const UpdateShop: React.FC<UpdateShopProps> = ({ onSave, shop }) => {
+  console.log("updateshop", JSON.stringify(shop));
   const methods = useForm({ defaultValues: shop });
   const handleSubmit = useCallback(
     (values) => {
-      onRegister(values);
+      onSave(values);
     },
-    [onRegister]
+    [onSave]
   );
   useEffect(() => {
     console.log("errors", methods.errors);
   }, [methods]);
   return (
     <div className={styles.root}>
-      <h2>Lege Dein Geschäft auf Platzhalter.io an</h2>
+      <h2>Bearbeite Dein Geschäft auf Platzhalter.io</h2>
       <form onSubmit={methods.handleSubmit(handleSubmit)}>
         <FormContext {...methods}>
           <div className={styles.fields}>
@@ -59,4 +60,4 @@ const RegisterShop: React.FC<RegisterShopProps> = ({ onRegister, shop }) => {
   );
 };
 
-export default RegisterShop;
+export default UpdateShop;

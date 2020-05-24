@@ -23,6 +23,8 @@ describe("generateTimeslotsFromTimeranges", () => {
       end: "12:00",
       day: 1,
       customers: 2,
+      minDuration: 15,
+      maxDuration: 120,
     };
     expect(result).toEqual([expected]);
   });
@@ -44,18 +46,24 @@ describe("generateTimeslotsFromTimeranges", () => {
         end: "12:00",
         day: 1,
         customers: 2,
+        minDuration: 15,
+        maxDuration: 120,
       },
       {
         start: "08:00",
         end: "12:00",
         day: 2,
         customers: 2,
+        minDuration: 15,
+        maxDuration: 120,
       },
       {
         start: "08:00",
         end: "12:00",
         day: 6,
         customers: 2,
+        minDuration: 15,
+        maxDuration: 120,
       },
     ];
     expect(result).toEqual(expected);
@@ -85,18 +93,24 @@ describe("generateTimeslotsFromTimeranges", () => {
       end: "12:00",
       day: 0,
       customers: 2,
+      minDuration: 15,
+      maxDuration: 120,
     };
     const expected2: Timeslot = {
       start: "08:00",
       end: "12:00",
       day: 1,
       customers: 2,
+      minDuration: 15,
+      maxDuration: 120,
     };
     const expected3: Timeslot = {
       start: "13:00",
       end: "18:00",
       day: 1,
       customers: 2,
+      minDuration: 15,
+      maxDuration: 120,
     };
     expect(result).toContainEqual(expected1);
     expect(result).toContainEqual(expected2);

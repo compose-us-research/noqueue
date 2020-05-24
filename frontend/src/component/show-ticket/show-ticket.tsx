@@ -11,17 +11,19 @@ import Spacer from "../spacer/spacer";
 interface ShowTicketProps {
   backToIndex: () => void;
   customer?: Customer;
+  label?: string;
   ticket: RegisteredTicket;
 }
 
 const ShowTicket: React.FC<ShowTicketProps> = ({
   backToIndex,
   customer,
+  label = "Erledigt! Dein Ticket ist jetzt verfügbar.",
   ticket,
 }) => {
   return (
     <div className={styles.root}>
-      <h2>Erledigt! Dein Ticket ist jetzt verfügbar.</h2>
+      <h2>{label}</h2>
       <p>
         Komm zur angegebenen Zeit ({ticket.start.toLocaleTimeString()}) ins
         Geschäft ({ticket.shop.name}), scanne deinen QR-Code und geh entspannt

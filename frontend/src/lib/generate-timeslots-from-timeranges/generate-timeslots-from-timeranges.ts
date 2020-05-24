@@ -14,6 +14,8 @@ function singleRangeToSlots(range: Timerange): Timeslot[] {
     customers: range.amountOfPeopleInShop,
     start: range.start,
     end: range.end,
+    minDuration: range.minDuration,
+    maxDuration: range.maxDuration,
   };
   return range.days.reduce<Timeslot[]>((slots, isSet, index) => {
     const slotOrNot: Timeslot[] = isSet

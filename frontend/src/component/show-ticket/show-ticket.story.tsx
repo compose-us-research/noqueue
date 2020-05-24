@@ -9,7 +9,11 @@ export default {
   component: ShowTicket,
 };
 
-const SimpleStory = () => {
+const SimpleStory = ({
+  header,
+}: {
+  header?: (t: RegisteredTicket) => string;
+}) => {
   const customer: Customer = {
     name: "Petra Platzhalter",
     contact: {
@@ -33,6 +37,7 @@ const SimpleStory = () => {
     <ShowTicket
       backToIndex={action("clicked back to index")}
       customer={customer}
+      label={header?.apply(header, [ticket])}
       ticket={ticket}
     />
   );
@@ -41,5 +46,13 @@ const SimpleStory = () => {
 export const Simple = () => (
   <Suspense fallback={<div>Lade...</div>}>
     <SimpleStory />
+  </Suspense>
+);
+
+export const WithLabel = () => (
+  <Suspense fallback={<div>Lade...</div>}>
+    <SimpleStory
+      header={(ticket) => `Dein gespeichertes Ticket für ${ticket.shop.name}`}
+    />
   </Suspense>
 );

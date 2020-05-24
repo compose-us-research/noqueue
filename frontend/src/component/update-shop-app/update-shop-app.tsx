@@ -2,41 +2,55 @@ import React, { useState } from "react";
 
 import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 
-import RegisterShop from "../register-shop/register-shop";
+import UpdateShop from "../update-shop/update-shop";
 import Spacer from "../spacer/spacer";
-import styles from "./shop-app.module.css";
 import ReservableTimes from "../reservable-times/reservable-times";
 import ShareShop from "../share-shop/share-shop";
 import { usePush, useShop } from "../../service/server/connection";
 import generateTimeslotsFromTimeranges from "../../lib/generate-timeslots-from-timeranges/generate-timeslots-from-timeranges";
+import styles from "./update-shop-app.module.css";
+import { TimerangeWithDurationAsArray, Timerange } from "../../service/domain";
 
-interface ShopAppProps {
+interface UpdateShopAppProps {
   backToIndex: () => void;
 }
 
-const ShopApp: React.FC<ShopAppProps> = ({ backToIndex }) => {
+const UpdateShopApp: React.FC<UpdateShopAppProps> = ({ backToIndex }) => {
   const { push } = useHistory();
-  const match = useRouteMatch();
+  const { path, url } = useRouteMatch();
   const shop = useShop();
   const [, setError] = useState<void>();
   const { updateOpeningHours, updateShop } = usePush();
+  console.log("updating shop", { shop });
 
   return (
     <div className={styles.root}>
       <div className={styles.screen}>
         <Switch>
-          <Route path={`${match.path}/share`}>
+          <Route path={`${path}/share`}>
             <ShareShop backToIndex={backToIndex} />
           </Route>
-          <Route path={`${match.path}/slots`}>
+          <Route path={`${path}/slots`}>
             <ReservableTimes
               handleSubmit={async ({ ranges }) => {
+                const rangesWithCorrectDuration: Timerange[] = (ranges as TimerangeWithDurationAsArray[]).map(
+                  (range) => {
+                    return {
+                      amountOfPeopleInShop: range.amountOfPeopleInShop,
+                      start: range.start,
+                      end: range.end,
+                      days: range.days,
+                      minDuration: range.duration[0],
+                      maxDuration: range.duration[1],
+                    };
+                  }
+                );
                 try {
                   await updateOpeningHours(
                     shop,
-                    generateTimeslotsFromTimeranges(ranges)
+                    generateTimeslotsFromTimeranges(rangesWithCorrectDuration)
                   );
-                  push(`${match.path}/share`);
+                  push(`${url}/share`);
                 } catch (e) {
                   setError(() => {
                     throw e;
@@ -46,17 +60,18 @@ const ShopApp: React.FC<ShopAppProps> = ({ backToIndex }) => {
             />
           </Route>
           <Route path="/">
-            <RegisterShop
-              onRegister={async (values) => {
+            <UpdateShop
+              onSave={async (values) => {
                 try {
                   await updateShop({ ...shop, ...values });
-                  push(`${match.path}/slots`);
+                  push(`${url}/slots`);
                 } catch (e) {
                   setError(() => {
                     throw e;
                   });
                 }
               }}
+              shop={shop}
             />
           </Route>
         </Switch>
@@ -66,4 +81,4 @@ const ShopApp: React.FC<ShopAppProps> = ({ backToIndex }) => {
   );
 };
 
-export default ShopApp;
+export default UpdateShopApp;

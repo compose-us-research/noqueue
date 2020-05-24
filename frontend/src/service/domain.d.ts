@@ -68,11 +68,21 @@ export interface Timerange {
   maxDuration: Minutes;
 }
 
+export interface TimerangeWithDurationAsArray {
+  amountOfPeopleInShop: AmountOfPeople;
+  days: [boolean, boolean, boolean, boolean, boolean, boolean, boolean];
+  start: Time;
+  end: Time;
+  duration: [Minutes, Minutes];
+}
+
 export interface Timeslot {
   customers: AmountOfPeople;
   day: DayOfWeek;
   start: Time;
   end: Time;
+  minDuration: Minutes;
+  maxDuration: Minutes;
 }
 
 export type TicketMap = { [id: string]: RegisteredTicket };

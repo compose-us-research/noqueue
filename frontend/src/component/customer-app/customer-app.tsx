@@ -17,7 +17,8 @@ interface CustomerAppProps {
 
 const CustomerApp: React.FC<CustomerAppProps> = ({ backToIndex }) => {
   const { push } = useHistory();
-  const match = useRouteMatch();
+  const { path, url } = useRouteMatch();
+  console.log("rendering CustomerApp", { path, url });
   const shop = useShop();
   const api = usePush();
   const [customer, setCustomer] = useState<Customer>();
@@ -33,47 +34,43 @@ const CustomerApp: React.FC<CustomerAppProps> = ({ backToIndex }) => {
       setCustomer(customer);
       saveCustomer(customer);
       saveTickets({ ...tickets, [registeredTicket.id]: registeredTicket });
-      push(
-        `${match.path}/show-ticket/${encodeURIComponent(registeredTicket.id)}`
-      );
+      push(`${url}/show-ticket/${encodeURIComponent(registeredTicket.id)}`);
     },
-    [api, match.path, push, saveCustomer, saveTickets, shop, ticket, tickets]
+    [api, url, push, saveCustomer, saveTickets, shop, ticket, tickets]
   );
   const onTicketSelect = useCallback(
     async (ticket: AvailableSlot) => {
       setTicket(ticket);
       if (shop.needsRegistration) {
-        push(`${match.path}/register`);
+        push(`${url}/register`);
       } else {
         const registeredTicket = await api.registerTicket({
           shop,
           ticket,
         });
         saveTickets({ ...tickets, [registeredTicket.id]: registeredTicket });
-        push(
-          `${match.path}/show-ticket/${encodeURIComponent(registeredTicket.id)}`
-        );
+        push(`${url}/show-ticket/${encodeURIComponent(registeredTicket.id)}`);
       }
     },
-    [api, match.path, push, saveTickets, setTicket, shop, tickets]
+    [api, url, push, saveTickets, setTicket, shop, tickets]
   );
 
   return (
     <div className={styles.root}>
       <Switch>
-        <Route path={`${match.path}/`} exact>
+        <Route path={`${path}/`} exact>
           <CurrentShop onClick={backToIndex} />
           <Spacer />
           <div className={styles.screen}>
             <ChooseTicket onSelect={onTicketSelect} />
           </div>
         </Route>
-        <Route path={`${match.path}/register`}>
+        <Route path={`${path}/register`}>
           <CurrentShop onClick={backToIndex} />
           <Spacer />
           <RegisterCustomer onRegister={onRegisterCustomer} ticket={ticket!} />
         </Route>
-        <Route path={`${match.path}/show-ticket/:ticketId`}>
+        <Route path={`${path}/ticket/:ticketId`}>
           <ShowTicketRoute backToIndex={backToIndex} customer={customer} />
         </Route>
       </Switch>

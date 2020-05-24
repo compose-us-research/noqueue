@@ -9,56 +9,98 @@ describe("generateTimerangesFromTimeslots", () => {
 
   it("returns a timerange from a time slot", () => {
     const result = generateTimerangesFromTimeslots([
-      { customers: 2, day: 1, start: "08:00", end: "12:00" },
+      {
+        customers: 2,
+        day: 1,
+        start: "08:00",
+        end: "12:00",
+        minDuration: 15,
+        maxDuration: 60,
+      },
     ]);
     const expected: Timerange = {
       amountOfPeopleInShop: 2,
       days: [false, true, false, false, false, false, false],
       start: "08:00",
       end: "12:00",
-      minDuration: 0,
-      maxDuration: 4 * 60, // 4 hours
+      minDuration: 15,
+      maxDuration: 60,
     };
     expect(result).toEqual([expected]);
   });
 
   it("works with multiple time slots of the same sizes", () => {
     const result = generateTimerangesFromTimeslots([
-      { customers: 2, day: 1, start: "08:00", end: "12:00" },
-      { customers: 2, day: 2, start: "08:00", end: "12:00" },
-      { customers: 2, day: 0, start: "08:00", end: "12:00" },
+      {
+        customers: 2,
+        day: 1,
+        start: "08:00",
+        end: "12:00",
+        minDuration: 15,
+        maxDuration: 60,
+      },
+      {
+        customers: 2,
+        day: 2,
+        start: "08:00",
+        end: "12:00",
+        minDuration: 15,
+        maxDuration: 60,
+      },
+      {
+        customers: 2,
+        day: 0,
+        start: "08:00",
+        end: "12:00",
+        minDuration: 15,
+        maxDuration: 60,
+      },
     ]);
     const expected: Timerange = {
       amountOfPeopleInShop: 2,
       days: [true, true, true, false, false, false, false],
       start: "08:00",
       end: "12:00",
-      minDuration: 0,
-      maxDuration: 4 * 60, // 4 hours
+      minDuration: 15,
+      maxDuration: 60,
     };
     expect(result).toEqual([expected]);
   });
 
   it("generates multiple time ranges if necessary", () => {
     const result = generateTimerangesFromTimeslots([
-      { customers: 2, day: 1, start: "08:00", end: "12:00" },
-      { customers: 2, day: 1, start: "13:00", end: "18:00" },
+      {
+        customers: 2,
+        day: 1,
+        start: "08:00",
+        end: "12:00",
+        minDuration: 15,
+        maxDuration: 60,
+      },
+      {
+        customers: 2,
+        day: 1,
+        start: "13:00",
+        end: "18:00",
+        minDuration: 15,
+        maxDuration: 60,
+      },
     ]);
     const expected1: Timerange = {
       amountOfPeopleInShop: 2,
       days: [false, true, false, false, false, false, false],
       start: "08:00",
       end: "12:00",
-      minDuration: 0,
-      maxDuration: 4 * 60, // 4 hours
+      minDuration: 15,
+      maxDuration: 60,
     };
     const expected2: Timerange = {
       amountOfPeopleInShop: 2,
       days: [false, true, false, false, false, false, false],
       start: "13:00",
       end: "18:00",
-      minDuration: 0,
-      maxDuration: 5 * 60, // 5 hours
+      minDuration: 15,
+      maxDuration: 60,
     };
 
     expect(result).toContainEqual(expected1);
@@ -68,34 +110,62 @@ describe("generateTimerangesFromTimeslots", () => {
 
   it("generates multiple time ranges if necessary and merges at the same time where possible", () => {
     const result = generateTimerangesFromTimeslots([
-      { customers: 2, day: 1, start: "08:00", end: "12:00" },
-      { customers: 4, day: 2, start: "13:00", end: "18:00" },
-      { customers: 4, day: 3, start: "08:00", end: "12:00" },
-      { customers: 4, day: 0, start: "08:00", end: "12:00" },
+      {
+        customers: 2,
+        day: 1,
+        start: "08:00",
+        end: "12:00",
+        minDuration: 15,
+        maxDuration: 60,
+      },
+      {
+        customers: 4,
+        day: 2,
+        start: "13:00",
+        end: "18:00",
+        minDuration: 15,
+        maxDuration: 120,
+      },
+      {
+        customers: 4,
+        day: 3,
+        start: "08:00",
+        end: "12:00",
+        minDuration: 15,
+        maxDuration: 60,
+      },
+      {
+        customers: 4,
+        day: 0,
+        start: "08:00",
+        end: "12:00",
+        minDuration: 15,
+        maxDuration: 60,
+      },
     ]);
     const expected1: Timerange = {
       amountOfPeopleInShop: 2,
       days: [false, true, false, false, false, false, false],
       start: "08:00",
       end: "12:00",
-      minDuration: 0,
-      maxDuration: 4 * 60, // 4 hours
+      minDuration: 15,
+      maxDuration: 60,
     };
     const expected2: Timerange = {
       amountOfPeopleInShop: 4,
       days: [false, false, true, false, false, false, false],
       start: "13:00",
       end: "18:00",
-      minDuration: 0,
-      maxDuration: 5 * 60, // 5 hours
+      minDuration: 15,
+      maxDuration: 120,
     };
     const expected3: Timerange = {
       amountOfPeopleInShop: 4,
       days: [true, false, false, true, false, false, false],
       start: "08:00",
       end: "12:00",
-      minDuration: 0,
-      maxDuration: 4 * 60, // 4 hours
+      minDuration: 15,
+      maxDuration: 60,
     };
 
     expect(result).toContainEqual(expected1);
@@ -106,15 +176,22 @@ describe("generateTimerangesFromTimeslots", () => {
 
   it("works for over-night times", () => {
     const result = generateTimerangesFromTimeslots([
-      { customers: 2, day: 1, start: "20:00", end: "02:00" },
+      {
+        customers: 2,
+        day: 1,
+        start: "20:00",
+        end: "02:00",
+        minDuration: 15,
+        maxDuration: 120,
+      },
     ]);
     const expected: Timerange = {
       amountOfPeopleInShop: 2,
       days: [false, true, false, false, false, false, false],
       start: "20:00",
       end: "02:00",
-      minDuration: 0,
-      maxDuration: 6 * 60, // 6 hours
+      minDuration: 15,
+      maxDuration: 120,
     };
     expect(result).toEqual([expected]);
   });

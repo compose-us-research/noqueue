@@ -5,11 +5,13 @@ import {
   Route,
   Switch,
   useHistory,
+  useParams,
+  useRouteMatch,
 } from "react-router-dom";
 
 import ChooseRole from "../choose-role/choose-role";
 import CustomerApp from "../customer-app/customer-app";
-import ShopApp from "../shop-app/shop-app";
+import UpdateShopApp from "../update-shop-app/update-shop-app";
 import styles from "./app.module.css";
 import Loader from "../loader/loader";
 import {
@@ -19,52 +21,113 @@ import {
 import useLocalTickets, {
   LocalTicketsProvider,
 } from "../../service/tickets/use-local-tickets";
-import ShowTickets from "../show-tickets/show-tickets";
-import getBasename from "../../service/get-basename/get-basename";
+import Stub from "../stub/stub";
+import ShowTicketsRoute from "../show-tickets-route/show-tickets-route";
 
 interface AppProps {
-  basename?: string;
   connection?: typeof defaultConnection;
 }
 
-const RoutedApp = () => {
-  const history = useHistory();
-  const { hasTickets, tickets } = useLocalTickets();
-  console.log({ hasTickets, tickets });
+interface CurrentShopAppProps {
+  connection: typeof defaultConnection;
+}
+
+const CurrentShopApp: React.FC<CurrentShopAppProps> = ({ connection }) => {
+  const { shopId } = useParams();
+  const { push } = useHistory();
+  const { path, url } = useRouteMatch();
+  console.log("hello from currentshopapp", { path, shopId, url });
+
+  return (
+    <FetcherProvider currentShopId={shopId} connection={connection}>
+      <Switch>
+        {/* more or less hidden route to change the shop */}
+        <Route path={`${path}/owner`}>
+          <UpdateShopApp backToIndex={() => push("/")} />
+        </Route>
+        <Route path={path}>
+          <CustomerApp backToIndex={() => push("/")} />
+        </Route>
+      </Switch>
+    </FetcherProvider>
+  );
+};
+
+const ChooseRoleRoute = () => {
+  const { push } = useHistory();
+  const { url } = useRouteMatch();
+  const { hasTickets } = useLocalTickets();
+  console.log({ url });
+  return (
+    <ChooseRole
+      selectShopRole={() => push(`/create-shop`)}
+      selectCustomerRole={() => push(`/choose-shop`)}
+      hasTickets={hasTickets}
+      selectShowTickets={() => push(`/show-tickets`)}
+    />
+  );
+};
+
+const ChooseShopRoute = () => {
+  const { push } = useHistory();
+  return (
+    <Stub
+      next={() => {
+        console.log("pushing to /shop/default");
+        push("/shop/default");
+      }}
+      text="Zwischen den Shops wird erst später ausgewählt"
+      buttonText="Weiter"
+    />
+  );
+};
+
+const RoutedApp: React.FC<CurrentShopAppProps> = ({ connection }) => {
+  const { push, location } = useHistory();
+  const { path, url } = useRouteMatch();
+  console.log("im on", { location, path, url });
   return (
     <Switch>
-      <Route path="/owner">
-        <ShopApp backToIndex={() => history.push("/")} />
+      <Route path="/create-shop">
+        <Stub
+          next={() => push("/shop/default/owner")}
+          text="Es kann nur der bereits registrierte Shop ('default') bearbeitet werden."
+          buttonText="Weiter"
+        />
       </Route>
-      <Route path="/customer">
-        <CustomerApp backToIndex={() => history.push("/")} />
+      <Route path="/choose-shop">
+        <Suspense fallback={<Loader />}>
+          <ChooseShopRoute />
+        </Suspense>
+      </Route>
+      <Route path="/shop/:shopId">
+        <Suspense fallback={<Loader />}>
+          <CurrentShopApp connection={connection} />
+        </Suspense>
       </Route>
       <Route path="/show-tickets">
-        <ShowTickets backToIndex={() => history.push("/")} tickets={tickets} />
+        <Suspense fallback={<Loader />}>
+          <ShowTicketsRoute backToIndex={() => push(url)} />
+        </Suspense>
       </Route>
       <Route path="/">
-        <ChooseRole
-          selectShopRole={() => history.push("owner")}
-          selectCustomerRole={() => history.push("customer")}
-          hasTickets={hasTickets}
-          selectShowTickets={() => history.push("show-tickets")}
-        />
+        <Suspense fallback={<Loader />}>
+          <ChooseRoleRoute />
+        </Suspense>
       </Route>
     </Switch>
   );
 };
 
-const App: React.FC<AppProps> = ({ basename = getBasename(), connection = defaultConnection }) => {
+const App: React.FC<AppProps> = ({ connection = defaultConnection }) => {
   return (
     <div className={styles.root}>
-      <Router basename={basename}>
-        <Suspense fallback={<Loader />}>
-          <FetcherProvider connection={connection}>
-            <LocalTicketsProvider>
-              <RoutedApp />
-            </LocalTicketsProvider>
-          </FetcherProvider>
-        </Suspense>
+      <Router>
+        <LocalTicketsProvider>
+          <Suspense fallback={<Loader />}>
+            <RoutedApp connection={connection} />
+          </Suspense>
+        </LocalTicketsProvider>
       </Router>
     </div>
   );

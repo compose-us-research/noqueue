@@ -32,9 +32,10 @@ export async function updateShop(data: UpdateShopConfig): Promise<void> {
 
 export async function updateOpeningHours(
   shop: ShopConfig,
-  data: Timeslot[]
+  timeslots: Timeslot[]
 ): Promise<void> {
-  await putData(`${shop["@id"]}/timeslot/`, data);
+  console.log("update opening hours", { timeslots });
+  await putData(`${shop["@id"]}/timeslot/`, { member: timeslots });
 }
 
 export type RegisterTicketParams = {

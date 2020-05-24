@@ -1,7 +1,7 @@
 import React from "react";
 
 import { ReactComponent as PlusIcon } from "../../asset/image/plus-icon.svg";
-import { Timerange, Timeslot } from "../../service/domain";
+import { Timerange, Timeslot, TimerangeWithDurationAsArray } from "../../service/domain";
 import Button from "../button/button";
 import styles from "./reservable-times.module.css";
 import { FormContext, useForm, OnSubmit, useFieldArray } from "react-hook-form";
@@ -25,11 +25,15 @@ function createNewTimerange(lastRange?: Timerange): Timerange {
   };
 }
 
+const mapper = (data: any): Timeslot[] => {
+  return data.member;
+};
+
 let id = 1;
 const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
-  const data = useShopFetch("/timeslot");
-  console.log({ timeslots: data });
-  const timeranges = generateTimerangesFromTimeslots(data as Timeslot[]);
+  const timeslots = useShopFetch("/timeslot", mapper);
+  console.log({ timeslots: timeslots });
+  const timeranges = generateTimerangesFromTimeslots(timeslots);
   const methods = useForm({
     defaultValues: {
       ranges: timeranges.map((range) => ({ ...range, id: id++ })),
@@ -52,7 +56,7 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
                 key={range.id}
                 label={`Zeitraum ${index + 1}`}
                 prefix={`ranges[${index}]`}
-                range={range as Timerange}
+                range={range as TimerangeWithDurationAsArray}
                 remover={() => remove(index)}
               />
             ))}

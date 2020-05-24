@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import useSWR from "swr";
 import { ShopId, ShopConfig } from "../domain";
 import * as fetcher from "./fetcher";
@@ -10,34 +10,32 @@ export type ShopFetcher = (shopId: ShopId) => Promise<ShopConfig>;
 
 export type Connection = typeof connection;
 
+const API_URL = (window as any).config?.BASE_URL || "";
+console.log("API_URL", API_URL);
+
 interface FetcherContextProps {
   connection: Connection;
   currentShopId: ShopId;
-  setCurrentShopId: (shopId: ShopId) => void;
 }
 
 const FetcherContext = React.createContext<FetcherContextProps>({
   connection,
   currentShopId: "default",
-  setCurrentShopId: () => {
-    throw Error("fetcher context not initialized");
-  },
 });
 
 interface FetcherProviderProps {
   children: React.ReactNode;
   connection: typeof connection;
+  currentShopId: string;
 }
 
 export const FetcherProvider: React.FC<FetcherProviderProps> = ({
   children,
   connection,
+  currentShopId = "default",
 }) => {
-  const [currentShopId, setCurrentShopId] = useState<ShopId>("default");
   return (
-    <FetcherContext.Provider
-      value={{ connection, currentShopId, setCurrentShopId }}
-    >
+    <FetcherContext.Provider value={{ connection, currentShopId }}>
       {children}
     </FetcherContext.Provider>
   );
@@ -45,7 +43,7 @@ export const FetcherProvider: React.FC<FetcherProviderProps> = ({
 
 const useFetch = (path: string) => {
   const { connection } = useContext(FetcherContext);
-  const { data } = useSWR(path, connection.fetcher.fetcher, {
+  const { data } = useSWR(`${API_URL}${path}`, connection.fetcher.fetcher, {
     suspense: true,
   });
   return data;

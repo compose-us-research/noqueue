@@ -1,5 +1,4 @@
 import { Timerange, Timeslot } from "../../service/domain";
-import calculateMaxDuration from "../calculate-max-duration/calculate-max-duration";
 
 export default function generateTimerangesFromTimeslots(
   timeslots: Timeslot[]
@@ -27,8 +26,8 @@ function timeslotToTimerangeWithoutDays(timeslot: Timeslot): Timerange {
     days: [false, false, false, false, false, false, false],
     start: timeslot.start,
     end: timeslot.end,
-    minDuration: 0,
-    maxDuration: calculateMaxDuration(timeslot.start, timeslot.end),
+    minDuration: timeslot.minDuration,
+    maxDuration: timeslot.maxDuration,
   };
   return range;
 }
