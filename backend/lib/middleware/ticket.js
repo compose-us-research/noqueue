@@ -21,7 +21,7 @@ function ticket ({ db }) {
 
       res
         .status(201)
-        // .set('access-control-expose-headers', 'location')
+        .set('access-control-expose-headers', 'location')
         .set('location', urlResolve(req.absoluteUrl(), result.id))
         .end()
     } catch (err) {
@@ -51,9 +51,11 @@ function ticket ({ db }) {
   })
 
   router.get('/:id', qrcode, async (req, res, next) => {
+    console.log("got a ticket route", req.params.id)
     const supportedContent = req.accepts('image/png') || req.accepts('application/json')
     if (!supportedContent) {
-      next()
+      console.log("unsupported content in ticket!")
+      return next()
     }
 
     try {
@@ -61,18 +63,23 @@ function ticket ({ db }) {
 
       // not found?
       if (!ticket) {
+        console.log('no ticket found in the database with this id')
         return next()
       }
 
       // sendQrCode is only attached if images are accepted
       if (res.sendQrCode) {
-        return res
+        console.log("sending qr code as result")
+        res
           .set('content-type', 'image/png')
           .sendQrCode(req.absoluteUrl())
+        return
       }
 
+      console.log("sending ticket json as result")
       res.json(ticket)
     } catch (err) {
+      console.log('catched an error', err)
       next(err)
     }
   })

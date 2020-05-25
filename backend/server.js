@@ -44,7 +44,7 @@ async function init () {
     debug(`mount frontend from ${frontendPath}`)
     app.use(express.static(frontendPath))
     app.use((req, res, next) => { // shouldn't 
-      if (!req.accepts('html')) {
+      if (req.accepts(['html', 'json', 'png']) !== 'html') {
         return next()
       }
 
