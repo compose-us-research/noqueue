@@ -1,11 +1,11 @@
 import React from "react";
 
-import { TicketMap } from "../../service/domain";
+import { TicketMap, RegisteredTicket } from "../../service/domain";
 import ListScreen from "../list-screen/list-screen";
 
 interface ShowTicketsProps {
   backToIndex: () => void;
-  navigateTo: (url: string) => void;
+  navigateTo: (ticket: RegisteredTicket) => void;
   tickets: TicketMap;
 }
 
@@ -23,7 +23,7 @@ const ShowTickets: React.FC<ShowTicketsProps> = ({
           id: ticket.id,
           label: `${ticket.shop.name}`,
           text: `${ticket.start.toLocaleString()} - ${ticket.end.toLocaleString()}`,
-          action: () => navigateTo(ticket.id),
+          action: () => navigateTo(ticket),
         };
       })}
     />

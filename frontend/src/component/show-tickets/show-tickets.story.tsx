@@ -17,6 +17,10 @@ const SimpleStory = () => {
       navigateTo={action("navigate to")}
       tickets={{
         "1": {
+          contact: {
+            name: "Petra Platzhalter",
+            contact: { email: "betatester@platzhalter.io" },
+          },
           end: new Date("2020-04-26Z16:30:00"),
           id: "1",
           shop,
@@ -24,6 +28,10 @@ const SimpleStory = () => {
           ticketUrl: "/shop/default/ticket/1",
         },
         "2": {
+          contact: {
+            name: "Petra Platzhalter",
+            contact: { email: "betatester@platzhalter.io" },
+          },
           end: new Date("2020-04-27Z16:30:00"),
           id: "2",
           shop,
@@ -31,6 +39,10 @@ const SimpleStory = () => {
           ticketUrl: "/shop/default/ticket/1",
         },
         "3": {
+          contact: {
+            name: "Petra Platzhalter",
+            contact: { email: "betatester@platzhalter.io" },
+          },
           end: new Date("2020-04-28Z16:30:00"),
           id: "3",
           shop,

@@ -114,11 +114,27 @@ const RegisterCustomer: React.FC<RegisterCustomerProps> = ({
               validate={validate}
             />
             <Spacer />
-            {errors &&
-              Object.values(errors).map((error, index) => (
-                <li key={index}>{JSON.stringify(Object.keys(error))}</li>
-              ))}
+            {errors && (
+              <>
+                <ul>
+                  {errors.name && (
+                    <li>
+                      Deinen Namen müssen wir, falls es zu einem
+                      Infektionsgeschehen kommt, zum Kontaktieren speichern.
+                    </li>
+                  )}
+                  {errors.contact && (
+                    <li>
+                      Es muss mindestens eine gültige Kontaktmöglichkeit
+                      angegeben werden (E-Mail, Adresse oder Telefonnummer).
+                    </li>
+                  )}
+                </ul>
+                <Spacer />
+              </>
+            )}
             <Button type="submit">Ticketbuchung abschließen</Button>
+            <Spacer />
           </div>
         </FormContext>
       </form>

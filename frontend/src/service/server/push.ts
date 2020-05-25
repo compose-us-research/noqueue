@@ -6,6 +6,7 @@ import {
   Timeslot,
   AvailableSlot,
 } from "../domain";
+import { fetcher } from "./fetcher";
 
 export const putData = (url: string, data: any) => sendData("PUT", url, data);
 export const postData = (url: string, data: any) => sendData("POST", url, data);
@@ -49,9 +50,9 @@ export async function registerTicket({
   ticket,
   customer,
 }: RegisterTicketParams): Promise<RegisteredTicket> {
-  const res = await postData(`${shop["@id"]}/ticket/`, { customer, ticket });
+  const dataToPost = { ...ticket, contact: customer };
+  const res = await postData(`${shop["@id"]}/ticket/`, dataToPost);
   const ticketUrl = res.headers.get("location");
-  const registeredTicket = { ...ticket, id: ticketUrl, ticketUrl, shop };
-  console.log({ registeredTicket });
-  return registeredTicket;
+  const registeredTicket = await fetcher(ticketUrl);
+  return { ...dataToPost, ...registeredTicket, ticketUrl, shop };
 }

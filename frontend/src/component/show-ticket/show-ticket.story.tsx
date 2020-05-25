@@ -27,6 +27,7 @@ const SimpleStory = ({
   const shop = useShop();
   const ticketUrl = `${shop["@id"]}/ticket/1`;
   const ticket: RegisteredTicket = {
+    contact: customer,
     end,
     id: ticketUrl,
     shop,
@@ -36,7 +37,6 @@ const SimpleStory = ({
   return (
     <ShowTicket
       backToIndex={action("clicked back to index")}
-      customer={customer}
       label={header?.apply(header, [ticket])}
       ticket={ticket}
     />

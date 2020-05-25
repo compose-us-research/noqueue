@@ -18,10 +18,8 @@ interface CustomerAppProps {
 const CustomerApp: React.FC<CustomerAppProps> = ({ backToIndex }) => {
   const { push } = useHistory();
   const { path, url } = useRouteMatch();
-  console.log("rendering CustomerApp", { path, url });
   const shop = useShop();
   const api = usePush();
-  const [customer, setCustomer] = useState<Customer>();
   const [ticket, setTicket] = useState<AvailableSlot>();
   const { saveCustomer, saveTickets, tickets } = useLocalTickets();
   const onRegisterCustomer = useCallback(
@@ -31,10 +29,9 @@ const CustomerApp: React.FC<CustomerAppProps> = ({ backToIndex }) => {
         ticket: ticket!,
         customer,
       });
-      setCustomer(customer);
       saveCustomer(customer);
       saveTickets({ ...tickets, [registeredTicket.id]: registeredTicket });
-      push(`${url}/show-ticket/${encodeURIComponent(registeredTicket.id)}`);
+      push(`${url}/ticket/${registeredTicket.id}`);
     },
     [api, url, push, saveCustomer, saveTickets, shop, ticket, tickets]
   );
@@ -49,7 +46,7 @@ const CustomerApp: React.FC<CustomerAppProps> = ({ backToIndex }) => {
           ticket,
         });
         saveTickets({ ...tickets, [registeredTicket.id]: registeredTicket });
-        push(`${url}/show-ticket/${encodeURIComponent(registeredTicket.id)}`);
+        push(`${url}/ticket/${registeredTicket.id}`);
       }
     },
     [api, url, push, saveTickets, setTicket, shop, tickets]
@@ -71,7 +68,7 @@ const CustomerApp: React.FC<CustomerAppProps> = ({ backToIndex }) => {
           <RegisterCustomer onRegister={onRegisterCustomer} ticket={ticket!} />
         </Route>
         <Route path={`${path}/ticket/:ticketId`}>
-          <ShowTicketRoute backToIndex={backToIndex} customer={customer} />
+          <ShowTicketRoute backToIndex={backToIndex} />
         </Route>
       </Switch>
     </div>

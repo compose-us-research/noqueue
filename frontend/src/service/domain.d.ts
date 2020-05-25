@@ -1,6 +1,15 @@
+export type ContactAbility =
+  | ContactAddress
+  | (ContactAddress & ContactMail)
+  | (ContactAddress & ContactMail & ContactPhone)
+  | (ContactAddress & ContactPhone)
+  | ContactMail
+  | (ContactMail & ContactPhone)
+  | ContactPhone;
+
 export interface Customer {
   name: Name;
-  contact: ContactMail | ContactPhone | ContactAddress;
+  contact: ContactAbility;
 }
 
 export interface ContactPhone {
@@ -12,13 +21,17 @@ export interface ContactMail {
 }
 
 export interface ContactAddress {
-  address: { city: City; postalCode: PostalCode; streetAddress: StreetAddress };
+  address: Address;
 }
 
-export type Day = "Mo" | "Di" | "Mi" | "Do" | "Fr" | "Sa" | "So";
-
+export type Address = {
+  city: City;
+  postalCode: PostalCode;
+  streetAddress: StreetAddress;
+};
 export type AmountOfPeople = Flavor<number, "AmountOfPeople">;
 export type City = Flavor<string, "City">;
+export type Day = "Mo" | "Di" | "Mi" | "Do" | "Fr" | "Sa" | "So";
 export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 export type EMail = Flavor<string, "EMail">;
 export type Minutes = Flavor<number, "Minutes">;
@@ -38,6 +51,7 @@ export interface BaseShopConfig {
   maxDuration: Minutes;
   name: ShopName;
   needsRegistration: boolean;
+  path: string;
 }
 
 export interface UpdateShopConfig extends BaseShopConfig {
@@ -88,9 +102,10 @@ export interface Timeslot {
 export type TicketMap = { [id: string]: RegisteredTicket };
 
 export interface RegisteredTicket {
+  contact: Customer;
+  end: Date;
   id: string;
-  ticketUrl: string;
   shop: ShopConfig;
   start: Date;
-  end: Date;
+  ticketUrl: string;
 }

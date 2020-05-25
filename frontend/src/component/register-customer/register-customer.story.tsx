@@ -14,10 +14,14 @@ export const Default = () => {
   const now = Date.now();
   const ticketUrl = `${shop["@id"]}/ticket/1`;
   const ticket: RegisteredTicket = {
-    id: ticketUrl,
-    start: new Date(now),
+    contact: {
+      name: "Petra Platzhalter",
+      contact: { email: "betatester@platzhalter.io" },
+    },
     end: new Date(now + 15 * 60 * 1000),
+    id: ticketUrl,
     shop,
+    start: new Date(now),
     ticketUrl,
   };
   return <RegisterCustomer onRegister={action("register")} ticket={ticket} />;

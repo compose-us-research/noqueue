@@ -15,7 +15,7 @@ const ShowTicketsRoute: React.FC<ShowTicketsRouteProps> = ({ backToIndex }) => {
   return (
     <ShowTickets
       backToIndex={backToIndex}
-      navigateTo={(ticketId) => push(`/saved-tickets/${ticketId}`)}
+      navigateTo={(ticket) => push(`/shop/${ticket.shop.path}/ticket/${ticket.id}`)}
       tickets={tickets}
     />
   );

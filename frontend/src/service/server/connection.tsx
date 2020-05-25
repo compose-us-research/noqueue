@@ -52,7 +52,7 @@ const useFetch = (path: string) => {
 export const useShop: () => ShopConfig = () => {
   const { currentShopId } = useContext(FetcherContext);
   const data = useFetch(`/shop/${currentShopId}`);
-  return data!;
+  return { ...data!, path: currentShopId };
 };
 
 function idFn<T>(a: T): T {
