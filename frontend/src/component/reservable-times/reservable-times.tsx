@@ -31,8 +31,11 @@ const mapper = (data: any): Timeslot[] => {
 let id = 1;
 const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
   const timeslots = useShopFetch("/timeslot", mapper);
-  console.log({ timeslots: timeslots });
   const timeranges = generateTimerangesFromTimeslots(timeslots);
+  console.log("timeslots from server and generated timeranges", {
+    timeslots,
+    timeranges,
+  });
   const methods = useForm({
     defaultValues: {
       ranges: timeranges.map((range) => ({ ...range, id: id++ })),

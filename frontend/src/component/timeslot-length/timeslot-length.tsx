@@ -15,12 +15,13 @@ const TimeslotLength: React.FC<TimeslotLengthProps> = ({
   start,
   end,
 }) => {
-  const { control, setValue } = useFormContext();
+  const { control, getValues, setValue } = useFormContext();
   const maxDuration = calculateMaxDuration(start, end);
   return (
     <Controller
       as={
         <RangeSlider
+          defaultValue={getValues()[name]}
           min={0}
           max={maxDuration}
           onChange={(value) => {
@@ -32,7 +33,6 @@ const TimeslotLength: React.FC<TimeslotLengthProps> = ({
         />
       }
       control={control}
-      defaultValue={[0, maxDuration]}
       name={name}
       rules={{
         validate: (value) => {

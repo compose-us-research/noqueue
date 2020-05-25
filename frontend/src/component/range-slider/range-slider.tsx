@@ -1,10 +1,11 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback } from "react";
 import ReactSlider from "react-slider";
 import cn from "classnames";
 
 import styles from "./range-slider.module.css";
 
 interface RangeSliderProps {
+  defaultValue?: [number, number];
   disabled?: boolean;
   max?: number;
   min?: number;
@@ -17,9 +18,9 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
   disabled = false,
   max = 120,
   min = 5,
+  defaultValue = [min, max],
   onChange = noop,
 }) => {
-  const values = useMemo(() => [min, max], [min, max]);
   const renderThumb = useCallback(
     (props: any, state: any) => (
       <div {...props}>
@@ -48,7 +49,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
   return (
     <div className={cn(styles.root, disabled && styles.disabled)}>
       <ReactSlider
-        defaultValue={values}
+        defaultValue={defaultValue}
         disabled={disabled}
         max={max}
         min={min}
