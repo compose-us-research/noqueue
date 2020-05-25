@@ -78,15 +78,6 @@ export interface Timerange {
   days: [boolean, boolean, boolean, boolean, boolean, boolean, boolean];
   start: Time;
   end: Time;
-  minDuration: Minutes;
-  maxDuration: Minutes;
-}
-
-export interface TimerangeWithDurationAsArray {
-  amountOfPeopleInShop: AmountOfPeople;
-  days: [boolean, boolean, boolean, boolean, boolean, boolean, boolean];
-  start: Time;
-  end: Time;
   duration: [Minutes, Minutes];
 }
 

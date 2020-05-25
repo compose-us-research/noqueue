@@ -26,8 +26,7 @@ function timeslotToTimerangeWithoutDays(timeslot: Timeslot): Timerange {
     days: [false, false, false, false, false, false, false],
     start: timeslot.start,
     end: timeslot.end,
-    minDuration: timeslot.minDuration,
-    maxDuration: timeslot.maxDuration,
+    duration: [timeslot.minDuration, timeslot.maxDuration],
   };
   return range;
 }

@@ -1,5 +1,5 @@
 import generateTimeslotsFromTimeranges from "./generate-timeslots-from-timeranges";
-import { Timerange, Timeslot } from "../../service/domain";
+import { Timeslot } from "../../service/domain";
 
 describe("generateTimeslotsFromTimeranges", () => {
   it("works with empty lists", () => {
@@ -14,8 +14,7 @@ describe("generateTimeslotsFromTimeranges", () => {
         days: [false, true, false, false, false, false, false],
         start: "08:00",
         end: "12:00",
-        minDuration: 15,
-        maxDuration: 120,
+        duration: [15, 120],
       },
     ]);
     const expected: Timeslot = {
@@ -36,8 +35,7 @@ describe("generateTimeslotsFromTimeranges", () => {
         days: [false, true, true, false, false, false, true],
         start: "08:00",
         end: "12:00",
-        minDuration: 15,
-        maxDuration: 120,
+        duration: [15, 120],
       },
     ]);
     const expected: Timeslot[] = [
@@ -76,16 +74,14 @@ describe("generateTimeslotsFromTimeranges", () => {
         days: [true, true, false, false, false, false, false],
         start: "08:00",
         end: "12:00",
-        minDuration: 15,
-        maxDuration: 120,
+        duration: [15, 120],
       },
       {
         amountOfPeopleInShop: 2,
         days: [false, true, false, false, false, false, false],
         start: "13:00",
         end: "18:00",
-        minDuration: 15,
-        maxDuration: 120,
+        duration: [15, 120],
       },
     ]);
     const expected1: Timeslot = {

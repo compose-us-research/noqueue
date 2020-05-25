@@ -15,7 +15,6 @@ interface UpdateShopProps {
 }
 
 const UpdateShop: React.FC<UpdateShopProps> = ({ onSave, shop }) => {
-  console.log("updateshop", JSON.stringify(shop));
   const methods = useForm({ defaultValues: shop });
   const handleSubmit = useCallback(
     (values) => {
@@ -35,14 +34,14 @@ const UpdateShop: React.FC<UpdateShopProps> = ({ onSave, shop }) => {
             <TextField name="name" label="Name deines Geschäfts" required />
             <Spacer />
             <TextField
-              name="streetAddress"
+              name="address.streetAddress"
               label="Straße, Hausnummer"
               required
             />
             <Spacer />
             <div className={styles.postal}>
-              <TextField name="postalCode" label="PLZ" required />
-              <TextField name="city" label="Ort" required />
+              <TextField name="address.postalCode" label="PLZ" required />
+              <TextField name="address.city" label="Ort" required />
             </div>
             <Spacer />
             <TextField name="mail" label="E-Mail" required />

@@ -23,8 +23,7 @@ describe("generateTimerangesFromTimeslots", () => {
       days: [false, true, false, false, false, false, false],
       start: "08:00",
       end: "12:00",
-      minDuration: 15,
-      maxDuration: 60,
+      duration: [15, 60],
     };
     expect(result).toEqual([expected]);
   });
@@ -61,8 +60,7 @@ describe("generateTimerangesFromTimeslots", () => {
       days: [true, true, true, false, false, false, false],
       start: "08:00",
       end: "12:00",
-      minDuration: 15,
-      maxDuration: 60,
+      duration: [15, 60],
     };
     expect(result).toEqual([expected]);
   });
@@ -91,16 +89,14 @@ describe("generateTimerangesFromTimeslots", () => {
       days: [false, true, false, false, false, false, false],
       start: "08:00",
       end: "12:00",
-      minDuration: 15,
-      maxDuration: 60,
+      duration: [15, 60],
     };
     const expected2: Timerange = {
       amountOfPeopleInShop: 2,
       days: [false, true, false, false, false, false, false],
       start: "13:00",
       end: "18:00",
-      minDuration: 15,
-      maxDuration: 60,
+      duration: [15, 60],
     };
 
     expect(result).toContainEqual(expected1);
@@ -148,24 +144,21 @@ describe("generateTimerangesFromTimeslots", () => {
       days: [false, true, false, false, false, false, false],
       start: "08:00",
       end: "12:00",
-      minDuration: 15,
-      maxDuration: 60,
+      duration: [15, 60],
     };
     const expected2: Timerange = {
       amountOfPeopleInShop: 4,
       days: [false, false, true, false, false, false, false],
       start: "13:00",
       end: "18:00",
-      minDuration: 15,
-      maxDuration: 120,
+      duration: [15, 120],
     };
     const expected3: Timerange = {
       amountOfPeopleInShop: 4,
       days: [true, false, false, true, false, false, false],
       start: "08:00",
       end: "12:00",
-      minDuration: 15,
-      maxDuration: 60,
+      duration: [15, 60],
     };
 
     expect(result).toContainEqual(expected1);
@@ -190,8 +183,7 @@ describe("generateTimerangesFromTimeslots", () => {
       days: [false, true, false, false, false, false, false],
       start: "20:00",
       end: "02:00",
-      minDuration: 15,
-      maxDuration: 120,
+      duration: [15, 120],
     };
     expect(result).toEqual([expected]);
   });

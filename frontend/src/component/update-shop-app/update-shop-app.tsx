@@ -9,7 +9,6 @@ import ShareShop from "../share-shop/share-shop";
 import { usePush, useShop } from "../../service/server/connection";
 import generateTimeslotsFromTimeranges from "../../lib/generate-timeslots-from-timeranges/generate-timeslots-from-timeranges";
 import styles from "./update-shop-app.module.css";
-import { TimerangeWithDurationAsArray, Timerange } from "../../service/domain";
 
 interface UpdateShopAppProps {
   backToIndex: () => void;
@@ -33,22 +32,10 @@ const UpdateShopApp: React.FC<UpdateShopAppProps> = ({ backToIndex }) => {
           <Route path={`${path}/slots`}>
             <ReservableTimes
               handleSubmit={async ({ ranges }) => {
-                const rangesWithCorrectDuration: Timerange[] = (ranges as TimerangeWithDurationAsArray[]).map(
-                  (range) => {
-                    return {
-                      amountOfPeopleInShop: range.amountOfPeopleInShop,
-                      start: range.start,
-                      end: range.end,
-                      days: range.days,
-                      minDuration: range.duration[0],
-                      maxDuration: range.duration[1],
-                    };
-                  }
-                );
                 try {
                   await updateOpeningHours(
                     shop,
-                    generateTimeslotsFromTimeranges(rangesWithCorrectDuration)
+                    generateTimeslotsFromTimeranges(ranges)
                   );
                   push(`${url}/share`);
                 } catch (e) {

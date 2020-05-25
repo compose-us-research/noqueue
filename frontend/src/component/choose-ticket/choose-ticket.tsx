@@ -17,7 +17,11 @@ const ChooseTicket: React.FC<ChooseTicketProps> = ({ onSelect }) => {
   const shop = useShop();
   const [duration, setDuration] = useState<number>(15);
   const [selectedTicket, setSelectedTicket] = useState<AvailableSlot>();
-  const start = useMemo(() => new Date(Date.now()), []);
+  const start = useMemo(() => {
+    // The latest 5 minutes
+    const now = Math.floor(Date.now() / (5 * 60 * 1000)) * (5 * 60 * 1000);
+    return new Date(now);
+  }, []);
   const end = useMemo(() => new Date(+start + 2 * 24 * 60 * 60 * 1000), [
     start,
   ]);

@@ -10,12 +10,13 @@ export default function generateTimeslotsFromTimeranges(
 }
 
 function singleRangeToSlots(range: Timerange): Timeslot[] {
+  const [minDuration, maxDuration] = range.duration;
   const potentialSlot: Omit<Timeslot, "day"> = {
     customers: range.amountOfPeopleInShop,
     start: range.start,
     end: range.end,
-    minDuration: range.minDuration,
-    maxDuration: range.maxDuration,
+    minDuration,
+    maxDuration,
   };
   return range.days.reduce<Timeslot[]>((slots, isSet, index) => {
     const slotOrNot: Timeslot[] = isSet
