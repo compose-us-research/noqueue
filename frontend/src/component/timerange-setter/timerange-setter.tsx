@@ -9,7 +9,7 @@ import TextField from "../text-field/text-field";
 import TimeslotLength from "../timeslot-length/timeslot-length";
 import styles from "./timerange-setter.module.css";
 import Button from "../button/button";
-import { TimerangeWithDurationAsArray } from "../../service/domain";
+import { Timerange } from "../../service/domain";
 import daysToString from "../../lib/days-to-string/days-to-string";
 import { useFormContext, Validate } from "react-hook-form";
 import ErrorBoundary from "../error-boundary/error-boundary";
@@ -18,7 +18,7 @@ import { checkTime } from "../../lib/calculate-max-duration/calculate-max-durati
 interface TimerangeSetterProps {
   label: string;
   prefix: string;
-  range: TimerangeWithDurationAsArray;
+  range: Timerange;
   remover: () => void;
 }
 

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { ReactComponent as PlusIcon } from "../../asset/image/plus-icon.svg";
-import { Timerange, Timeslot, TimerangeWithDurationAsArray } from "../../service/domain";
+import { Timerange, Timeslot } from "../../service/domain";
 import Button from "../button/button";
 import styles from "./reservable-times.module.css";
 import { FormContext, useForm, OnSubmit, useFieldArray } from "react-hook-form";
@@ -20,8 +20,7 @@ function createNewTimerange(lastRange?: Timerange): Timerange {
     days: lastRange?.days || [true, true, true, true, true, false, false],
     start: lastRange?.start || "08:00",
     end: lastRange?.end || "18:00",
-    minDuration: lastRange?.minDuration || 5,
-    maxDuration: lastRange?.maxDuration || 120,
+    duration: lastRange?.duration || [5, 120],
   };
 }
 
@@ -56,7 +55,7 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
                 key={range.id}
                 label={`Zeitraum ${index + 1}`}
                 prefix={`ranges[${index}]`}
-                range={range as TimerangeWithDurationAsArray}
+                range={range as Timerange}
                 remover={() => remove(index)}
               />
             ))}
