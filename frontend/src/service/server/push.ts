@@ -7,6 +7,7 @@ import {
   AvailableSlot,
 } from "../domain";
 import { fetcher } from "./fetcher";
+import { toRegisteredTicket } from "../tickets/use-local-tickets";
 
 export const putData = (url: string, data: any) => sendData("PUT", url, data);
 export const postData = (url: string, data: any) => sendData("POST", url, data);
@@ -27,7 +28,6 @@ async function sendData(method: string, url: string, data: any): Promise<any> {
 }
 
 export async function updateShop(data: UpdateShopConfig): Promise<void> {
-  console.log("fetching", { data });
   await putData(data["@id"], data);
 }
 
@@ -35,7 +35,6 @@ export async function updateOpeningHours(
   shop: ShopConfig,
   timeslots: Timeslot[]
 ): Promise<void> {
-  console.log("update opening hours", { timeslots });
   await putData(`${shop["@id"]}/timeslot/`, { member: timeslots });
 }
 
@@ -53,6 +52,7 @@ export async function registerTicket({
   const dataToPost = { ...ticket, contact: customer };
   const res = await postData(`${shop["@id"]}/ticket/`, dataToPost);
   const ticketUrl = res.headers.get("location");
-  const registeredTicket = await fetcher(ticketUrl);
+  const fetchedTicket = await fetcher(ticketUrl);
+  const registeredTicket = toRegisteredTicket(fetchedTicket);
   return { ...dataToPost, ...registeredTicket, ticketUrl, shop };
 }

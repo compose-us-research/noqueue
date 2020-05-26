@@ -32,7 +32,7 @@ interface LocalTicketsProviderProps {
   children: React.ReactNode;
 }
 
-const toRegisteredTicket = (ticket: any) =>
+export const toRegisteredTicket = (ticket: any) =>
   ({
     ...ticket,
     start: new Date(ticket.start),

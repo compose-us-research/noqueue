@@ -22,21 +22,22 @@ const ShowTicket: React.FC<ShowTicketProps> = ({
   ticket,
 }) => {
   const { push } = useHistory();
-  const { path } = useRouteMatch();
+  const { url } = useRouteMatch();
   const copyLink = useCallback(async () => {
     await navigator.clipboard.writeText(ticket.ticketUrl);
-  }, [path]);
+  }, [ticket.ticketUrl]);
   const navigateToUpdate = useCallback(() => {
-    push(`${path}/update`);
-  }, [push, path]);
+    push(`${url}/update`);
+  }, [push, url]);
   return (
     <div className={styles.root}>
       <h2>{label}</h2>
       <p>
         Komm zur angegebenen Zeit ({ticket.start.toLocaleTimeString()}) ins
         Geschäft ({ticket.shop.name}), scanne deinen QR-Code und geh entspannt
-        einkaufen - ohne in der Schlange zu warten. Als Kontakt ist hinterlegt:{" "}
-        {contactToString(ticket.contact)}
+        einkaufen - ohne in der Schlange zu warten.{" "}
+        {ticket.contact &&
+          `Als Kontakt ist hinterlegt: ${contactToString(ticket.contact)}`}
       </p>
       <div>
         <img
@@ -50,7 +51,7 @@ const ShowTicket: React.FC<ShowTicketProps> = ({
 
       <Button className={styles.button} variant="secondary" onClick={copyLink}>
         <BookmarkIcon />
-        <span>Als Lesezeichen speichern</span>
+        <span>Ticket kopieren / weitergeben</span>
       </Button>
 
       <Spacer />

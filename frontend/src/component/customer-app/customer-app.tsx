@@ -21,17 +21,24 @@ const CustomerApp: React.FC<CustomerAppProps> = ({ backToIndex }) => {
   const shop = useShop();
   const api = usePush();
   const [ticket, setTicket] = useState<AvailableSlot>();
+  const [, setError] = useState<never>();
   const { saveCustomer, saveTickets, tickets } = useLocalTickets();
   const onRegisterCustomer = useCallback(
     async (customer: Customer) => {
-      const registeredTicket = await api.registerTicket({
-        shop,
-        ticket: ticket!,
-        customer,
-      });
-      saveCustomer(customer);
-      saveTickets({ ...tickets, [registeredTicket.id]: registeredTicket });
-      push(`${url}/ticket/${registeredTicket.id}`);
+      try {
+        const registeredTicket = await api.registerTicket({
+          shop,
+          ticket: ticket!,
+          customer,
+        });
+        saveCustomer(customer);
+        saveTickets({ ...tickets, [registeredTicket.id]: registeredTicket });
+        push(`${url}/ticket/${registeredTicket.id}`);
+      } catch (e) {
+        setError(() => {
+          throw e;
+        });
+      }
     },
     [api, url, push, saveCustomer, saveTickets, shop, ticket, tickets]
   );
@@ -41,12 +48,18 @@ const CustomerApp: React.FC<CustomerAppProps> = ({ backToIndex }) => {
       if (shop.needsRegistration) {
         push(`${url}/register`);
       } else {
-        const registeredTicket = await api.registerTicket({
-          shop,
-          ticket,
-        });
-        saveTickets({ ...tickets, [registeredTicket.id]: registeredTicket });
-        push(`${url}/ticket/${registeredTicket.id}`);
+        try {
+          const registeredTicket = await api.registerTicket({
+            shop,
+            ticket,
+          });
+          saveTickets({ ...tickets, [registeredTicket.id]: registeredTicket });
+          push(`${url}/ticket/${registeredTicket.id}`);
+        } catch (e) {
+          setError(() => {
+            throw e;
+          });
+        }
       }
     },
     [api, url, push, saveTickets, setTicket, shop, tickets]
