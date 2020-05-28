@@ -54,8 +54,6 @@ EOF
 
 cat <<EOF > tmp_install.sh
 set -e
-echo "\$(date) - Continuing as user \${USER}"
-whoami
 
 echo "\$(date) - Checking if docker is installed"
 if ! [ -x "\$(command -v docker)" ]; then
@@ -76,13 +74,14 @@ if ! [ -x "\$(command -v docker)" ]; then
   apt-get install -y docker-ce
   echo "\$(date) - Adding docker group"
   groupadd docker || echo "Docker group exists already?"
-  echo "\$(date) - Adding user \$USER to docker group"
-  usermod -aG docker "\$USER"
   echo "\$(date) - Enable docker in systemd"
   systemctl enable docker
   echo "\$(date) - Start docker through systemd"
   systemctl start docker
 fi
+
+echo "\$(date) - Adding user $USER_NAME to docker group"
+usermod -aG docker "$USER_NAME"
 
 echo "\$(date) - Checking for wget"
 if ! [ -x "\$(command -v wget)" ]; then
