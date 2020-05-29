@@ -101,6 +101,9 @@ echo "\$(date) - Updating server"
 apt-get update
 apt-get upgrade -y
 
+echo "\$(date) - Creating folder for platzhalterio"
+mkdir -p "/home/${USER_NAME}/platzhalterio"
+
 echo "\$(date) - Installation complete. Server can now be deployed, but first: We REBOOT!"
 shutdown --reboot 0
 EOF

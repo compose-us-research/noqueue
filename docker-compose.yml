@@ -1,9 +1,9 @@
 version: '3'
 services:
 
-  noqueue:
-    container_name: noqueue
-    build: .
+  platzhalterio:
+    container_name: platzhalterio
+    image: composeus/platzhalterio
     restart: unless-stopped
     environment:
       DB_PASSWORD: "abcd"
@@ -22,4 +22,4 @@ services:
     ports:
       - "0.0.0.0:5432:5432"
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - platzhalterio-data:/var/lib/postgresql/data
