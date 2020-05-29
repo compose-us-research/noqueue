@@ -20,25 +20,28 @@ const config = {
   path: process.env.SHOP_PATH || 'default'
 }
 
-const whitelist = ["http://localhost:8080", "http://localhost:9009"]
+/*
+either reverse proxy all of them or have another DB for each of these
+www.platzhalter.io/shop/happy-nails
+www.platzhalter.io/shop/cundm-friseur-passau
+www.platzhalter.io/shop/cundm-friseur-landshut
+*/
 
 async function init () {
   try {
     const app = express()
 
+    // retrieve information from all shops in this instance
     const db = new Database(config.db)
     await db.init()
 
     app.use(morgan('combined'))
-    app.use(cors({
-      origin: function (origin, callback) {
-        if (whitelist.indexOf(origin) !== -1 || !origin) {
-          callback(null, true)
-        } else {
-          callback(new Error('Not allowed by CORS'))
-        }
-      }
-    }))
+    if (process.env.NODE_ENV === 'development') {
+      app.use(cors({
+        origin: (_origin, callback) => callback(null, true),
+        exposedHeaders: ['location']
+      }))
+    }
 
     const frontendPath = resolve(__dirname, '../frontend/build')
     debug(`mount frontend from ${frontendPath}`)
@@ -51,11 +54,13 @@ async function init () {
       res.sendFile(resolve(frontendPath, 'index.html'))
     })
 
+    // for around the various shops that are registered as database
     debug('mount admin API at /admin')
     app.use('/admin', admin({ db }))
 
     debug(`mount shop at /shop/${config.path}`)
     app.use(`/shop/${config.path}`, shop({ db }))
+    // end for
 
     const server = app.listen(config.port, () => {
       console.log(`listening at http://localhost:${server.address().port}/`)

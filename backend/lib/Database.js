@@ -147,15 +147,6 @@ ORDER BY "range"."start"
     return result.rows
   }
 
-  async addTimeslot ({ day, start, end, customers, minDuration, maxDuration }) {
-    const query =
-      'INSERT INTO timeslots("day", "start", "end", "customers", "min_duration", "max_duration") VALUES ($1, $2, $3, $4, $5, $6) RETURNING *'
-    const values = [day, start, end, customers, minDuration, maxDuration]
-    const result = await this.client.query(query, values)
-
-    return result.rows[0]
-  }
-
   async replaceTimeslots (listOfSlots) {
     const query = `WITH inserted_ids AS (INSERT INTO timeslots("day", "start", "end", "customers", "min_duration", "max_duration") VALUES ${
       listOfSlots.map((_slot, idx) => {
@@ -175,10 +166,6 @@ ORDER BY "range"."start"
     const result = await this.client.query(query)
 
     return result.rows
-  }
-
-  async clearTimeslots () {
-    await this.client.query(tables.timeslots.clear)
   }
 }
 

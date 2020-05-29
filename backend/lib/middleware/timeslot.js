@@ -41,18 +41,6 @@ function timeslot ({ db }) {
         minDuration: member.minDuration,
         maxDuration: member.maxDuration
       })))
-      // await db.clearTimeslots()
-
-      // for (const member of req.body.member) {
-      //   await db.addTimeslot({
-      //     day: member.day,
-      //     start: member.start,
-      //     end: member.end,
-      //     customers: member.customers,
-      //     minDuration: member.minDuration,
-      //     maxDuration: member.maxDuration
-      //   })
-      // }
 
       res.status(201).end()
     } catch (err) {
