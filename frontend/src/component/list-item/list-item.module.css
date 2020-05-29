@@ -1,0 +1,24 @@
+/* elements */
+.root {
+  display: grid;
+  grid-template-areas: "icon storeInfo";
+  grid-column-gap: 15px;
+  align-items: center;
+  justify-content: left;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.text {
+  font-size: 10px;
+}
+
+/* modifiers */

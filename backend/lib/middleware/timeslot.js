@@ -31,19 +31,16 @@ function timeslot ({ db }) {
   })
 
   router.put('/', bodyParser.json(), async (req, res, next) => {
+    
     try {
-      await db.clearTimeslots()
-
-      for (const member of req.body.member) {
-        await db.addTimeslot({
-          day: member.day,
-          start: member.start,
-          end: member.end,
-          customers: member.customers,
-          minDuration: member.minDuration,
-          maxDuration: member.maxDuration
-        })
-      }
+      await db.replaceTimeslots(req.body.member.map(member => ({
+        day: member.day,
+        start: member.start,
+        end: member.end,
+        customers: member.customers,
+        minDuration: member.minDuration,
+        maxDuration: member.maxDuration
+      })))
 
       res.status(201).end()
     } catch (err) {
