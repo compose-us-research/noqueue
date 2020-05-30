@@ -16,23 +16,27 @@ import ErrorBoundary from "../error-boundary/error-boundary";
 import { checkTime } from "../../lib/calculate-max-duration/calculate-max-duration";
 
 interface TimerangeSetterProps {
+  index: number;
   label: string;
-  prefix: string;
+  name: string;
   range: Timerange;
   remover: () => void;
 }
 
 const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
+  index,
   label,
-  prefix,
+  name,
   range,
   remover,
 }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [days, setDays] = useState<string>(daysToString(range.days));
-  const { watch } = useFormContext();
+  const { errors, watch } = useFormContext();
   const slots = `${days} ${range.start} - ${range.end} Uhr`;
   const toggleOpen = useCallback(() => setOpen((open) => !open), [setOpen]);
+  const hasError = errors[name] && errors[name][index];
+  const prefix = `${name}[${index}]`;
   const start = watch(`${prefix}.start`, range.start);
   const end = watch(`${prefix}.end`, range.end);
   const checkTimeValidator = useCallback<Validate>((value) => {
@@ -48,7 +52,13 @@ const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
   }, []);
 
   return (
-    <div className={cn(styles.root, isOpen && styles.open)}>
+    <div
+      className={cn(
+        styles.root,
+        isOpen && styles.open,
+        hasError && styles.error
+      )}
+    >
       <Button
         className={styles.expander}
         onClick={toggleOpen}
@@ -69,6 +79,9 @@ const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
           name={`${prefix}.days`}
           onChange={(days) => setDays(daysToString(days))}
         />
+        {errors.ranges && errors.ranges[index] && errors.ranges[index].days && (
+          <div>Mindestens ein Tag muss ausgewählt werden.</div>
+        )}
 
         <Spacer />
 

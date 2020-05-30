@@ -73,9 +73,11 @@ export interface AvailableSlot {
   start: Date;
 }
 
+export type DaysInWeek = [boolean, boolean, boolean, boolean, boolean, boolean, boolean];
+
 export interface Timerange {
   amountOfPeopleInShop: AmountOfPeople;
-  days: [boolean, boolean, boolean, boolean, boolean, boolean, boolean];
+  days: DaysInWeek;
   start: Time;
   end: Time;
   duration: [Minutes, Minutes];

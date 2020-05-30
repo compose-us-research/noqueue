@@ -56,8 +56,9 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
             {fields.map((range, index) => (
               <React.Fragment key={range.id}>
                 <TimerangeSetter
+                  index={index}
                   label={`Zeitraum ${index + 1}`}
-                  prefix={`ranges[${index}]`}
+                  name={"ranges"}
                   range={range as Timerange}
                   remover={() => remove(index)}
                 />
