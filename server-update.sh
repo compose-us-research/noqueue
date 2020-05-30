@@ -72,8 +72,8 @@ else
   echo "$(date) - Volume created"
 fi
 
-echo "$(date) - Start platzhalter.io server"
-docker-compose up
+echo "$(date) - Start platzhalter.io server in the background"
+docker-compose up -d
 
 DEPLOYMENT
 EOF
