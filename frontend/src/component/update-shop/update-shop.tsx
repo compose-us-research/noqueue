@@ -31,20 +31,41 @@ const UpdateShop: React.FC<UpdateShopProps> = ({ onSave, shop }) => {
       <form onSubmit={methods.handleSubmit(handleSubmit)}>
         <FormContext {...methods}>
           <div className={styles.fields}>
-            <TextField name="name" label="Name deines Geschäfts" required />
+            <TextField
+              name="name"
+              label="Name deines Geschäfts"
+              placeholder="Zum knuddeligen Kuscheltier"
+              required
+            />
             <Spacer />
             <TextField
               name="address.streetAddress"
               label="Straße, Hausnummer"
+              placeholder="Blumenstr. 13"
               required
             />
             <Spacer />
             <div className={styles.postal}>
-              <TextField name="address.postalCode" label="PLZ" required />
-              <TextField name="address.city" label="Ort" required />
+              <TextField
+                name="address.postalCode"
+                label="PLZ"
+                placeholder="94032"
+                required
+              />
+              <TextField
+                name="address.city"
+                label="Ort"
+                placeholder="Passau"
+                required
+              />
             </div>
             <Spacer />
-            <TextField name="mail" label="E-Mail" required />
+            <TextField
+              name="mail"
+              label="E-Mail"
+              placeholder="betatester@platzhalter.io"
+              required
+            />
             <Spacer />
             <Checkbox
               name="needsRegistration"

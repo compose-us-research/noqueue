@@ -62,8 +62,8 @@ const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
           <ChevronIcon />
         </span>
       </Button>
-      <Spacer />
       <div className={styles.details}>
+        <h3>Zeitraum für folgende Tage</h3>
         <DaySelector
           defaultValue={range.days}
           name={`${prefix}.days`}
@@ -77,6 +77,7 @@ const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
             defaultValue={range.start}
             label="Uhrzeit von"
             name={`${prefix}.start`}
+            placeholder="08:00"
             required
             validate={checkTimeValidator}
           />
@@ -85,6 +86,7 @@ const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
             defaultValue={range.end}
             label="Uhrzeit bis"
             name={`${prefix}.end`}
+            placeholder="17:30"
             required
             validate={checkTimeValidator}
           />
@@ -95,13 +97,19 @@ const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
         <TextField
           label="Anzahl der Personen im Geschäft"
           name={`${prefix}.amountOfPeopleInShop`}
+          placeholder="5"
           required
           type="number"
         />
 
         <Spacer />
 
-        <h3>Wählbarer Zeitraum</h3>
+        <h3>
+          Wählbarer Zeitraum{" "}
+          <span className={styles.rangeDescription}>
+            (min. und max. in Minuten)
+          </span>
+        </h3>
         <ErrorBoundary resetKeys={[start, end]}>
           <TimeslotLength
             key={`${prefix}.duration-${isOpen ? "open" : "close"}`}

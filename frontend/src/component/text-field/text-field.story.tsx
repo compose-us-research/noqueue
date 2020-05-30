@@ -13,6 +13,12 @@ export const Simple = () => (
   </Form>
 );
 
+export const WithPlaceholder = () => (
+  <Form>
+    <TextField name="name" label="Name" placeholder="Petra Platzhalter" />
+  </Form>
+);
+
 export const Required = () => (
   <Form>
     <TextField name="name" label="Name" required />
