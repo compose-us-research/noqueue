@@ -78,10 +78,17 @@ const CustomerApp: React.FC<CustomerAppProps> = ({ backToIndex }) => {
         <Route path={`${path}/register`}>
           <CurrentShop onClick={backToIndex} />
           <Spacer />
-          <RegisterCustomer onRegister={onRegisterCustomer} ticket={ticket!} />
+          <div className={styles.screen}>
+            <RegisterCustomer
+              onRegister={onRegisterCustomer}
+              ticket={ticket!}
+            />
+          </div>
         </Route>
         <Route path={`${path}/ticket/:ticketId`}>
-          <ShowTicketRoute backToIndex={backToIndex} />
+          <div className={styles.screen}>
+            <ShowTicketRoute backToIndex={backToIndex} />
+          </div>
         </Route>
       </Switch>
     </div>
