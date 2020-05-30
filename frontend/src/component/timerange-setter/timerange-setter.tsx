@@ -39,6 +39,10 @@ const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
   const prefix = `${name}[${index}]`;
   const start = watch(`${prefix}.start`, range.start);
   const end = watch(`${prefix}.end`, range.end);
+  const greaterThanZero = useCallback<Validate>(
+    (value: string) => parseInt(value, 10) > 0,
+    []
+  );
   const checkTimeValidator = useCallback<Validate>((value) => {
     try {
       checkTime(value);
@@ -113,6 +117,7 @@ const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
           placeholder="5"
           required
           type="number"
+          validate={greaterThanZero}
         />
 
         <Spacer />
