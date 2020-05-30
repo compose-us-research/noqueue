@@ -87,6 +87,14 @@
 
 /* modifiers */
 
+.error.root {
+  border-top: 2px solid #f00;
+}
+
+.error.open.root {
+  border-top: 2px solid #f00;
+}
+
 .open.root {
   border: 1px solid #fff;
 }

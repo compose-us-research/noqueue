@@ -35,6 +35,7 @@ const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
   const { errors, watch } = useFormContext();
   const slots = `${days} ${range.start} - ${range.end} Uhr`;
   const toggleOpen = useCallback(() => setOpen((open) => !open), [setOpen]);
+  const hasError = errors[name] && errors[name][index];
   const prefix = `${name}[${index}]`;
   const start = watch(`${prefix}.start`, range.start);
   const end = watch(`${prefix}.end`, range.end);
@@ -51,7 +52,13 @@ const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
   }, []);
 
   return (
-    <div className={cn(styles.root, isOpen && styles.open)}>
+    <div
+      className={cn(
+        styles.root,
+        isOpen && styles.open,
+        hasError && styles.error
+      )}
+    >
       <Button
         className={styles.expander}
         onClick={toggleOpen}
