@@ -83,6 +83,13 @@ fi
 echo "\$(date) - Adding user $USER_NAME to docker group"
 usermod -aG docker "$USER_NAME"
 
+echo "\$(date) - Checking for docker-compose"
+if ! [ -x "\$(command -v docker-compose)" ]; then
+  echo "docker-compose not installed. Trying to change that."
+  curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  chmod +x /usr/local/bin/docker-compose
+fi
+
 echo "\$(date) - Checking for wget"
 if ! [ -x "\$(command -v wget)" ]; then
   echo "wget not installed. Trying to change that."
