@@ -32,10 +32,6 @@ let id = 1;
 const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
   const timeslots = useShopFetch("/timeslot", mapper);
   const timeranges = generateTimerangesFromTimeslots(timeslots);
-  console.log("timeslots from server and generated timeranges", {
-    timeslots,
-    timeranges,
-  });
   const methods = useForm({
     defaultValues: {
       ranges: timeranges.map((range) => ({ ...range, id: id++ })),
@@ -45,7 +41,7 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
     control: methods.control,
     name: "ranges",
   });
-  console.log("rendering ReservableTimes");
+
   return (
     <div className={styles.root}>
       <h2>Buchbare Zeiten hinterlegen</h2>
@@ -68,12 +64,14 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
 
             <Button
               className={styles.addButton}
-              onClick={() =>
-                append({
-                  ...createNewTimerange(fields[fields.length - 1] as Timerange),
+              onClick={() => {
+                const lastRange = fields[fields.length - 1] as Timerange;
+                const appendTimerange = {
+                  ...createNewTimerange(lastRange),
                   id: id++,
-                })
-              }
+                };
+                append(appendTimerange);
+              }}
               variant="secondary"
             >
               <span>Zeitraum hinzufügen</span>

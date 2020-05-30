@@ -5,23 +5,25 @@ import { useFormContext, Controller } from "react-hook-form";
 import calculateMaxDuration from "../../lib/calculate-max-duration/calculate-max-duration";
 
 interface TimeslotLengthProps {
+  defaultValue: [number, number];
   end: string;
   name: string;
   start: string;
 }
 
 const TimeslotLength: React.FC<TimeslotLengthProps> = ({
+  defaultValue,
   name,
   start,
   end,
 }) => {
-  const { control, getValues, setValue } = useFormContext();
+  const { control, setValue } = useFormContext();
   const maxDuration = calculateMaxDuration(start, end);
   return (
     <Controller
       as={
         <RangeSlider
-          defaultValue={getValues()[name]}
+          defaultValue={defaultValue}
           min={0}
           max={maxDuration}
           onChange={(value) => {
@@ -33,6 +35,7 @@ const TimeslotLength: React.FC<TimeslotLengthProps> = ({
         />
       }
       control={control}
+      defaultValue={defaultValue}
       name={name}
       rules={{
         validate: (value) => {
