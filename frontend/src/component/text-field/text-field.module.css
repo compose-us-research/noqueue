@@ -14,6 +14,10 @@
   width: 100%;
 }
 
+.label {
+  padding-left: 9px;
+}
+
 /* modifiers */
 
 .required .input {
