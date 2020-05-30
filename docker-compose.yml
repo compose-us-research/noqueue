@@ -1,9 +1,12 @@
 version: '3'
+volumes: 
+  platzhalterio-data:
+
 services:
 
   platzhalterio:
     container_name: platzhalterio
-    image: composeus/platzhalterio
+    image: composeus/platzhalterio:latest
     restart: unless-stopped
     environment:
       DB_PASSWORD: "abcd"
