@@ -66,6 +66,10 @@
   flex-grow: 1;
 }
 
+.rangeDescription {
+  font-weight: 400;
+}
+
 .addButton {
   align-items: center;
   display: flex;
@@ -82,6 +86,14 @@
 }
 
 /* modifiers */
+
+.open.root {
+  border: 1px solid #fff;
+}
+
+.open .expander {
+  background: linear-gradient(180deg, #fff 0%, #f3f6ff 100%);
+}
 
 .open .details {
   display: block;

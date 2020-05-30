@@ -81,36 +81,46 @@ const RegisterCustomer: React.FC<RegisterCustomerProps> = ({
               müssen. Sie werden nach 14 Tagen automatisch gelöscht.
             </p>
             <Spacer />
-            <TextField name="name" label="Vor / Nachname" required />
+            <TextField
+              name="name"
+              label="Vor / Nachname"
+              placeholder="Petra Platzhalter"
+              required
+            />
             <Spacer />
             <TextField
               name="contact.email"
               label="E-Mail"
+              placeholder="betatester@platzhalter.io"
               validate={validate}
             />
             <Spacer />
             <TextField
               name="contact.address.streetAddress"
               label="Straße, Hausnummer"
+              placeholder="Blumenstr. 13"
               validate={validate}
-            />
+              />
             <Spacer />
             <div className={styles.postal}>
               <TextField
                 name="contact.address.postalCode"
                 label="PLZ"
+                placeholder="94032"
                 validate={validate}
-              />
+                />
               <TextField
                 name="contact.address.city"
                 label="Ort"
+                placeholder="Passau"
                 validate={validate}
-              />
+                />
             </div>
             <Spacer />
             <TextField
               name="contact.phone"
               label="Telefonnummer"
+              placeholder="01234567890"
               validate={validate}
             />
             <Spacer />

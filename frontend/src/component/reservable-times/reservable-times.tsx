@@ -54,13 +54,15 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
           <Spacer />
           <div className={styles.fields}>
             {fields.map((range, index) => (
-              <TimerangeSetter
-                key={range.id}
-                label={`Zeitraum ${index + 1}`}
-                prefix={`ranges[${index}]`}
-                range={range as Timerange}
-                remover={() => remove(index)}
-              />
+              <React.Fragment key={range.id}>
+                <TimerangeSetter
+                  label={`Zeitraum ${index + 1}`}
+                  prefix={`ranges[${index}]`}
+                  range={range as Timerange}
+                  remover={() => remove(index)}
+                />
+                <Spacer />
+              </React.Fragment>
             ))}
 
             <Button
