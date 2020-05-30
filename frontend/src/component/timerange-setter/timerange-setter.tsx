@@ -39,6 +39,7 @@ const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
   const prefix = `${name}[${index}]`;
   const start = watch(`${prefix}.start`, range.start);
   const end = watch(`${prefix}.end`, range.end);
+  const duration = watch(`${prefix}.duration`, range.duration);
   const greaterThanZero = useCallback<Validate>(
     (value: string) => parseInt(value, 10) > 0,
     []
@@ -112,6 +113,7 @@ const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
         <Spacer />
 
         <TextField
+          defaultValue={range.amountOfPeopleInShop}
           label="Anzahl der Personen im Geschäft"
           name={`${prefix}.amountOfPeopleInShop`}
           placeholder="5"
@@ -131,6 +133,7 @@ const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
         <ErrorBoundary resetKeys={[start, end]}>
           <TimeslotLength
             key={`${prefix}.duration-${isOpen ? "open" : "close"}`}
+            defaultValue={duration}
             end={end}
             name={`${prefix}.duration`}
             start={start}
