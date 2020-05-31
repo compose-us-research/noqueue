@@ -111,6 +111,10 @@ apt-get upgrade -y
 echo "\$(date) - Creating folder for platzhalterio"
 mkdir -p "/home/${USER_NAME}/platzhalterio"
 
+echo "\$(date) - Creating folder for traefik and letsencrypt"
+mkdir -p "/home/${USER_NAME}/traefik"
+mkdir -p "/home/${USER_NAME}/traefik/letsencrypt"
+
 echo "\$(date) - Installation complete. Server can now be deployed, but first: We REBOOT!"
 shutdown --reboot 0
 EOF
