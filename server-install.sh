@@ -115,6 +115,20 @@ echo "\$(date) - Creating folder for traefik and letsencrypt"
 mkdir -p "/home/${USER_NAME}/traefik"
 mkdir -p "/home/${USER_NAME}/traefik/letsencrypt"
 
+echo "\$(date) - Setting up ufw"
+if ! [ -x "\$(command -v ufw)" ]; then
+  apt-get update
+  apt-get install -y ufw
+fi
+ufw default deny incoming
+ufw default allow outgoing
+ufw allow ssh
+ufw allow http
+ufw allow https
+ufw limit ssh/tcp
+echo "\$(date) - Enabling ufw"
+yes | ufw enable
+
 echo "\$(date) - Installation complete. Server can now be deployed, but first: We REBOOT!"
 shutdown --reboot 0
 EOF
