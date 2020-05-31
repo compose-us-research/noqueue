@@ -41,7 +41,7 @@ cat <<INSTALLATION | bash
 set -e
 echo "\$(date) - Hardening: Create user, add ssh key, remove direct root access"
 echo "\$(date) - Creating administrative user"
-useradd -m -G sudo "${USER_NAME}"
+useradd -m -s /bin/bash -G sudo "${USER_NAME}"
 echo "${USER_NAME}:${USER_PASS}" | chpasswd
 echo "\$(date) - Importing ssh key from GitHub"
 su -c "ssh-import-id 'gh:${GITHUB_USER}'" "${USER_NAME}"
@@ -50,6 +50,46 @@ sed -i 's/^#\\?PasswordAuthentication\\s\\+yes/PasswordAuthentication no/g' /etc
 sed -i 's/^#\\?PermitRootLogin\\s\\+yes/PermitRootLogin no/g' /etc/ssh/sshd_config
 systemctl reload sshd
 INSTALLATION
+EOF
+
+ssh -l "${USER_NAME}" "${SERVER_IP}" <<EOF
+cat <<PREPARATION | bash
+echo "\$(date) - Creating folder for traefik and letsencrypt"
+mkdir -p "/home/${USER_NAME}/traefik"
+mkdir -p "/home/${USER_NAME}/traefik/letsencrypt"
+
+echo "\$(date) - Creating traefik configuration"
+cd "/home/${USER_NAME}/traefik"
+cat <<EOF_DOCKER_COMPOSE > docker-compose.yml
+version: '3'
+volumes: 
+  platzhalterio-data:
+
+services:
+
+  reverse-proxy:
+    image: traefik:v2.2
+    restart: unless-stopped
+    command:
+      # Enabling docker provider
+      - "--providers.docker=true"
+      # Do not expose containers unless explicitly told so
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.leresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.leresolver.acme.email=joern.bernhardt+letsencrypt@compose.us"
+      - "--certificatesresolvers.leresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "../traefik/letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+EOF_DOCKER_COMPOSE
+
+PREPARATION
+
 EOF
 
 cat <<EOF > tmp_install.sh
@@ -108,13 +148,6 @@ echo "\$(date) - Updating server"
 apt-get update
 apt-get upgrade -y
 
-echo "\$(date) - Creating folder for platzhalterio"
-mkdir -p "/home/${USER_NAME}/platzhalterio"
-
-echo "\$(date) - Creating folder for traefik and letsencrypt"
-mkdir -p "/home/${USER_NAME}/traefik"
-mkdir -p "/home/${USER_NAME}/traefik/letsencrypt"
-
 echo "\$(date) - Setting up ufw"
 if ! [ -x "\$(command -v ufw)" ]; then
   apt-get update
@@ -129,11 +162,21 @@ ufw limit ssh/tcp
 echo "\$(date) - Enabling ufw"
 yes | ufw enable
 
+echo "\$(date) - Starting traefik"
+cd "/home/${USER_NAME}/traefik"
+docker-compose up -d
+
+echo "\$(date) - Creating folder for platzhalterio"
+mkdir -p "/home/${USER_NAME}/platzhalterio"
+
 echo "\$(date) - Installation complete. Server can now be deployed, but first: We REBOOT!"
 shutdown --reboot 0
 EOF
 
 scp tmp_install.sh "${USER_NAME}@${SERVER_IP}:/home/${USER_NAME}"
 rm tmp_install.sh
-
 ssh -t -l "${USER_NAME}" "${SERVER_IP}" "echo '${USER_PASS}' | sudo -S bash tmp_install.sh"
+
+scp traefik-docker-compose.yml "${USER_NAME}@${SERVER_IP}:/home/${USER_NAME}/traefik/docker-compose.yml"
+ssh -t -l "${USER_NAME}" "${SERVER_IP}" "cd /home/${USER_NAME}/traefik && docker-compose up -d"
+

@@ -11,6 +11,11 @@ services:
     environment:
       DB_PASSWORD: "abcd"
       DB_HOST: "postgres"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.platzhalterio.rule=Host(`beta.platzhalter.io`)"
+      - "traefik.http.routers.platzhalterio.entrypoints=web,websecure"
+      - "traefik.http.routers.platzhalterio.tls.certresolver=leresolver"
     links:
       - "postgres:postgres"
     ports:
