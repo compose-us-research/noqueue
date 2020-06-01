@@ -1,4 +1,11 @@
 version: '3'
+
+networks:
+  web:
+    external: true
+  platzhalterio:
+    external: false
+
 volumes: 
   platzhalterio-data:
 
@@ -8,16 +15,22 @@ services:
     container_name: platzhalterio
     image: composeus/platzhalterio:latest
     restart: unless-stopped
+    depends_on:
+      - postgres
     environment:
       DB_PASSWORD: "abcd"
       DB_HOST: "postgres"
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=web"
       - "traefik.http.routers.platzhalterio.rule=Host(`beta.platzhalter.io`)"
-      - "traefik.http.routers.platzhalterio.entrypoints=web,websecure"
+      - "traefik.http.routers.platzhalterio.entrypoints=websecure"
       - "traefik.http.routers.platzhalterio.tls.certresolver=leresolver"
     links:
       - "postgres:postgres"
+    networks:
+      - web
+      - platzhalterio
     ports:
       - "0.0.0.0:8080:80"
 
@@ -27,6 +40,10 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: "abcd"
+    labels:
+      - traefik.enable=false
+    networks:
+      - platzhalterio
     ports:
       - "0.0.0.0:5432:5432"
     volumes:
