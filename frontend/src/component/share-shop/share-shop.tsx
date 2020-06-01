@@ -1,7 +1,6 @@
 import React, { useCallback } from "react";
 
 import Button from "../button/button";
-import { ReactComponent as ShareIcon } from "../../asset/image/share-icon.svg";
 
 import styles from "./share-shop.module.css";
 import Spacer from "../spacer/spacer";
@@ -13,52 +12,25 @@ interface ShareShopProps {
 
 const ShareShop: React.FC<ShareShopProps> = ({ backToIndex }) => {
   const shop = useShop();
-  const shareOnFacebook = useCallback(() => {
-    console.log("share fb...");
-  }, []);
-  const shareOnLinkedIn = useCallback(() => {
-    console.log("share linkedin...");
-  }, []);
-  const shareIframeText = `<iframe ...${shop.name}></iframe>`;
+  const copyLink = useCallback(async () => {
+    await navigator.clipboard.writeText(shop["@id"]);
+  }, [shop]);
   return (
     <div className={styles.root}>
       <h2>Erzähle es deinen Kunden!</h2>
       <Spacer />
-      <Button
-        className={styles.button}
-        onClick={shareOnFacebook}
-        variant="secondary"
-      >
-        <span className={styles.icon}>
-          <ShareIcon />
-        </span>
-        <Spacer direction="column" />
-        Auf Facebook teilen
+      <p>
+        Dein Geschäft wurde erfolgreich bei Platzhalter.io registriert. Du
+        kannst direkt starten. Am Besten weist du deine Kunden gleich auf das
+        neue Angebot hin und verhinderst so lange Schlangen vor dem Geschäft.
+      </p>
+      <Spacer />
+      <h3>Deine individuelle Shop-Adresse:</h3>
+      <p className={styles.copyShop}>{shop["@id"]}</p>
+      <Spacer />
+      <Button className={styles.button} onClick={copyLink} variant="primary">
+        In die Zwischenablage kopieren
       </Button>
-      <Spacer />
-      <Button
-        className={styles.button}
-        onClick={shareOnLinkedIn}
-        variant="secondary"
-      >
-        <span className={styles.icon}>
-          <ShareIcon />
-        </span>
-        <Spacer direction="column" />
-        Auf LinkedIn teilen
-      </Button>
-      <Spacer />
-      <h3>...oder direkt auf der Webseite einbinden:</h3>
-      <Spacer />
-      <textarea
-        className={styles.iframeText}
-        cols={100}
-        rows={10}
-        contentEditable={false}
-        disabled
-        value={shareIframeText}
-      />
-
       <Spacer />
       <Button
         className={styles.button}
