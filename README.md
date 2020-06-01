@@ -20,3 +20,13 @@ Platzhalter.io is a project started at ITC1's digital hackathon.
 - Thomas Bergwinkl, Backend
 - Jörn Bernhardt, Frontend
 - Kristina Juse, Marketing & Project Management
+
+# Building / setup 🛠 #
+
+To initialize the server, run `server-install.sh`. It will setup the (Ubuntu)
+server by creating a user to work with and install docker if its not installed
+yet.
+
+When running `server-update.sh`, a new version of the docker file will be 
+built, the image uploaded and the uploaded image loaded into the hosts docker
+system. It will then restart the service and run it.
