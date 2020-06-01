@@ -12,7 +12,6 @@ interface ChooseDurationProps {
 
 const ChooseDuration: React.FC<ChooseDurationProps> = ({ onChange }) => {
   const shop = useShop();
-  console.log("rendering ChooseDuration");
 
   return (
     <div className={styles.root}>
@@ -20,12 +19,13 @@ const ChooseDuration: React.FC<ChooseDurationProps> = ({ onChange }) => {
         <h2>Wie viel Zeit benötigst Du?</h2>
         <Slider
           max={shop.maxDuration}
-          min={1}
+          min={shop.minDuration || 0}
           onChange={(value) => {
             if (value) {
               onChange(value as number);
             }
           }}
+          step={15}
         />
       </div>
     </div>
