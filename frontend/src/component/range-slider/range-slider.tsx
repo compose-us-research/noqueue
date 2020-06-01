@@ -10,6 +10,7 @@ interface RangeSliderProps {
   max?: number;
   min?: number;
   onChange?: (value: number | number[] | null | undefined) => void;
+  step?: number;
 }
 
 const noop = () => {};
@@ -20,6 +21,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
   min = 5,
   defaultValue = [min, max],
   onChange = noop,
+  step = 15,
 }) => {
   const renderThumb = useCallback(
     (props: any, state: any) => (
@@ -57,6 +59,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
         onChange={onChange}
         renderThumb={renderThumb}
         renderTrack={renderTrack}
+        step={step}
         thumbClassName={styles.thumb}
         trackClassName={styles.track}
       />

@@ -49,6 +49,7 @@ export interface BaseShopConfig {
   address: Address;
   mail: EMail;
   maxDuration: Minutes;
+  minDuration: Minutes;
   name: ShopName;
   needsRegistration: boolean;
   path: string;
@@ -73,7 +74,15 @@ export interface AvailableSlot {
   start: Date;
 }
 
-export type DaysInWeek = [boolean, boolean, boolean, boolean, boolean, boolean, boolean];
+export type DaysInWeek = [
+  boolean,
+  boolean,
+  boolean,
+  boolean,
+  boolean,
+  boolean,
+  boolean
+];
 
 export interface Timerange {
   amountOfPeopleInShop: AmountOfPeople;

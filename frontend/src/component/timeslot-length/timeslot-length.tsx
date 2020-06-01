@@ -32,6 +32,7 @@ const TimeslotLength: React.FC<TimeslotLengthProps> = ({
               setValue(name, [min, max]);
             }
           }}
+          step={15}
         />
       }
       control={control}
