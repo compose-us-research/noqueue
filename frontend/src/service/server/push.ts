@@ -8,6 +8,7 @@ import {
 } from "../domain";
 import { fetcher } from "./fetcher";
 import { toRegisteredTicket } from "../tickets/use-local-tickets";
+import idToLink from "../../lib/id-to-link/id-to-link";
 
 export const putData = (url: string, data: any) => sendData("PUT", url, data);
 export const postData = (url: string, data: any) => sendData("POST", url, data);
@@ -28,14 +29,14 @@ async function sendData(method: string, url: string, data: any): Promise<any> {
 }
 
 export async function updateShop(data: UpdateShopConfig): Promise<void> {
-  await putData(data["@id"], data);
+  await putData(idToLink(data["@id"]), data);
 }
 
 export async function updateOpeningHours(
   shop: ShopConfig,
   timeslots: Timeslot[]
 ): Promise<void> {
-  await putData(`${shop["@id"]}/timeslot/`, { member: timeslots });
+  await putData(`${idToLink(shop["@id"])}/timeslot/`, { member: timeslots });
 }
 
 export type RegisterTicketParams = {
@@ -50,7 +51,7 @@ export async function registerTicket({
   customer,
 }: RegisterTicketParams): Promise<RegisteredTicket> {
   const dataToPost = { ...ticket, contact: customer };
-  const res = await postData(`${shop["@id"]}/ticket/`, dataToPost);
+  const res = await postData(`${idToLink(shop["@id"])}/ticket/`, dataToPost);
   const ticketUrl = res.headers.get("location");
   const fetchedTicket = await fetcher(ticketUrl);
   const registeredTicket = toRegisteredTicket(fetchedTicket);
