@@ -3,6 +3,7 @@ import ShowTicket from "./show-ticket";
 import { action } from "@storybook/addon-actions";
 import { Customer, RegisteredTicket } from "../../service/domain";
 import { useShop } from "../../service/server/connection";
+import idToLink from "../../lib/id-to-link/id-to-link";
 
 export default {
   title: "Screens/ShowTicket",
