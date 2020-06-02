@@ -25,7 +25,7 @@ const SimpleStory = ({
   const start = new Date(now);
   const end = new Date(now + 15 * 60 * 1000);
   const shop = useShop();
-  const ticketUrl = `${shop["@id"]}/ticket/1`;
+  const ticketUrl = `${idToLink(shop["@id"])}/ticket/1`;
   const ticket: RegisteredTicket = {
     contact: customer,
     end,
