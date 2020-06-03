@@ -112,28 +112,49 @@ class Database {
   async availableTickets ({ start, end }) {
     const query = `
 SELECT "range"."start", "range"."end", COUNT("booked".*)::integer AS "reserved", COALESCE("timeslots"."customers", 0) AS "allowed", COALESCE("timeslots"."customers", 0) - COUNT("booked".*)::integer AS "available" FROM (
+  -- combine the start and end timestamps to ranges 
   SELECT "start", MIN("raw_end") AS "end" FROM (
+      -- the next 3 selects combine all possible start timestamps for varying number of allowed and reserved customers 
+  
+      -- find all tickets issued in the given time range and get start...
       SELECT "start" FROM tickets WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+
+      -- ...and end date
       SELECT "end" AS "start" FROM tickets WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+
+      -- combine the day range with the start time of the timeslot matching the day of week
       SELECT "range"."day" + "timeslots"."start" AS "start" FROM (
-        SELECT generate_series AS "day" FROM generate_series($1::timestamp, $2, '24 hours')
+        -- create timestamps for each day from start to end with the time 00:00:00.000 
+        SELECT generate_series AS "day" FROM generate_series(($1::date)::timestamp, $2, '24 hours')
       ) AS "range", timeslots WHERE timeslots.day = EXTRACT(DOW FROM "range"."day")
+
       ORDER BY "start"
     ) AS "start", (
+      -- the next 3 selects combine all possible end timestamps for varying number of allowed and reserved customers
+    
+      -- find all tickets issued in the given time range and get start...
       SELECT "start" AS "raw_end" FROM tickets WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+
+      -- ...and end date
       SELECT "end" AS "raw_end" FROM tickets WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+      
+      -- combine the day range with the end time of the timeslot matching the day of week
       SELECT "range"."day" + "timeslots"."end" AS "end" FROM (
-        SELECT generate_series AS "day" FROM generate_series($1::timestamp, $2, '24 hours')
+        -- create timestamps for each day from start to end with the time 00:00:00.000
+        SELECT generate_series AS "day" FROM generate_series(($1::date)::timestamp, $2, '24 hours')
       ) AS "range", timeslots WHERE timeslots.day = EXTRACT(DOW FROM "range"."day")
+
       ORDER BY "raw_end"
     ) AS "end"
   WHERE "start" < "raw_end"
   GROUP BY "start"
 ) AS "range"
+-- add the tickets for the built ranges
 LEFT JOIN tickets "booked" ON (
   ("booked"."start" <= "range"."start" AND "booked"."end" > "range"."start") OR
   ("booked"."start" < "range"."end" AND "booked"."end" >= "range"."end")
 )
+-- add the timeslots for the built ranges
 LEFT JOIN timeslots ON (
   ("timeslots"."start" <= CAST("range"."start" AS time) AND "timeslots"."end" > CAST("range"."start" AS time) AND "timeslots"."day" = EXTRACT(DOW FROM "range"."start")) OR
   ("timeslots"."start" < CAST("range"."end" AS time) AND "timeslots"."end" >= CAST("range"."end" AS time) AND "timeslots"."day" = EXTRACT(DOW FROM "range"."start"))
