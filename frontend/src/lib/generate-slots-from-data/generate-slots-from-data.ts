@@ -1,12 +1,29 @@
 import { Ticket, Minutes, AvailableSlot } from "../../service/domain";
 
-export default function generateSlotsFromData(
-  tickets: Ticket[],
-  duration: Minutes
-): AvailableSlot[] {
+type GenerateSlotsFromDataProps = {
+  slots: Ticket[];
+  duration: Minutes;
+  from: Date;
+};
+
+export default function generateSlotsFromData({
+  slots,
+  duration,
+  from,
+}: GenerateSlotsFromDataProps): AvailableSlot[] {
   const durationInMs = duration * 60 * 1000;
-  const mergedTicketsAsSlots: AvailableSlot[] = tickets.reduce<AvailableSlot[]>(
-    (acc, ticket) => {
+  const mergedTicketsAsSlots: AvailableSlot[] = slots
+    .filter((ticket) => {
+      const ticketInPast = +ticket.end < +from;
+      return !ticketInPast;
+    })
+    .map((ticket) => {
+      if (+ticket.start < +from) {
+        return { ...ticket, start: from };
+      }
+      return ticket;
+    })
+    .reduce<AvailableSlot[]>((acc, ticket) => {
       const hasAvailableSpot = ticket.reserved < ticket.allowed;
       if (!hasAvailableSpot) {
         return acc;
@@ -22,9 +39,7 @@ export default function generateSlotsFromData(
         return [...acc.slice(0, lastIndex), ...mergedTicketOrTickets];
       }
       return [ticket];
-    },
-    []
-  );
+    }, []);
   const possibleTimeranges: AvailableSlot[] = mergedTicketsAsSlots.filter(
     (ticket) => {
       const ticketDuration = +ticket.end - +ticket.start;
