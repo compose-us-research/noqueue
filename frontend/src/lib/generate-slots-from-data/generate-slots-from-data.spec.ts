@@ -2,7 +2,7 @@ import generateSlotsFromData from "./generate-slots-from-data";
 
 describe("generateSlotsFromData", () => {
   it("returns empty list for empty list", () => {
-    const result = generateSlotsFromData([], 15);
+    const result = generateSlotsFromData([], 15, new Date());
     expect(result).toEqual([]);
   });
 
@@ -20,7 +20,8 @@ describe("generateSlotsFromData", () => {
           reserved: 0,
         },
       ],
-      15
+      15,
+      new Date(now)
     );
     expect(result).toEqual([{ start, end }]);
   });
@@ -39,7 +40,8 @@ describe("generateSlotsFromData", () => {
           reserved: 1,
         },
       ],
-      15
+      15,
+      new Date(now)
     );
     expect(result).toEqual([]);
   });
@@ -58,7 +60,8 @@ describe("generateSlotsFromData", () => {
           reserved: 0,
         },
       ],
-      15
+      15,
+      new Date(now)
     );
     expect(result).toEqual([
       {
@@ -99,7 +102,8 @@ describe("generateSlotsFromData", () => {
           reserved: 0,
         },
       ],
-      15
+      15,
+      new Date(now)
     );
     expect(result).toEqual([
       { start: start1, end: new Date(+start1 + 15 * 60 * 1000) },
@@ -137,7 +141,8 @@ describe("generateSlotsFromData", () => {
           reserved: 0,
         },
       ],
-      15
+      15,
+      new Date(now)
     );
     expect(result).toEqual([
       {
@@ -170,8 +175,38 @@ describe("generateSlotsFromData", () => {
           reserved: 2,
         },
       ],
-      15
+      15,
+      new Date(now)
     );
     expect(result).toEqual([]);
+  });
+
+  it("filters slots that are in the past", () => {
+    const now = Date.now();
+    const start = new Date(now - 30 * 60 * 1000);
+    const end = new Date(now + 30 * 60 * 1000);
+    const result = generateSlotsFromData(
+      [
+        {
+          allowed: 2,
+          available: 1,
+          end,
+          start,
+          reserved: 1,
+        },
+      ],
+      15,
+      new Date(now)
+    );
+    expect(result).toEqual([
+      {
+        start: new Date(now),
+        end: new Date(+now + 15 * 60 * 1000),
+      },
+      {
+        start: new Date(+now + 15 * 60 * 1000),
+        end: new Date(+now + 30 * 60 * 1000),
+      },
+    ]);
   });
 });
