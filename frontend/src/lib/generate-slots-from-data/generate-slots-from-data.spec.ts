@@ -2,7 +2,11 @@ import generateSlotsFromData from "./generate-slots-from-data";
 
 describe("generateSlotsFromData", () => {
   it("returns empty list for empty list", () => {
-    const result = generateSlotsFromData([], 15, new Date());
+    const result = generateSlotsFromData({
+      slots: [],
+      duration: 15,
+      from: new Date(),
+    });
     expect(result).toEqual([]);
   });
 
@@ -10,8 +14,8 @@ describe("generateSlotsFromData", () => {
     const now = Date.now();
     const start = new Date(now);
     const end = new Date(now + 15 * 60 * 1000);
-    const result = generateSlotsFromData(
-      [
+    const result = generateSlotsFromData({
+      slots: [
         {
           allowed: 1,
           available: 1,
@@ -20,9 +24,9 @@ describe("generateSlotsFromData", () => {
           reserved: 0,
         },
       ],
-      15,
-      new Date(now)
-    );
+      duration: 15,
+      from: new Date(now),
+    });
     expect(result).toEqual([{ start, end }]);
   });
 
@@ -30,8 +34,8 @@ describe("generateSlotsFromData", () => {
     const now = Date.now();
     const start = new Date(now);
     const end = new Date(now + 15 * 60 * 1000);
-    const result = generateSlotsFromData(
-      [
+    const result = generateSlotsFromData({
+      slots: [
         {
           allowed: 1,
           available: 0,
@@ -40,9 +44,9 @@ describe("generateSlotsFromData", () => {
           reserved: 1,
         },
       ],
-      15,
-      new Date(now)
-    );
+      duration: 15,
+      from: new Date(now),
+    });
     expect(result).toEqual([]);
   });
 
@@ -50,8 +54,8 @@ describe("generateSlotsFromData", () => {
     const now = Date.now();
     const start = new Date(now);
     const end = new Date(now + 50 * 60 * 1000);
-    const result = generateSlotsFromData(
-      [
+    const result = generateSlotsFromData({
+      slots: [
         {
           allowed: 1,
           available: 1,
@@ -60,9 +64,9 @@ describe("generateSlotsFromData", () => {
           reserved: 0,
         },
       ],
-      15,
-      new Date(now)
-    );
+      duration: 15,
+      from: new Date(now),
+    });
     expect(result).toEqual([
       {
         start,
@@ -85,8 +89,8 @@ describe("generateSlotsFromData", () => {
     const end1 = new Date(+start1 + 30 * 60 * 1000);
     const start2 = new Date(now + 60 * 60 * 1000); // one hour later another spot
     const end2 = new Date(+start2 + 25 * 60 * 1000);
-    const result = generateSlotsFromData(
-      [
+    const result = generateSlotsFromData({
+      slots: [
         {
           allowed: 1,
           available: 1,
@@ -102,9 +106,9 @@ describe("generateSlotsFromData", () => {
           reserved: 0,
         },
       ],
-      15,
-      new Date(now)
-    );
+      duration: 15,
+      from: new Date(now),
+    });
     expect(result).toEqual([
       { start: start1, end: new Date(+start1 + 15 * 60 * 1000) },
       {
@@ -124,8 +128,8 @@ describe("generateSlotsFromData", () => {
     const end1 = new Date(now + 10 * 60 * 1000);
     const start2 = new Date(now + 10 * 60 * 1000);
     const end2 = new Date(now + 20 * 60 * 1000);
-    const result = generateSlotsFromData(
-      [
+    const result = generateSlotsFromData({
+      slots: [
         {
           allowed: 2,
           available: 1,
@@ -141,9 +145,9 @@ describe("generateSlotsFromData", () => {
           reserved: 0,
         },
       ],
-      15,
-      new Date(now)
-    );
+      duration: 15,
+      from: new Date(now),
+    });
     expect(result).toEqual([
       {
         start: start1,
@@ -158,8 +162,8 @@ describe("generateSlotsFromData", () => {
     const end1 = new Date(now + 10 * 60 * 1000);
     const start2 = new Date(now + 10 * 60 * 1000);
     const end2 = new Date(now + 20 * 60 * 1000);
-    const result = generateSlotsFromData(
-      [
+    const result = generateSlotsFromData({
+      slots: [
         {
           allowed: 2,
           available: 1,
@@ -175,9 +179,9 @@ describe("generateSlotsFromData", () => {
           reserved: 2,
         },
       ],
-      15,
-      new Date(now)
-    );
+      duration: 15,
+      from: new Date(now),
+    });
     expect(result).toEqual([]);
   });
 
@@ -185,8 +189,8 @@ describe("generateSlotsFromData", () => {
     const now = Date.now();
     const start = new Date(now - 30 * 60 * 1000);
     const end = new Date(now + 30 * 60 * 1000);
-    const result = generateSlotsFromData(
-      [
+    const result = generateSlotsFromData({
+      slots: [
         {
           allowed: 2,
           available: 1,
@@ -195,9 +199,38 @@ describe("generateSlotsFromData", () => {
           reserved: 1,
         },
       ],
-      15,
-      new Date(now)
-    );
+      duration: 15,
+      from: new Date(now),
+    });
+    expect(result).toEqual([
+      {
+        start: new Date(now),
+        end: new Date(+now + 15 * 60 * 1000),
+      },
+      {
+        start: new Date(+now + 15 * 60 * 1000),
+        end: new Date(+now + 30 * 60 * 1000),
+      },
+    ]);
+  });
+
+  it("returns nice times when slots in the past were filtered", () => {
+    const now = Date.now();
+    const start = new Date(now - 10 * 60 * 1000);
+    const end = new Date(now + 35 * 60 * 1000);
+    const result = generateSlotsFromData({
+      slots: [
+        {
+          allowed: 2,
+          available: 1,
+          end,
+          start,
+          reserved: 1,
+        },
+      ],
+      duration: 15,
+      from: new Date(now),
+    });
     expect(result).toEqual([
       {
         start: new Date(now),

@@ -1,12 +1,18 @@
 import { Ticket, Minutes, AvailableSlot } from "../../service/domain";
 
-export default function generateSlotsFromData(
-  tickets: Ticket[],
-  duration: Minutes,
-  from: Date
-): AvailableSlot[] {
+type GenerateSlotsFromDataProps = {
+  slots: Ticket[];
+  duration: Minutes;
+  from: Date;
+};
+
+export default function generateSlotsFromData({
+  slots,
+  duration,
+  from,
+}: GenerateSlotsFromDataProps): AvailableSlot[] {
   const durationInMs = duration * 60 * 1000;
-  const mergedTicketsAsSlots: AvailableSlot[] = tickets
+  const mergedTicketsAsSlots: AvailableSlot[] = slots
     .filter((ticket) => {
       const ticketInPast = +ticket.end < +from;
       return !ticketInPast;
