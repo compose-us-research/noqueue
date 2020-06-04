@@ -1,5 +1,6 @@
 const absoluteUrl = require('absolute-url')
 const bodyParser = require('body-parser')
+const { requiresAdmin } = require('./authz')
 const express = require('express')
 const uuid = require('uuid').v4
 const qrcode = require('./qrcode')
@@ -77,7 +78,7 @@ function ticket ({ db }) {
     }
   })
 
-  router.put('/:id', bodyParser.json(), async (req, res, next) => {
+  router.put('/:id', requiresAdmin, bodyParser.json(), async (req, res, next) => {
     try {
       await db.setTicket({
         id: req.params.id,

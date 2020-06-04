@@ -1,10 +1,12 @@
 const debug = require('debug')('noqueue-server')
 const { resolve } = require('path')
 const express = require('express')
+const expressSession = require('express-session')
 const cors = require('cors')
 const morgan = require('morgan')
 const Database = require('./lib/Database')
 const defaults = require('./lib/defaults')
+const authn = require('./lib/middleware/authn')
 const admin = require('./lib/middleware/admin')
 const shop = require('./lib/middleware/shop')
 
@@ -17,7 +19,18 @@ const config = {
     password: process.env.DB_PASSWORD || defaults.db.password,
     port: process.env.DB_PORT || defaults.db.port
   },
-  path: process.env.SHOP_PATH || 'default'
+  path: process.env.SHOP_PATH || 'default',
+  express: {
+    session: {
+      key: process.env.SESSION_KEY || defaults.express.session.key
+    }
+  },
+  auth: {
+    operator: {
+      user: process.env.OPERATOR_USER || defaults.auth.operator.user,
+      password: process.env.OPERATOR_PASSWORD || defaults.auth.operator.password
+    }
+  }
 }
 
 /*
@@ -42,6 +55,16 @@ async function init () {
         exposedHeaders: ['location']
       }))
     }
+
+    debug('mount express session')
+    app.use(expressSession({
+      secret: config.express.session.key,
+      resave: true,
+      saveUninitialized: true
+    }))
+
+    debug('mount authn')
+    app.use(authn({ config: config.auth, db }))
 
     const frontendPath = resolve(__dirname, '../frontend/build')
     debug(`mount frontend from ${frontendPath}`)

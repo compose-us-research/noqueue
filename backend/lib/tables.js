@@ -28,7 +28,17 @@ const tables = {
       "min_duration" integer,
       "max_duration" integer
     );`,
-    delete: 'DROP TABLE timeslots;'
+    delete: 'DROP TABLE timeslots;',
+  },
+  users: {
+    clear: 'TRUNCATE users;',
+    create: `CREATE TABLE users (
+      "id" character varying(1024),
+      "label" character varying(1024),
+      "token" character varying(1024),
+      "admin" boolean DEFAULT false
+    );`,
+    delete: 'DROP TABLE users;',
   }
 }
 

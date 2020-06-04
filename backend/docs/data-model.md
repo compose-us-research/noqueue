@@ -47,3 +47,12 @@ See the create script for more details about the data types and keys.
 - `customers`: Maximum number of customers for this time slot.
 - `min_duration`: Minimum duration time to issue a ticket.
 - `max_duration`: Maximum duration time to issue a ticket.
+
+### users
+
+`users` contains all registered users.
+
+- `id`: Id of the user as an integer.
+- `label`: Name of the user as string.
+- `token`: Bearer token for login using `access_token` query parameter.
+- `admin`: Flag if the user has admin right as boolean.

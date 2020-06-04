@@ -1,6 +1,8 @@
 const absoluteUrl = require('absolute-url')
 const bodyParser = require('body-parser')
 const express = require('express')
+const HttpError = require('http-errors')
+const { requiresAdmin }  = require('./authz')
 
 function timeslot ({ db }) {
   const router = new express.Router()
@@ -30,7 +32,7 @@ function timeslot ({ db }) {
     }
   })
 
-  router.put('/', bodyParser.json(), async (req, res, next) => {
+  router.put('/', requiresAdmin, bodyParser.json(), async (req, res, next) => {
     
     try {
       await db.replaceTimeslots(req.body.member.map(member => ({
