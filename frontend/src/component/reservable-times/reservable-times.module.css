@@ -20,6 +20,20 @@
   width: 100%;
 }
 
+.range {
+}
+
+.expander {
+}
+
+.remover {
+  padding: 25px;
+}
+
+.details {
+  display: none;
+}
+
 .timeframe {
   display: inline-flex;
   justify-content: stretch;
@@ -45,3 +59,7 @@
 }
 
 /* modifiers */
+
+.details.open {
+  display: block;
+}

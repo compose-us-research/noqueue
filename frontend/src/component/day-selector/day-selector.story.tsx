@@ -9,6 +9,15 @@ export default {
 
 export const Regular = () => (
   <Form>
-    <DaySelector name="day" />
+    <DaySelector name="days" />
+  </Form>
+);
+
+export const WithDefaultValue = () => (
+  <Form>
+    <DaySelector
+      defaultValue={[false, false, true, true, false, false, false]}
+      name="days"
+    />
   </Form>
 );

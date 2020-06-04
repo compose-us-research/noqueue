@@ -5,16 +5,23 @@ import Headline from "../headline/headline";
 
 import styles from "./choose-role.module.css";
 import Spacer from "../spacer/spacer";
+import { useRouteMatch } from "react-router-dom";
 
 interface ChooseRoleProps {
+  hasTickets: boolean;
   selectShopRole: () => void;
   selectCustomerRole: () => void;
+  selectShowTickets: () => void;
 }
 
 const ChooseRole: React.FC<ChooseRoleProps> = ({
   selectShopRole,
   selectCustomerRole,
+  hasTickets,
+  selectShowTickets,
 }) => {
+  const { path } = useRouteMatch();
+  console.log("in choose role?", { path });
   return (
     <div className={styles.root}>
       <Headline>
@@ -34,6 +41,14 @@ const ChooseRole: React.FC<ChooseRoleProps> = ({
         <Spacer />
         <Button variant="secondary" onClick={selectCustomerRole}>
           Als Kunde einen Termin buchen
+        </Button>
+        <Spacer />
+        <Button
+          variant="secondary"
+          onClick={selectShowTickets}
+          disabled={!hasTickets}
+        >
+          Gespeicherte Termine ansehen
         </Button>
       </div>
     </div>

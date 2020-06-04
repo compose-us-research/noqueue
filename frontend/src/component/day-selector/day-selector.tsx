@@ -1,51 +1,78 @@
-import React, { useEffect } from "react";
+import React from "react";
 import cn from "classnames";
 
 import styles from "./day-selector.module.css";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, Controller } from "react-hook-form";
+import { Day, DaysInWeek } from "../../service/domain";
 
-type DayOption = "Mo" | "Di" | "Mi" | "Do" | "Fr" | "Sa" | "So";
+type AvailableDays = [
+  boolean,
+  boolean,
+  boolean,
+  boolean,
+  boolean,
+  boolean,
+  boolean
+];
 
 interface DaySelectorProps {
   className?: string;
-  defaultValue?: DayOption;
+  defaultValue?: AvailableDays;
   disabled?: boolean;
   name: string;
+  onChange?: (selectedDays: AvailableDays) => void;
 }
 
-const options: DayOption[] = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+const noop = () => {};
+const options: Day[] = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+const hasAtLeastOneDaySet = (days: DaysInWeek) => {
+  console.log("validating", { days });
+  return days.some((day) => day);
+};
 
-function DaySelector({
+const DaySelector: React.FC<DaySelectorProps> = ({
   className = undefined,
-  defaultValue = "Mo",
+  defaultValue = [true, false, false, false, false, false, false],
   disabled = false,
   name,
-}: DaySelectorProps) {
-  const { register, setValue, unregister, watch } = useFormContext();
+  onChange = noop,
+}) => {
+  const { control, setValue, watch } = useFormContext();
   const selected = watch(name, defaultValue);
-
-  useEffect(() => {
-    register({ name });
-    setValue(name, defaultValue);
-
-    return () => unregister(name);
-  }, [defaultValue, name, register, setValue, unregister]);
 
   return (
     <div className={cn(styles.root, disabled && styles.disabled, className)}>
-      {options.map((option) => (
-        <button
-          key={option}
-          className={selected === option ? styles.selected : styles.option}
-          disabled={disabled}
-          onClick={() => setValue(name, option)}
-          type="button"
-        >
-          {option}
-        </button>
-      ))}
+      <Controller
+        as={
+          <React.Fragment>
+            {options.map((option, index) => (
+              <button
+                key={option}
+                className={selected[index] ? styles.selected : styles.option}
+                disabled={disabled}
+                onClick={() => {
+                  const newSelected = [
+                    ...selected.slice(0, index),
+                    !selected[index],
+                    ...selected.slice(index + 1),
+                  ] as AvailableDays;
+                  setValue(name, newSelected, true);
+                  onChange(newSelected);
+                }}
+                type="button"
+              >
+                {option}
+              </button>
+            ))}
+          </React.Fragment>
+        }
+        control={control}
+        defaultValue={selected}
+        name={name}
+        rules={{ validate: hasAtLeastOneDaySet }}
+      />
     </div>
   );
-}
+};
 
 export default DaySelector;

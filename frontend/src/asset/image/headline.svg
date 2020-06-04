@@ -1,5 +1,5 @@
 <svg width="375" height="296" viewBox="0 0 375 296" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M0.997314 -4.9816L375 -4.9816V277.26C375 277.26 249.83 295.907 187.999 295.907C126.167 295.907 0.997314 277.26 0.997314 277.26L0.997314 -4.9816Z" fill="url(#paint0_linear)"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M0 -4.9816L375 -4.9816V277.26C375 277.26 249.83 296 187.999 296C126.167 296 0 277.26 0 277.26L0 -4.9816Z" fill="url(#paint0_linear)"/>
 <defs>
 <linearGradient id="paint0_linear" x1="13.9627" y1="96.2572" x2="314.594" y2="288.763" gradientUnits="userSpaceOnUse">
 <stop stop-color="#4643D3"/>

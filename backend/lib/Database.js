@@ -23,7 +23,7 @@ class Database {
     }
 
     // check if default config exists otherwise create default config
-    if (!await this.getConfig()) {
+    if (!(await this.getConfig())) {
       debug(`create default config`)
 
       await this.addConfig(defaults.config)
@@ -57,7 +57,8 @@ class Database {
   async addConfig (config, name = 'default') {
     await this.deleteConfig(name)
 
-    const query = 'INSERT INTO config("name", "data") VALUES ($1, $2) RETURNING *'
+    const query =
+      'INSERT INTO config("name", "data") VALUES ($1, $2) RETURNING *'
     const values = [name, config]
     const result = await this.client.query(query, values)
 
@@ -84,17 +85,19 @@ class Database {
     await this.client.query('DELETE FROM config WHERE "name" = $1', [name])
   }
 
-  async addTicket ({ user, start, end }) {
-    const query = 'INSERT INTO tickets("user", "start", "end") VALUES ($1, $2, $3) RETURNING *'
-    const values = [user, start, end]
+  async addTicket ({ id, start, end, contact }) {
+    const query =
+      'INSERT INTO tickets("id", "start", "end", "contact") VALUES ($1, $2, $3, $4) RETURNING *'
+    const values = [id, start, end, contact]
     const result = await this.client.query(query, values)
 
     return result.rows[0]
   }
 
-  async setTicket ({ id, start, end, ready, used }) {
-    const query = 'UPDATE tickets SET "start"=$1, "end"=$2, "ready"=$3, "used"=$4 WHERE "id"=$5'
-    const values = [start, end, ready, used, id]
+  async setTicket ({ id, start, end, contact }) {
+    const query =
+      'UPDATE tickets SET "start"=$1, "end"=$2, "contact"=$3 WHERE "id"=$4'
+    const values = [start, end, contact, id]
     await this.client.query(query, values)
   }
 
@@ -108,34 +111,55 @@ class Database {
 
   async availableTickets ({ start, end }) {
     const query = `
-SELECT "range"."start", "range"."end", COUNT("booked".*) AS "reserved", "timeslots"."customers" AS "allowed", "timeslots"."customers" - COUNT("booked".*) AS "available" FROM (
+SELECT "range"."start", "range"."end", COUNT("booked".*)::integer AS "reserved", COALESCE("timeslots"."customers", 0) AS "allowed", COALESCE("timeslots"."customers", 0) - COUNT("booked".*)::integer AS "available" FROM (
+  -- combine the start and end timestamps to ranges 
   SELECT "start", MIN("raw_end") AS "end" FROM (
+      -- the next 3 selects combine all possible start timestamps for varying number of allowed and reserved customers 
+  
+      -- find all tickets issued in the given time range and get start...
       SELECT "start" FROM tickets WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+
+      -- ...and end date
       SELECT "end" AS "start" FROM tickets WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+
+      -- combine the day range with the start time of the timeslot matching the day of week
       SELECT "range"."day" + "timeslots"."start" AS "start" FROM (
-        SELECT generate_series AS "day" FROM generate_series($1::timestamp, $2, '24 hours')
+        -- create timestamps for each day from start to end with the time 00:00:00.000 
+        SELECT generate_series AS "day" FROM generate_series(($1::date)::timestamp, $2, '24 hours')
       ) AS "range", timeslots WHERE timeslots.day = EXTRACT(DOW FROM "range"."day")
+
       ORDER BY "start"
     ) AS "start", (
+      -- the next 3 selects combine all possible end timestamps for varying number of allowed and reserved customers
+    
+      -- find all tickets issued in the given time range and get start...
       SELECT "start" AS "raw_end" FROM tickets WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+
+      -- ...and end date
       SELECT "end" AS "raw_end" FROM tickets WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+      
+      -- combine the day range with the end time of the timeslot matching the day of week
       SELECT "range"."day" + "timeslots"."end" AS "end" FROM (
-        SELECT generate_series AS "day" FROM generate_series($1::timestamp, $2, '24 hours')
+        -- create timestamps for each day from start to end with the time 00:00:00.000
+        SELECT generate_series AS "day" FROM generate_series(($1::date)::timestamp, $2, '24 hours')
       ) AS "range", timeslots WHERE timeslots.day = EXTRACT(DOW FROM "range"."day")
+
       ORDER BY "raw_end"
     ) AS "end"
   WHERE "start" < "raw_end"
   GROUP BY "start"
 ) AS "range"
+-- add the tickets for the built ranges
 LEFT JOIN tickets "booked" ON (
   ("booked"."start" <= "range"."start" AND "booked"."end" > "range"."start") OR
   ("booked"."start" < "range"."end" AND "booked"."end" >= "range"."end")
 )
+-- add the timeslots for the built ranges
 LEFT JOIN timeslots ON (
-  ("timeslots"."start" <= CAST("range"."start" AS time) AND "timeslots"."end" > CAST("range"."start" AS time)) OR
-  ("timeslots"."start" < CAST("range"."end" AS time) AND "timeslots"."end" >= CAST("range"."end" AS time))
+  ("timeslots"."start" <= CAST("range"."start" AS time) AND "timeslots"."end" > CAST("range"."start" AS time) AND "timeslots"."day" = EXTRACT(DOW FROM "range"."start")) OR
+  ("timeslots"."start" < CAST("range"."end" AS time) AND "timeslots"."end" >= CAST("range"."end" AS time) AND "timeslots"."day" = EXTRACT(DOW FROM "range"."start"))
 )
-GROUP BY "range"."start", "range"."end", "allowed"
+GROUP BY "range"."start", "range"."end", "allowed", "timeslots"."customers"
 ORDER BY "range"."start"
 `
     const values = [start.toISOString(), end.toISOString()]
@@ -144,17 +168,17 @@ ORDER BY "range"."start"
     return result.rows
   }
 
-  async addTimeslot ({ day, start, end, customers }) {
-    const query = 'INSERT INTO timeslots("day", "start", "end", "customers") VALUES ($1, $2, $3, $4) RETURNING *'
-    const values = [day, start, end, customers]
-    const result = await this.client.query(query, values)
-
-    return result.rows[0]
-  }
-
-  async setTimeslot ({ id, day, start, end, customers }) {
-    const query = 'UPDATE timeslots SET "day"=$1 "start"=$2, "end"=$3, "customers"=$4 WHERE "id"=$5'
-    const values = [day, start, end, customers, id]
+  async replaceTimeslots (listOfSlots) {
+    const query = `WITH inserted_ids AS (INSERT INTO timeslots("day", "start", "end", "customers", "min_duration", "max_duration") VALUES ${
+      listOfSlots.map((_slot, idx) => {
+        const row = idx * 6;
+        return `($${row + 1}, $${row + 2}, $${row + 3}, $${row + 4}, $${row + 5}, $${row + 6})`
+      }).join(',')
+    } RETURNING id) DELETE FROM timeslots WHERE id NOT IN (SELECT id FROM inserted_ids)`;
+    const values = listOfSlots.reduce(
+      (acc, {day, start, end, customers, minDuration, maxDuration}) => [...acc, day, start, end, customers, minDuration, maxDuration],
+      []
+    )
     await this.client.query(query, values)
   }
 
@@ -162,7 +186,7 @@ ORDER BY "range"."start"
     const query = 'SELECT * FROM timeslots'
     const result = await this.client.query(query)
 
-    return result.rows[0]
+    return result.rows
   }
 
   async addUser ({ id, label, token, admin }) {

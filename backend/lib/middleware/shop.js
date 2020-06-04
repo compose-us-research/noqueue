@@ -15,23 +15,15 @@ function shop ({ db }) {
   router.get('/', async (req, res, next) => {
     console.log(req.user)
 
-    if (req.accepts('html')) {
-      return next()
-    }
-
     const config = await db.getConfig()
 
     res.json({
+      ...config,
       '@id': req.absoluteUrl(),
-      label: config.label
     })
   })
 
   router.put('/', requiresAdmin, bodyParser.json(), async (req, res, next) => {
-    if (req.accepts('html')) {
-      return next()
-    }
-
     await db.setConfig(req.body)
 
     res.status(201).end()

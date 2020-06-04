@@ -1,73 +1,83 @@
-import React, { useCallback } from "react";
+import React from "react";
 
 import { ReactComponent as PlusIcon } from "../../asset/image/plus-icon.svg";
-import { Timerange } from "../../service/domain";
+import { Timerange, Timeslot } from "../../service/domain";
 import Button from "../button/button";
 import styles from "./reservable-times.module.css";
-import RangeSlider from "../multi-slider/range-slider";
-import TextField from "../text-field/text-field";
-import { FormContext, useForm } from "react-hook-form";
-import DaySelector from "../day-selector/day-selector";
+import { FormContext, useForm, OnSubmit, useFieldArray } from "react-hook-form";
 import Spacer from "../spacer/spacer";
+import TimerangeSetter from "../timerange-setter/timerange-setter";
+import { useShopFetch } from "../../service/server/connection";
+import generateTimerangesFromTimeslots from "../../lib/generate-timeranges-from-timeslots/generate-timeranges-from-timeslots";
 
 interface ReservableTimesProps {
-  ranges: Timerange[];
+  handleSubmit: OnSubmit<Record<string, any>>;
 }
 
-// const ReservableTimes: React.FC<ReservableTimesProps> = ({ ranges }) => {
-// const [currentTimerange, setCurrentTimerange] = useState<Timerange>(
-//   ranges[0]
-// );
-const ReservableTimes: React.FC<ReservableTimesProps> = () => {
-  const addTimerange = useCallback(() => {}, []);
-  const handleSubmit = useCallback(() => {}, []);
-  const methods = useForm();
+function createNewTimerange(lastRange?: Timerange): Timerange {
+  return {
+    amountOfPeopleInShop: lastRange?.amountOfPeopleInShop || 0,
+    days: lastRange?.days || [true, true, true, true, true, false, false],
+    start: lastRange?.start || "08:00",
+    end: lastRange?.end || "18:00",
+    duration: lastRange?.duration || [5, 120],
+  };
+}
+
+const mapper = (data: any): Timeslot[] => {
+  return data.member;
+};
+
+let id = 1;
+const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
+  const timeslots = useShopFetch("/timeslot", mapper);
+  const timeranges = generateTimerangesFromTimeslots(timeslots);
+  const methods = useForm({
+    defaultValues: {
+      ranges: timeranges.map((range) => ({ ...range, id: id++ })),
+    },
+  });
+  const { fields, append, remove } = useFieldArray({
+    control: methods.control,
+    name: "ranges",
+  });
+
   return (
     <div className={styles.root}>
       <h2>Buchbare Zeiten hinterlegen</h2>
       <FormContext {...methods}>
         <form onSubmit={methods.handleSubmit(handleSubmit)}>
+          <Spacer />
           <div className={styles.fields}>
-            <div>stub: Selector</div>
-            <Spacer />
-
-            <DaySelector name="day" />
-
-            <Spacer />
-
-            <div className={styles.timeframe}>
-              <TextField label="Uhrzeit von" name="timeFrom" required />
-              <Spacer direction="column" />
-              <TextField label="Uhrzeit bis" name="timeUntil" required />
-            </div>
-
-            <Spacer />
-
-            <TextField
-              label="Anzahl der Personen im Geschäft"
-              name="amountOfCustomers"
-              required
-              type="number"
-            />
-
-            <Spacer />
-
-            <h3>Wählbarer Zeitraum</h3>
-            <RangeSlider min={5} max={120} />
-
-            <Spacer />
+            {fields.map((range, index) => (
+              <React.Fragment key={range.id}>
+                <TimerangeSetter
+                  index={index}
+                  label={`Zeitraum ${index + 1}`}
+                  name={"ranges"}
+                  range={range as Timerange}
+                  remover={() => remove(index)}
+                />
+                <Spacer />
+              </React.Fragment>
+            ))}
 
             <Button
               className={styles.addButton}
-              onClick={addTimerange}
+              onClick={() => {
+                const lastRange = fields[fields.length - 1] as Timerange;
+                const appendTimerange = {
+                  ...createNewTimerange(lastRange),
+                  id: id++,
+                };
+                append(appendTimerange);
+              }}
               variant="secondary"
             >
               <span>Zeitraum hinzufügen</span>
               <PlusIcon />
             </Button>
-
             <Spacer />
-
             <Button className={styles.submit} type="submit">
               Fertig! Erzähl es deinen Kunden!
             </Button>

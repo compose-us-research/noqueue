@@ -9,7 +9,18 @@ export default {
 
 export const Default = () => (
   <ChooseRole
+    hasTickets={false}
     selectCustomerRole={action("selected customer role")}
     selectShopRole={action("selected shop role")}
+    selectShowTickets={action("selected show tickets")}
+  />
+);
+
+export const WithTickets = () => (
+  <ChooseRole
+    hasTickets={true}
+    selectCustomerRole={action("selected customer role")}
+    selectShopRole={action("selected shop role")}
+    selectShowTickets={action("selected show tickets")}
   />
 );
