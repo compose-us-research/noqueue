@@ -1,11 +1,12 @@
 const debug = require('debug')('noqueue-database')
 const { Client } = require('pg')
-const defaults = require('./defaults')
-const tables = require('./tables')
+const defaults = require('../defaults')
+const tables = require('./shop-tables')
 
-class Database {
-  constructor ({ user, host, database, password, port }) {
+class ShopConnection {
+  constructor ({ user, host, database, password, prefix, port }) {
     this.client = new Client({ user, host, database, password, port })
+    this.prefix = prefix
   }
 
   async init () {
@@ -13,20 +14,13 @@ class Database {
 
     // check if tables exist otherwise run create script
     for (const [table, config] of Object.entries(tables)) {
-      const exists = await this.exists(table)
+      const exists = await this.exists(`${this.prefix}_${table}`)
 
       if (!exists) {
-        debug(`${table} doesn't exist, running create script`)
+        debug(`${this.prefix}_${table} doesn't exist, running create script`)
 
-        await this.client.query(config.create)
+        await this.client.query(config.create(this.prefix))
       }
-    }
-
-    // check if default config exists otherwise create default config
-    if (!(await this.getConfig())) {
-      debug(`create default config`)
-
-      await this.addConfig(defaults.config)
     }
   }
 
@@ -36,14 +30,15 @@ class Database {
 
   async clear () {
     for (const [table, config] of Object.entries(tables)) {
-      await this.client.query(config.clear)
+      await this.client.query(config.clear(this.prefix))
     }
   }
 
   async delete () {
     for (const [table, config] of Object.entries(tables)) {
-      await this.client.query(config.delete)
+      await this.client.query(config.delete(this.prefix))
     }
+    await this.client.query('DELETE FROM shops WHERE "name"=$1', [this.prefix])
   }
 
   async exists (name) {
@@ -54,40 +49,22 @@ class Database {
     return result.rows[0].exists
   }
 
-  async addConfig (config, name = 'default') {
-    await this.deleteConfig(name)
-
-    const query =
-      'INSERT INTO config("name", "data") VALUES ($1, $2) RETURNING *'
-    const values = [name, config]
+  async getConfig () {
+    const query = 'SELECT * FROM shops WHERE "name"=$1'
+    const values = [this.prefix]
     const result = await this.client.query(query, values)
 
-    return result.rows[0].data
+    return result.rows[0]
   }
 
-  async setConfig (config, name = 'default') {
-    const query = 'UPDATE config SET "data"=$1 WHERE "name"=$2'
-    const values = [config, name]
+  async setConfig (config) {
+    const query = 'UPDATE shops SET "name"=$1, "data"=$2 WHERE "prefix"=$3'
+    const values = [this.prefix, config]
     await this.client.query(query, values)
   }
 
-  async getConfig (name = 'default') {
-    const result = await this.client.query('SELECT * FROM config')
-
-    if (result.rows.length === 0) {
-      return null
-    }
-
-    return result.rows[0].data
-  }
-
-  async deleteConfig (name = 'default') {
-    await this.client.query('DELETE FROM config WHERE "name" = $1', [name])
-  }
-
   async addTicket ({ id, start, end, contact }) {
-    const query =
-      'INSERT INTO tickets("id", "start", "end", "contact") VALUES ($1, $2, $3, $4) RETURNING *'
+    const query = `INSERT INTO "${this.prefix}_tickets"("id", "start", "end", "contact") VALUES ($1, $2, $3, $4) RETURNING *`
     const values = [id, start, end, contact]
     const result = await this.client.query(query, values)
 
@@ -95,14 +72,13 @@ class Database {
   }
 
   async setTicket ({ id, start, end, contact }) {
-    const query =
-      'UPDATE tickets SET "start"=$1, "end"=$2, "contact"=$3 WHERE "id"=$4'
+    const query = `UPDATE "${this.prefix}_tickets" SET "start"=$1, "end"=$2, "contact"=$3 WHERE "id"=$4`
     const values = [start, end, contact, id]
     await this.client.query(query, values)
   }
 
   async getTicket (id) {
-    const query = 'SELECT * FROM tickets WHERE "id"=$1'
+    const query = `SELECT * FROM "${this.prefix}_tickets" WHERE "id"=$1`
     const values = [id]
     const result = await this.client.query(query, values)
 
@@ -117,32 +93,32 @@ SELECT "range"."start", "range"."end", COUNT("booked".*)::integer AS "reserved",
       -- the next 3 selects combine all possible start timestamps for varying number of allowed and reserved customers 
   
       -- find all tickets issued in the given time range and get start...
-      SELECT "start" FROM tickets WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+      SELECT "start" FROM "${this.prefix}_tickets" WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
 
       -- ...and end date
-      SELECT "end" AS "start" FROM tickets WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+      SELECT "end" AS "start" FROM "${this.prefix}_tickets" WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
 
       -- combine the day range with the start time of the timeslot matching the day of week
       SELECT "range"."day" + "timeslots"."start" AS "start" FROM (
         -- create timestamps for each day from start to end with the time 00:00:00.000 
         SELECT generate_series AS "day" FROM generate_series(($1::date)::timestamp, $2, '24 hours')
-      ) AS "range", timeslots WHERE timeslots.day = EXTRACT(DOW FROM "range"."day")
+      ) AS "range", "${this.prefix}_timeslots" AS timeslots WHERE timeslots.day = EXTRACT(DOW FROM "range"."day")
 
       ORDER BY "start"
     ) AS "start", (
       -- the next 3 selects combine all possible end timestamps for varying number of allowed and reserved customers
     
       -- find all tickets issued in the given time range and get start...
-      SELECT "start" AS "raw_end" FROM tickets WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+      SELECT "start" AS "raw_end" FROM "${this.prefix}_tickets" WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
 
       -- ...and end date
-      SELECT "end" AS "raw_end" FROM tickets WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+      SELECT "end" AS "raw_end" FROM "${this.prefix}_tickets" WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
       
       -- combine the day range with the end time of the timeslot matching the day of week
       SELECT "range"."day" + "timeslots"."end" AS "end" FROM (
         -- create timestamps for each day from start to end with the time 00:00:00.000
         SELECT generate_series AS "day" FROM generate_series(($1::date)::timestamp, $2, '24 hours')
-      ) AS "range", timeslots WHERE timeslots.day = EXTRACT(DOW FROM "range"."day")
+      ) AS "range", "${this.prefix}_timeslots" AS timeslots WHERE timeslots.day = EXTRACT(DOW FROM "range"."day")
 
       ORDER BY "raw_end"
     ) AS "end"
@@ -150,12 +126,12 @@ SELECT "range"."start", "range"."end", COUNT("booked".*)::integer AS "reserved",
   GROUP BY "start"
 ) AS "range"
 -- add the tickets for the built ranges
-LEFT JOIN tickets "booked" ON (
+LEFT JOIN "${this.prefix}_tickets" "booked" ON (
   ("booked"."start" <= "range"."start" AND "booked"."end" > "range"."start") OR
   ("booked"."start" < "range"."end" AND "booked"."end" >= "range"."end")
 )
 -- add the timeslots for the built ranges
-LEFT JOIN timeslots ON (
+LEFT JOIN "${this.prefix}_timeslots" "timeslots" ON (
   ("timeslots"."start" <= CAST("range"."start" AS time) AND "timeslots"."end" > CAST("range"."start" AS time) AND "timeslots"."day" = EXTRACT(DOW FROM "range"."start")) OR
   ("timeslots"."start" < CAST("range"."end" AS time) AND "timeslots"."end" >= CAST("range"."end" AS time) AND "timeslots"."day" = EXTRACT(DOW FROM "range"."start"))
 )
@@ -169,25 +145,38 @@ ORDER BY "range"."start"
   }
 
   async replaceTimeslots (listOfSlots) {
-    const query = `WITH inserted_ids AS (INSERT INTO timeslots("day", "start", "end", "customers", "min_duration", "max_duration") VALUES ${
-      listOfSlots.map((_slot, idx) => {
-        const row = idx * 6;
-        return `($${row + 1}, $${row + 2}, $${row + 3}, $${row + 4}, $${row + 5}, $${row + 6})`
-      }).join(',')
-    } RETURNING id) DELETE FROM timeslots WHERE id NOT IN (SELECT id FROM inserted_ids)`;
+    const query = `WITH inserted_ids AS (INSERT INTO "${
+      this.prefix
+    }_timeslots"("day", "start", "end", "customers", "min_duration", "max_duration") VALUES ${listOfSlots
+      .map((_slot, idx) => {
+        const row = idx * 6
+        return `($${row + 1}, $${row + 2}, $${row + 3}, $${row + 4}, $${row +
+          5}, $${row + 6})`
+      })
+      .join(',')} RETURNING id) DELETE FROM "${
+      this.prefix
+    }_timeslots" WHERE id NOT IN (SELECT id FROM inserted_ids)`
     const values = listOfSlots.reduce(
-      (acc, {day, start, end, customers, minDuration, maxDuration}) => [...acc, day, start, end, customers, minDuration, maxDuration],
+      (acc, { day, start, end, customers, minDuration, maxDuration }) => [
+        ...acc,
+        day,
+        start,
+        end,
+        customers,
+        minDuration,
+        maxDuration
+      ],
       []
     )
     await this.client.query(query, values)
   }
 
   async getTimeslots () {
-    const query = 'SELECT * FROM timeslots'
+    const query = `SELECT * FROM "${this.prefix}_timeslots"`
     const result = await this.client.query(query)
 
     return result.rows
   }
 }
 
-module.exports = Database
+module.exports = ShopConnection

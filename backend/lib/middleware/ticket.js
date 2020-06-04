@@ -50,7 +50,8 @@ function ticket ({ db }) {
   })
 
   router.get('/:id', qrcode, async (req, res, next) => {
-    const supportedContent = req.accepts('image/png') || req.accepts('application/json')
+    const supportedContent =
+      req.accepts('image/png') || req.accepts('application/json')
     if (!supportedContent) {
       return next()
     }
@@ -65,9 +66,7 @@ function ticket ({ db }) {
 
       // sendQrCode is only attached if images are accepted
       if (res.sendQrCode) {
-        res
-          .set('content-type', 'image/png')
-          .sendQrCode(req.absoluteUrl())
+        res.set('content-type', 'image/png').sendQrCode(req.absoluteUrl())
         return
       }
 
