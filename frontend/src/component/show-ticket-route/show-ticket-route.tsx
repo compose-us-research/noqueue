@@ -17,10 +17,9 @@ const ShowTicketRoute: React.FC<ShowTicketRouteProps> = ({ backToIndex }) => {
   return (
     <Switch>
       <Route path={`${path}/update`}>
-        <Stub
-          next={backToIndex}
-          text="Das Bearbeiten ist momentan noch nicht möglich."
-        />
+        <Stub next={backToIndex}>
+          Das Bearbeiten ist momentan noch nicht möglich.
+        </Stub>
       </Route>
       <Route path={`${path}/`}>
         <ShowTicket backToIndex={backToIndex} ticket={ticket} />

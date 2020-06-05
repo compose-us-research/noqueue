@@ -23,6 +23,7 @@ import useLocalTickets, {
 } from "../../service/tickets/use-local-tickets";
 import Stub from "../stub/stub";
 import ShowTicketsRoute from "../show-tickets-route/show-tickets-route";
+import ChooseShop from "../choose-shop/choose-shop";
 
 interface AppProps {
   connection?: typeof defaultConnection;
@@ -68,20 +69,6 @@ const ChooseRoleRoute = () => {
   );
 };
 
-const ChooseShopRoute = () => {
-  const { push } = useHistory();
-  return (
-    <Stub
-      next={() => {
-        console.log("pushing to /shop/default");
-        push("/shop/default");
-      }}
-      text="Zwischen den Shops wird erst später ausgewählt"
-      buttonText="Weiter"
-    />
-  );
-};
-
 const RoutedApp: React.FC<CurrentShopAppProps> = ({ connection }) => {
   const { push, location } = useHistory();
   const { path, url } = useRouteMatch();
@@ -89,15 +76,14 @@ const RoutedApp: React.FC<CurrentShopAppProps> = ({ connection }) => {
   return (
     <Switch>
       <Route path="/create-shop">
-        <Stub
-          next={() => push("/shop/default/owner")}
-          text="Es kann nur der bereits registrierte Shop ('default') bearbeitet werden."
-          buttonText="Weiter"
-        />
+        <Stub next={() => push("/")} buttonText="Weiter">
+          Momentan ist unsere Registrierung nur über Rücksprache mit uns
+          möglich.
+        </Stub>
       </Route>
       <Route path="/choose-shop">
         <Suspense fallback={<Loader />}>
-          <ChooseShopRoute />
+          <ChooseShop backToIndex={() => push(url)} navigateTo={push} />
         </Suspense>
       </Route>
       <Route path="/shop/:shopId">

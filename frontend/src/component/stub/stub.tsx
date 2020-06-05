@@ -8,10 +8,14 @@ import Headline from "../headline/headline";
 interface StubProps {
   buttonText?: string;
   next: () => void;
-  text?: string;
+  children?: React.ReactNode;
 }
 
-const Stub: React.FC<StubProps> = ({ buttonText = "Zurück", next, text }) => {
+const Stub: React.FC<StubProps> = ({
+  buttonText = "Zurück",
+  next,
+  children = undefined,
+}) => {
   return (
     <div className={styles.root}>
       <Headline>
@@ -21,8 +25,9 @@ const Stub: React.FC<StubProps> = ({ buttonText = "Zurück", next, text }) => {
       <div className={styles.main}>
         <Spacer />
 
-        <p>Dieses Feature ist leider noch nicht eingebaut.</p>
-        {text && <p>{text}</p>}
+        <p>Feature in progress.</p>
+
+        {children}
 
         <Spacer />
 

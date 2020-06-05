@@ -55,6 +55,11 @@ export const useShop: () => ShopConfig = () => {
   return { ...data!, path: currentShopId };
 };
 
+export const useShops: () => ShopConfig[] = () => {
+  const data = useFetch("/shop");
+  return data!.member;
+};
+
 function idFn<T>(a: T): T {
   return a;
 }
