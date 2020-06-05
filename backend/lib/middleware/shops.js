@@ -6,12 +6,12 @@ const ShopConnection = require('../db/ShopConnection')
 const admin = require('./admin')
 const shop = require('./shop')
 
-function nameToPrefix(name) {
-  return name.toLowerCase().replace(/[^a-z]/ig, '_')
+function nameToPrefix (name) {
+  return name.toLowerCase().replace(/[^a-z]/gi, '_')
 }
 
-function nameToPath(name) {
-  return name.toLowerCase().replace(/[^a-z]/ig, '-')
+function nameToPath (name) {
+  return name.toLowerCase().replace(/[^a-z]/gi, '-')
 }
 
 async function shops ({ db, dbConfig }) {
@@ -20,10 +20,15 @@ async function shops ({ db, dbConfig }) {
   router.use(absoluteUrl())
 
   const shops = await db.getShops()
-  
+
   router.get('/', async (req, res, next) => {
     const shops = await db.getShops()
-    res.json(shops)
+    res.json({
+      member: shops.map(shop => ({
+        ...shop.data,
+        '@id': `${req.absoluteUrl()}/${shop.name}`
+      }))
+    })
   })
 
   shops.forEach(async shopConfig => {
@@ -32,6 +37,7 @@ async function shops ({ db, dbConfig }) {
     debug(`mounting shop at /shop/${path}`)
     const shopConnection = new ShopConnection({
       ...dbConfig,
+      name: path,
       prefix
     })
     await shopConnection.init()
@@ -51,6 +57,7 @@ async function shops ({ db, dbConfig }) {
     await db.addShop(config, path, prefix)
     const shopConnection = new ShopConnection({
       ...dbConfig,
+      name: path,
       prefix
     })
     await shopConnection.init()

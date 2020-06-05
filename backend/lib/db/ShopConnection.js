@@ -4,8 +4,9 @@ const defaults = require('../defaults')
 const tables = require('./shop-tables')
 
 class ShopConnection {
-  constructor ({ user, host, database, password, prefix, port }) {
+  constructor ({ user, host, database, password, name, prefix, port }) {
     this.client = new Client({ user, host, database, password, port })
+    this.name = name
     this.prefix = prefix
   }
 
@@ -38,7 +39,7 @@ class ShopConnection {
     for (const [table, config] of Object.entries(tables)) {
       await this.client.query(config.delete(this.prefix))
     }
-    await this.client.query('DELETE FROM shops WHERE "name"=$1', [this.prefix])
+    await this.client.query('DELETE FROM shops WHERE "name"=$1', [this.name])
   }
 
   async exists (name) {
@@ -51,15 +52,16 @@ class ShopConnection {
 
   async getConfig () {
     const query = 'SELECT * FROM shops WHERE "name"=$1'
-    const values = [this.prefix]
+    const values = [this.name]
     const result = await this.client.query(query, values)
 
-    return result.rows[0]
+    console.log('selecting', this.name);
+    return result.rows[0].data
   }
 
   async setConfig (config) {
-    const query = 'UPDATE shops SET "name"=$1, "data"=$2 WHERE "prefix"=$3'
-    const values = [this.prefix, config]
+    const query = 'UPDATE shops SET "data"=$1 WHERE "name"=$2'
+    const values = [config, this.name]
     await this.client.query(query, values)
   }
 
