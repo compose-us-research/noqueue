@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import { useForm, FormContext } from "react-hook-form";
 
 import { ShopConfig } from "../../service/domain";
