@@ -1,11 +1,11 @@
 import React from "react";
 
-import { TicketMap, RegisteredTicket } from "../../service/domain";
+import { TicketMap, LocalTicket } from "../../service/domain";
 import ListScreen from "../list-screen/list-screen";
 
 interface ShowTicketsProps {
   backToIndex: () => void;
-  navigateTo: (ticket: RegisteredTicket) => void;
+  navigateTo: (ticket: LocalTicket) => void;
   tickets: TicketMap;
 }
 

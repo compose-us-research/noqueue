@@ -37,7 +37,7 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
   const url = `/ticket/available?start=${encodeURIComponent(
     start.toISOString()
   )}&end=${encodeURIComponent(end.toISOString())}`;
-  const data = useShopFetch<Ticket[]>(url, mapper);
+  const data = useShopFetch<Ticket[]>(url, { mapper });
   const slots = generateSlotsFromData({
     slots: data,
     duration,

@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import useSWR from "swr";
+import useSWR, { ConfigInterface } from "swr";
 import { ShopId, ShopConfig } from "../domain";
 import * as fetcher from "./fetcher";
 import * as push from "./push";
@@ -40,10 +40,11 @@ export const FetcherProvider: React.FC<FetcherProviderProps> = ({
   );
 };
 
-const useFetch = (path: string) => {
+const useFetch = (path: string, options: ConfigInterface = {}) => {
   const { connection } = useContext(FetcherContext);
   const { data } = useSWR(`${API_URL}${path}`, connection.fetcher.fetcher, {
     suspense: true,
+    ...options,
   });
   return data;
 };
@@ -65,10 +66,16 @@ function idFn<T>(a: T): T {
 
 export function useShopFetch<T>(
   path: string,
-  mapper: (from: any) => T = idFn
+  {
+    mapper = idFn,
+    swrOptions = {},
+  }: {
+    mapper?: (from: any) => T;
+    swrOptions?: ConfigInterface;
+  }
 ): T {
   const { currentShopId } = useContext(FetcherContext);
-  const data = useFetch(`/shop/${currentShopId}${path}`);
+  const data = useFetch(`/shop/${currentShopId}${path}`, swrOptions);
   return mapper(data!);
 }
 

@@ -1,9 +1,4 @@
-import {
-  AvailableSlot,
-  Customer,
-  RegisteredTicket,
-  ShopConfig,
-} from "../../../src/service/domain";
+import { LocalTicket } from "../../../src/service/domain";
 import { RegisterTicketParams } from "../../../src/service/server/push";
 
 export const putData = async (url: string, data: any) => {
@@ -19,7 +14,7 @@ export async function registerTicket({
   shop,
   ticket,
   customer,
-}: RegisterTicketParams): Promise<RegisteredTicket> {
+}: RegisterTicketParams): Promise<LocalTicket> {
   const ticketUrl = `${shop["@id"]}/ticket/1`;
   return { ...ticket, shop, id: ticketUrl, ticketUrl };
 }
