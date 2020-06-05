@@ -27,7 +27,10 @@ const mapper: (from: any) => RegisteredTicket = (ticket) => {
 function isLocalTicket(
   ticket: RegisteredTicket | LocalTicket
 ): ticket is LocalTicket {
-  return (ticket as LocalTicket).shop !== undefined;
+  return (
+    (ticket as LocalTicket).shop !== undefined &&
+    (ticket as LocalTicket).ticketUrl !== undefined
+  );
 }
 
 const ShowTicketRoute: React.FC<ShowTicketRouteProps> = ({ backToIndex }) => {
@@ -40,11 +43,15 @@ const ShowTicketRoute: React.FC<ShowTicketRouteProps> = ({ backToIndex }) => {
       mapper,
       swrOptions: {
         initialData: tickets[ticketId],
+        refreshWhenOffline: false,
       },
     }
   );
-  const shop = useShopFetch<ShopConfig>(`/`, {
-    swrOptions: { initialData: (retrievedTicket as LocalTicket).shop },
+  const shop = useShopFetch<ShopConfig>("/", {
+    swrOptions: {
+      initialData: (retrievedTicket as LocalTicket).shop,
+      refreshWhenOffline: false,
+    },
   });
   const ticket = isLocalTicket(retrievedTicket)
     ? retrievedTicket
