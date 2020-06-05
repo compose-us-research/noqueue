@@ -101,13 +101,16 @@ export interface Timeslot {
   maxDuration: Minutes;
 }
 
-export type TicketMap = { [id: string]: RegisteredTicket };
+export type TicketMap = { [id: string]: LocalTicket };
 
 export interface RegisteredTicket {
-  contact: Customer;
+  contact?: Customer;
   end: Date;
   id: string;
-  shop: ShopConfig;
   start: Date;
+}
+
+export interface LocalTicket extends RegisteredTicket {
+  shop: ShopConfig;
   ticketUrl: string;
 }

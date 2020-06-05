@@ -9,7 +9,6 @@ import RegisterCustomer from "../register-customer/register-customer";
 import { useShop, usePush } from "../../service/server/connection";
 import ChooseTicket from "../choose-ticket/choose-ticket";
 import useLocalTickets from "../../service/tickets/use-local-tickets";
-import ShowTicketRoute from "../show-ticket-route/show-ticket-route";
 
 interface CustomerAppProps {
   backToIndex: () => void;
@@ -83,11 +82,6 @@ const CustomerApp: React.FC<CustomerAppProps> = ({ backToIndex }) => {
               onRegister={onRegisterCustomer}
               ticket={ticket!}
             />
-          </div>
-        </Route>
-        <Route path={`${path}/ticket/:ticketId`}>
-          <div className={styles.screen}>
-            <ShowTicketRoute backToIndex={backToIndex} />
           </div>
         </Route>
       </Switch>

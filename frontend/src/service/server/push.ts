@@ -1,10 +1,10 @@
 import {
-  ShopConfig,
-  UpdateShopConfig,
-  Customer,
-  RegisteredTicket,
-  Timeslot,
   AvailableSlot,
+  Customer,
+  LocalTicket,
+  ShopConfig,
+  Timeslot,
+  UpdateShopConfig,
 } from "../domain";
 import { fetcher } from "./fetcher";
 import { toRegisteredTicket } from "../tickets/use-local-tickets";
@@ -49,7 +49,7 @@ export async function registerTicket({
   shop,
   ticket,
   customer,
-}: RegisterTicketParams): Promise<RegisteredTicket> {
+}: RegisterTicketParams): Promise<LocalTicket> {
   const dataToPost = { ...ticket, contact: customer };
   const res = await postData(`${idToLink(shop["@id"])}/ticket/`, dataToPost);
   const ticketUrl = res.headers.get("location");

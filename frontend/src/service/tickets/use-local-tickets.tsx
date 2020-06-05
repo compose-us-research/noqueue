@@ -1,5 +1,5 @@
 import React, { useContext, useCallback, useState } from "react";
-import { RegisteredTicket, TicketMap, Customer } from "../domain";
+import { TicketMap, Customer, LocalTicket } from "../domain";
 
 function serializeTickets(tickets: TicketMap): string {
   return JSON.stringify(tickets);
@@ -37,7 +37,7 @@ export const toRegisteredTicket = (ticket: any) =>
     ...ticket,
     start: new Date(ticket.start),
     end: new Date(ticket.end),
-  } as RegisteredTicket);
+  } as LocalTicket);
 
 export const LocalTicketsProvider: React.FC<LocalTicketsProviderProps> = ({
   children,

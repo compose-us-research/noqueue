@@ -22,6 +22,7 @@ import useLocalTickets, {
   LocalTicketsProvider,
 } from "../../service/tickets/use-local-tickets";
 import Stub from "../stub/stub";
+import ShowTicketRoute from "../show-ticket-route/show-ticket-route";
 import ShowTicketsRoute from "../show-tickets-route/show-tickets-route";
 import ChooseShop from "../choose-shop/choose-shop";
 
@@ -37,16 +38,20 @@ const CurrentShopApp: React.FC<CurrentShopAppProps> = ({ connection }) => {
   const { shopId } = useParams();
   const { push } = useHistory();
   const { path } = useRouteMatch();
+  const backToIndex = () => push("/");
 
   return (
     <FetcherProvider currentShopId={shopId} connection={connection}>
       <Switch>
         {/* more or less hidden route to change the shop */}
         <Route path={`${path}/owner`}>
-          <UpdateShopApp backToIndex={() => push("/")} />
+          <UpdateShopApp backToIndex={backToIndex} />
+        </Route>
+        <Route path={`${path}/ticket/:ticketId`}>
+          <ShowTicketRoute backToIndex={backToIndex} />
         </Route>
         <Route path={path}>
-          <CustomerApp backToIndex={() => push("/")} />
+          <CustomerApp backToIndex={backToIndex} />
         </Route>
       </Switch>
     </FetcherProvider>

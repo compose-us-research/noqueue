@@ -1,7 +1,7 @@
 import React from "react";
 import RegisterCustomer from "./register-customer";
 import { action } from "@storybook/addon-actions";
-import { RegisteredTicket } from "../../service/domain";
+import { LocalTicket } from "../../service/domain";
 import { useShop } from "../../service/server/connection";
 
 export default {
@@ -13,7 +13,7 @@ export const Default = () => {
   const shop = useShop();
   const now = Date.now();
   const ticketUrl = `${shop["@id"]}/ticket/1`;
-  const ticket: RegisteredTicket = {
+  const ticket: LocalTicket = {
     contact: {
       name: "Petra Platzhalter",
       contact: { email: "betatester@platzhalter.io" },
