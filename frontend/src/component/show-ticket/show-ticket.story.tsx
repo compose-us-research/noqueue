@@ -3,7 +3,6 @@ import ShowTicket from "./show-ticket";
 import { action } from "@storybook/addon-actions";
 import { Customer, LocalTicket } from "../../service/domain";
 import { useShop } from "../../service/server/connection";
-import idToLink from "../../lib/id-to-link/id-to-link";
 
 export default {
   title: "Screens/ShowTicket",
@@ -22,7 +21,7 @@ const SimpleStory = ({ header }: { header?: (t: LocalTicket) => string }) => {
   const start = new Date(now);
   const end = new Date(now + 15 * 60 * 1000);
   const shop = useShop();
-  const ticketUrl = `${idToLink(shop["@id"])}/ticket/1`;
+  const ticketUrl = `${shop["@id"]}/ticket/1`;
   const ticket: LocalTicket = {
     contact: customer,
     end,
