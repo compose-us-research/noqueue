@@ -14,7 +14,7 @@ const ChooseShop: React.FC<ChooseShopProps> = ({ backToIndex, navigateTo }) => {
   return (
     <ListScreen
       backToIndex={backToIndex}
-      label="Deine gespeicherten Tickets"
+      label="Was hast Du vor?"
       list={shops.map((shop) => {
         return {
           id: shop["@id"],
