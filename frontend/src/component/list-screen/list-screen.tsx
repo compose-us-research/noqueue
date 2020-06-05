@@ -29,7 +29,6 @@ const ListScreen: React.FC<ListScreenProps> = ({
   list,
   selected,
 }) => {
-  console.log({ selected });
   return (
     <div className={styles.root}>
       <Headline>

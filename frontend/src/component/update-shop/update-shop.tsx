@@ -22,9 +22,6 @@ const UpdateShop: React.FC<UpdateShopProps> = ({ onSave, shop }) => {
     },
     [onSave]
   );
-  useEffect(() => {
-    console.log("errors", methods.errors);
-  }, [methods]);
   return (
     <div className={styles.root}>
       <h2>Bearbeite Dein Geschäft auf Platzhalter.io</h2>

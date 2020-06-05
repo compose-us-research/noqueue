@@ -11,7 +11,6 @@ export type ShopFetcher = (shopId: ShopId) => Promise<ShopConfig>;
 export type Connection = typeof connection;
 
 const API_URL = (window as any).config?.BASE_URL || "";
-console.log("API_URL", API_URL);
 
 interface FetcherContextProps {
   connection: Connection;

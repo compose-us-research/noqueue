@@ -36,8 +36,7 @@ interface CurrentShopAppProps {
 const CurrentShopApp: React.FC<CurrentShopAppProps> = ({ connection }) => {
   const { shopId } = useParams();
   const { push } = useHistory();
-  const { path, url } = useRouteMatch();
-  console.log("hello from currentshopapp", { path, shopId, url });
+  const { path } = useRouteMatch();
 
   return (
     <FetcherProvider currentShopId={shopId} connection={connection}>
@@ -56,9 +55,7 @@ const CurrentShopApp: React.FC<CurrentShopAppProps> = ({ connection }) => {
 
 const ChooseRoleRoute = () => {
   const { push } = useHistory();
-  const { url } = useRouteMatch();
   const { hasTickets } = useLocalTickets();
-  console.log({ url });
   return (
     <ChooseRole
       selectShopRole={() => push(`/create-shop`)}
@@ -70,9 +67,8 @@ const ChooseRoleRoute = () => {
 };
 
 const RoutedApp: React.FC<CurrentShopAppProps> = ({ connection }) => {
-  const { push, location } = useHistory();
-  const { path, url } = useRouteMatch();
-  console.log("im on", { location, path, url });
+  const { push } = useHistory();
+  const { url } = useRouteMatch();
   return (
     <Switch>
       <Route path="/create-shop">

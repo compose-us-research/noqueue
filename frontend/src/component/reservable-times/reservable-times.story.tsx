@@ -8,6 +8,5 @@ export default {
 };
 
 export const Default = () => {
-  console.log("rendering Default");
   return <ReservableTimes handleSubmit={action("submit")} />;
 };

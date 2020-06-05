@@ -20,7 +20,6 @@ const UpdateShopApp: React.FC<UpdateShopAppProps> = ({ backToIndex }) => {
   const shop = useShop();
   const [, setError] = useState<void>();
   const { updateOpeningHours, updateShop } = usePush();
-  console.log("updating shop", { shop });
 
   return (
     <div className={styles.root}>
