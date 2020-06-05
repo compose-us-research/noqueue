@@ -11,7 +11,6 @@ export type ShopFetcher = (shopId: ShopId) => Promise<ShopConfig>;
 export type Connection = typeof connection;
 
 const API_URL = (window as any).config?.BASE_URL || "";
-console.log("API_URL", API_URL);
 
 interface FetcherContextProps {
   connection: Connection;
@@ -53,6 +52,11 @@ export const useShop: () => ShopConfig = () => {
   const { currentShopId } = useContext(FetcherContext);
   const data = useFetch(`/shop/${currentShopId}`);
   return { ...data!, path: currentShopId };
+};
+
+export const useShops: () => ShopConfig[] = () => {
+  const data = useFetch("/shop");
+  return data!.member;
 };
 
 function idFn<T>(a: T): T {

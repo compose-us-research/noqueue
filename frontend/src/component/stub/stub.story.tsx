@@ -13,10 +13,8 @@ export const Default = () => {
 
 export const WithText = () => {
   return (
-    <Stub
-      next={action("clicked backToIndex")}
-      text="This is some additional info."
-      buttonText="Changed Button Text"
-    />
+    <Stub next={action("clicked backToIndex")} buttonText="Changed Button Text">
+      This is some additional info.
+    </Stub>
   );
 };

@@ -52,12 +52,6 @@ const RegisterCustomer: React.FC<RegisterCustomerProps> = ({
     );
     const hasEMail = !!watch("contact.email");
     const hasPhone = !!watch("contact.phone");
-    console.log({
-      hasAddress,
-      hasEMail,
-      hasPhone,
-      email: watch("contact.email"),
-    });
     return (
       hasAddress ||
       hasEMail ||
@@ -100,7 +94,7 @@ const RegisterCustomer: React.FC<RegisterCustomerProps> = ({
               label="Straße, Hausnummer"
               placeholder="Blumenstr. 13"
               validate={validate}
-              />
+            />
             <Spacer />
             <div className={styles.postal}>
               <TextField
@@ -108,13 +102,13 @@ const RegisterCustomer: React.FC<RegisterCustomerProps> = ({
                 label="PLZ"
                 placeholder="94032"
                 validate={validate}
-                />
+              />
               <TextField
                 name="contact.address.city"
                 label="Ort"
                 placeholder="Passau"
                 validate={validate}
-                />
+              />
             </div>
             <Spacer />
             <TextField

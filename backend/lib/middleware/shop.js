@@ -14,7 +14,7 @@ function shop ({ db }) {
 
     res.json({
       ...config,
-      '@id': req.absoluteUrl(),
+      '@id': req.absoluteUrl()
     })
   })
 
@@ -22,6 +22,10 @@ function shop ({ db }) {
     await db.setConfig(req.body)
 
     res.status(201).end()
+  })
+
+  router.delete('/', async (req, res, next) => {
+    await db.delete()
   })
 
   router.use('/ticket', ticket({ db }))

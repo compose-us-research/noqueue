@@ -1,0 +1,12 @@
+{
+  "name": "cozy-costumes",
+  "config": {
+    "address": {
+      "streetAddress": "Am Bahnhofsplatz 3",
+      "postalCode": 94032,
+      "city": "Passau"
+    },
+    "name": "Cozy Costumes",
+    "mail": "betatester@platzhalter.io"
+  }
+}

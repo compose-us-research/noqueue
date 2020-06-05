@@ -26,7 +26,6 @@ interface DaySelectorProps {
 const noop = () => {};
 const options: Day[] = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
 const hasAtLeastOneDaySet = (days: DaysInWeek) => {
-  console.log("validating", { days });
   return days.some((day) => day);
 };
 

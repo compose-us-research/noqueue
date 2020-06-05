@@ -1,9 +1,9 @@
 const debug = require('debug')('noqueue-database')
 const { Client } = require('pg')
-const defaults = require('./defaults')
+const defaults = require('../defaults')
 const tables = require('./tables')
 
-class Database {
+class DatabaseConnection {
   constructor ({ user, host, database, password, port }) {
     this.client = new Client({ user, host, database, password, port })
   }
@@ -20,13 +20,6 @@ class Database {
 
         await this.client.query(config.create)
       }
-    }
-
-    // check if default config exists otherwise create default config
-    if (!(await this.getConfig())) {
-      debug(`create default config`)
-
-      await this.addConfig(defaults.config)
     }
   }
 
@@ -54,25 +47,19 @@ class Database {
     return result.rows[0].exists
   }
 
-  async addConfig (config, name = 'default') {
-    await this.deleteConfig(name)
-
+  async addShop (config, name, prefix) {
     const query =
-      'INSERT INTO config("name", "data") VALUES ($1, $2) RETURNING *'
-    const values = [name, config]
+      'INSERT INTO shops("name", "prefix", "data") VALUES ($1, $2, $3) RETURNING *'
+    const values = [name, prefix, config]
     const result = await this.client.query(query, values)
 
     return result.rows[0].data
   }
 
-  async setConfig (config, name = 'default') {
-    const query = 'UPDATE config SET "data"=$1 WHERE "name"=$2'
-    const values = [config, name]
-    await this.client.query(query, values)
-  }
-
-  async getConfig (name = 'default') {
-    const result = await this.client.query('SELECT * FROM config')
+  async getShop (name = 'default') {
+    const query = 'SELECT * FROM shops WHERE "name"=$1'
+    const values = [name]
+    const result = await this.client.query(query, values)
 
     if (result.rows.length === 0) {
       return null
@@ -81,8 +68,10 @@ class Database {
     return result.rows[0].data
   }
 
-  async deleteConfig (name = 'default') {
-    await this.client.query('DELETE FROM config WHERE "name" = $1', [name])
+  async getShops () {
+    const result = await this.client.query('SELECT * FROM shops')
+
+    return result.rows
   }
 
   async addTicket ({ id, start, end, contact }) {
@@ -169,14 +158,25 @@ ORDER BY "range"."start"
   }
 
   async replaceTimeslots (listOfSlots) {
-    const query = `WITH inserted_ids AS (INSERT INTO timeslots("day", "start", "end", "customers", "min_duration", "max_duration") VALUES ${
-      listOfSlots.map((_slot, idx) => {
-        const row = idx * 6;
-        return `($${row + 1}, $${row + 2}, $${row + 3}, $${row + 4}, $${row + 5}, $${row + 6})`
-      }).join(',')
-    } RETURNING id) DELETE FROM timeslots WHERE id NOT IN (SELECT id FROM inserted_ids)`;
+    const query = `WITH inserted_ids AS (INSERT INTO timeslots("day", "start", "end", "customers", "min_duration", "max_duration") VALUES ${listOfSlots
+      .map((_slot, idx) => {
+        const row = idx * 6
+        return `($${row + 1}, $${row + 2}, $${row + 3}, $${row + 4}, $${row +
+          5}, $${row + 6})`
+      })
+      .join(
+        ','
+      )} RETURNING id) DELETE FROM timeslots WHERE id NOT IN (SELECT id FROM inserted_ids)`
     const values = listOfSlots.reduce(
-      (acc, {day, start, end, customers, minDuration, maxDuration}) => [...acc, day, start, end, customers, minDuration, maxDuration],
+      (acc, { day, start, end, customers, minDuration, maxDuration }) => [
+        ...acc,
+        day,
+        start,
+        end,
+        customers,
+        minDuration,
+        maxDuration
+      ],
       []
     )
     await this.client.query(query, values)
@@ -190,4 +190,4 @@ ORDER BY "range"."start"
   }
 }
 
-module.exports = Database
+module.exports = DatabaseConnection
