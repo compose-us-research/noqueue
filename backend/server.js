@@ -18,16 +18,12 @@ const config = {
   }
 }
 
-/*
-either reverse proxy all of them or have another DB for each of these
-www.platzhalter.io/shop/happy-nails
-www.platzhalter.io/shop/cundm-friseur-passau
-www.platzhalter.io/shop/cundm-friseur-landshut
-*/
-
 async function init () {
   try {
     const app = express()
+
+    // setup express to listen to x-forwarded-* headers
+    app.set('trust proxy', true)
 
     app.use(morgan('combined'))
     if (process.env.NODE_ENV === 'development') {
