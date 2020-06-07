@@ -242,4 +242,64 @@ describe("generateSlotsFromData", () => {
       },
     ]);
   });
+
+  it("creates something for all 15 minutes", () => {
+    const start = new Date("2020-06-07T18:25:00.000Z");
+    const secondDayStart = new Date("2020-06-08T16:30:00.000Z");
+    const thirdDayStart = new Date("2020-06-09T16:30:00.000Z");
+    const slots = [
+      {
+        start: new Date("2020-06-07T16:30:00.000Z"),
+        end: new Date("2020-06-07T18:00:00.000Z"),
+        reserved: 1,
+        allowed: 3,
+        available: 2,
+      },
+      {
+        start: secondDayStart,
+        end: new Date("2020-06-08T18:00:00.000Z"),
+        reserved: 0,
+        allowed: 3,
+        available: 3,
+      },
+      {
+        start: thirdDayStart,
+        end: new Date("2020-06-09T18:00:00.000Z"),
+        reserved: 0,
+        allowed: 3,
+        available: 3,
+      },
+    ];
+    const result = generateSlotsFromData({
+      slots,
+      duration: 30,
+      from: start,
+    });
+    const daySlots = (startOfSlots: Date) => [
+      {
+        start: startOfSlots,
+        end: new Date(+startOfSlots + 30 * 60 * 1000),
+      },
+      {
+        start: new Date(+startOfSlots + 15 * 60 * 1000),
+        end: new Date(+startOfSlots + (15 + 30) * 60 * 1000),
+      },
+      {
+        start: new Date(+startOfSlots + 30 * 60 * 1000),
+        end: new Date(+startOfSlots + (30 + 30) * 60 * 1000),
+      },
+      {
+        start: new Date(+startOfSlots + 45 * 60 * 1000),
+        end: new Date(+startOfSlots + (45 + 30) * 60 * 1000),
+      },
+      {
+        start: new Date(+startOfSlots + 60 * 60 * 1000),
+        end: new Date(+startOfSlots + (60 + 30) * 60 * 1000),
+      },
+    ];
+    expect(result).toEqual([
+      ...daySlots(secondDayStart),
+      ...daySlots(thirdDayStart),
+    ]);
+  });
 });
