@@ -26,6 +26,42 @@ import ShowTicketRoute from "../show-ticket-route/show-ticket-route";
 import ShowTicketsRoute from "../show-tickets-route/show-tickets-route";
 import ChooseShop from "../choose-shop/choose-shop";
 
+const subject = "Registrierung eines Geschäfts";
+const body = `Herzlich Willkommen!
+schön, dass Sie sich bei platzhalter.io registrieren.
+
+Mit platzhalter.io können Sie Ihren Kunden feste Slots und Termine zuweisen und so Schlangen, Wartezeiten und Abstandsprobleme einfach umgehen.
+
+Es ist kein Technik-KnowHow, kein Installieren nötig und der Datenschutz wird gewahrt - das gilt sowohl für Sie als auch für Ihre Kunden.
+
+Nötige Schritte:
+
+1. Sie geben Ihre Daten hier an, verschicken diese E-Mail an betatester@platzhalter.io und wir registrieren Sie:
+
+Name des Geschäfts: Beispielshop
+Adresse: Beispielstraße 1
+Postleitzahl: 94032
+Stadt: Beispielstadt
+
+2. Wir mailen Ihnen Ihre platzhalter.io Webadresse.
+
+3. Sie füllen Ihre Details bei platzhalter.io/ihr-shop aus.
+
+4. Ihre Kunden checken bei platzhalter.io/ihr-shop ein.
+
+5. Ihre Kunden kommen entspannt bei Ihnen vorbei.
+
+Sollte es einen Covid19 Fall geben, übertragen Sie die Personendaten per Knopfdruck ans Gesundheitsamt.
+
+Wenn platzhalter.io hilfreich für Sie ist, dann können Sie gerne beitragen: Mit Feedback, Werbung für platzhalter.io oder einer Spende.
+
+Vielen Dank und los geht's!
+Es grüßen die Platzhalter
+`;
+const mailLink = `mailto:betatester@platzhalter.io?subject=${encodeURIComponent(
+  subject
+)}&body=${encodeURIComponent(body)}`;
+
 interface AppProps {
   connection?: typeof defaultConnection;
 }
@@ -78,8 +114,13 @@ const RoutedApp: React.FC<CurrentShopAppProps> = ({ connection }) => {
     <Switch>
       <Route path="/create-shop">
         <Stub next={() => push("/")} buttonText="Weiter">
-          Momentan ist unsere Registrierung nur über Rücksprache mit uns
-          möglich.
+          <p>
+            Momentan ist die{" "}
+            <a href={mailLink}>
+              Registrierung eines eigenen Shops nur über Rücksprache mit uns
+            </a>{" "}
+            möglich.
+          </p>
         </Stub>
       </Route>
       <Route path="/choose-shop">
