@@ -16,9 +16,17 @@ export default function daysToString(days: AvailableDaysInWeek): string {
   const result = days.reduce<Day[]>(
     (result, isSet, index) => [
       ...result,
-      ...(isSet ? [possibleDays[index]] : []),
+      ...(isSet
+        ? [
+            possibleDays[
+              (index + (possibleDays.length - 1)) % possibleDays.length
+            ],
+          ]
+        : []),
     ],
     []
   );
-  return result.join(", ");
+  return result
+    .sort((a, b) => possibleDays.indexOf(a) - possibleDays.indexOf(b))
+    .join(", ");
 }
