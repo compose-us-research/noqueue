@@ -50,11 +50,12 @@ export default function generateSlotsFromData({
   const splitInSlots: AvailableSlot[] = possibleTimeranges.flatMap((ticket) => {
     const firstSlot = +ticket.start;
     const lastSlot = +ticket.end - durationInMs;
+    const fifteenMinutes = 15 * 60 * 1000;
     const howManySlots =
-      1 + Math.floor((lastSlot - firstSlot) / (15 * 60 * 1000));
+      1 + Math.floor((lastSlot - firstSlot) / fifteenMinutes);
 
     return new Array(howManySlots).fill(null).map((_, index) => {
-      const start = new Date(firstSlot + durationInMs * index);
+      const start = new Date(firstSlot + fifteenMinutes * index);
       const end = new Date(+start + durationInMs);
       return { start, end };
     });

@@ -43,6 +43,7 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
     duration,
     from: new Date(),
   });
+  console.log({ slots });
   const hasSlots = slots.length > 0;
   const noSlots = !hasSlots;
   const dailySlots = slotsPerDays(slots);

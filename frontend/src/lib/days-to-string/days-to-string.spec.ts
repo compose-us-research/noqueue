@@ -2,16 +2,6 @@ import { Day } from "../../service/domain";
 import daysToString, { AvailableDaysInWeek } from "./days-to-string";
 
 describe("daysToString", () => {
-  const fullWeekSet: AvailableDaysInWeek = [
-    true,
-    true,
-    true,
-    true,
-    true,
-    true,
-    true,
-  ];
-
   it("converts an empty array to an empty string", () => {
     const empty: AvailableDaysInWeek = [
       false,
@@ -27,7 +17,7 @@ describe("daysToString", () => {
   });
 
   it("converts a single value to the same one as string", () => {
-    const moSet: AvailableDaysInWeek = [
+    const soSet: AvailableDaysInWeek = [
       true,
       false,
       false,
@@ -36,11 +26,20 @@ describe("daysToString", () => {
       false,
       false,
     ];
-    const result = daysToString(moSet);
-    expect(result).toBe("Mo");
+    const result = daysToString(soSet);
+    expect(result).toBe("So");
   });
 
   it("converts all values to a comma separated list", () => {
+    const fullWeekSet: AvailableDaysInWeek = [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+    ];
     const result = daysToString(fullWeekSet);
     expect(result).toBe("Mo, Di, Mi, Do, Fr, Sa, So");
   });
@@ -48,12 +47,12 @@ describe("daysToString", () => {
   it("converts a list of week days into a comma separated list", () => {
     const moMiDoSo: AvailableDaysInWeek = [
       true,
+      true,
       false,
       true,
       true,
       false,
       false,
-      true,
     ];
     const result = daysToString(moMiDoSo);
     expect(result).toBe("Mo, Mi, Do, So");

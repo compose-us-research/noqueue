@@ -28,6 +28,9 @@ const options: Day[] = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
 const hasAtLeastOneDaySet = (days: DaysInWeek) => {
   return days.some((day) => day);
 };
+const toBackendIndex = (index: number) => {
+  return (index + 1) % options.length;
+};
 
 const DaySelector: React.FC<DaySelectorProps> = ({
   className = undefined,
@@ -47,13 +50,18 @@ const DaySelector: React.FC<DaySelectorProps> = ({
             {options.map((option, index) => (
               <button
                 key={option}
-                className={selected[index] ? styles.selected : styles.option}
+                className={
+                  selected[toBackendIndex(index)]
+                    ? styles.selected
+                    : styles.option
+                }
                 disabled={disabled}
                 onClick={() => {
+                  const backendIndex = toBackendIndex(index);
                   const newSelected = [
-                    ...selected.slice(0, index),
-                    !selected[index],
-                    ...selected.slice(index + 1),
+                    ...selected.slice(0, backendIndex),
+                    !selected[backendIndex],
+                    ...selected.slice(backendIndex + 1),
                   ] as AvailableDays;
                   setValue(name, newSelected, true);
                   onChange(newSelected);
