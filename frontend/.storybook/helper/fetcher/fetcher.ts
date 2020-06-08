@@ -1,15 +1,22 @@
 import { ShopConfig } from "../../../src/service/domain";
+import { fetcherFn } from "swr/dist/types";
 
 const shop: ShopConfig = {
-  address: "Am Bahnhofsplatz, 94032 Passau",
-  "@id": "http://localhost:8080/shop/default",
+  address: {
+    streetAddress: "Am Bahnhofsplatz 1",
+    postalCode: "94032",
+    city: "Passau",
+  },
+  "@id": "/shop/buchhandlung-pustet",
   mail: "someone@example.org",
   maxDuration: 120,
+  minDuration: 15,
   name: "Buchhandlung Pustet",
   needsRegistration: true,
+  path: "buchhandlung-pustet",
 };
 
-export const fetcher = async (url: string) => {
+export const fetcher: fetcherFn<any> = async (url: string) => {
   console.log("fetching", { url });
   if (/\/shop\/([^/]+?)\/?$/.test(url)) {
     return shop;

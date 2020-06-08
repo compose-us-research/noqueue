@@ -34,8 +34,8 @@ const ShowTicket: React.FC<ShowTicketProps> = ({
       <div className={styles.screen}>
         <h2>{label}</h2>
         <p>
-          Komm zur angegebenen Zeit ({ticket.start.toLocaleTimeString()} am{" "}
-          {ticket.start.toLocaleDateString()}) ins Geschäft ({ticket.shop.name}
+          Komm zur angegebenen Zeit ({ticket.start.toLocaleString()}) ins
+          Geschäft ({ticket.shop.name}
           ), scanne deinen QR-Code und geh entspannt einkaufen - ohne in der
           Schlange zu warten.{" "}
           {ticket.contact &&
@@ -80,6 +80,8 @@ const ShowTicket: React.FC<ShowTicketProps> = ({
         >
           <span>Zurück zum Anfang</span>
         </Button>
+
+        <Spacer />
       </div>
     </div>
   );

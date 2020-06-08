@@ -1,7 +1,7 @@
 import React from "react";
 import App from "./app";
 
-import * as mockConnection from "../../../.storybook/helper/fetcher/connection";
+import { connection } from "../../../.storybook/helper/fetcher/connection";
 
 export default {
   title: "App",
@@ -9,4 +9,4 @@ export default {
 };
 
 export const Default = () => <App />;
-export const MockedShop = () => <App connection={mockConnection} />;
+export const MockedShop = () => <App connection={connection} />;
