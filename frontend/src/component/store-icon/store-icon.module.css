@@ -1,0 +1,11 @@
+.root {
+  align-items: center;
+  background: #fe805c;
+  border-radius: 8px;
+  color: #fff;
+  display: flex;
+  font-weight: 800;
+  height: 35px;
+  justify-content: center;
+  width: 38px;
+}
