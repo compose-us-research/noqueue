@@ -2,11 +2,24 @@ import React, { Suspense } from "react";
 import ShowTicket from "./show-ticket";
 import { action } from "@storybook/addon-actions";
 import { Customer, LocalTicket } from "../../service/domain";
-import { useShop } from "../../service/server/connection";
+import { connection } from "../../../.storybook/helper/fetcher/connection";
+import { FetcherProvider, useShop } from "../../service/server/connection";
+import { BrowserRouter } from "react-router-dom";
 
 export default {
   title: "Screens/ShowTicket",
   component: ShowTicket,
+  decorators: [
+    (storyFn: any) => <BrowserRouter>{storyFn()}</BrowserRouter>,
+    (storyFn: any) => (
+      <FetcherProvider
+        currentShopId="buchhandlung-pustet"
+        connection={connection}
+      >
+        {storyFn()}
+      </FetcherProvider>
+    ),
+  ],
 };
 
 const SimpleStory = ({ header }: { header?: (t: LocalTicket) => string }) => {

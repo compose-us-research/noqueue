@@ -1,6 +1,7 @@
 .root {
   align-items: center;
-  color: #000;
+  background: #4643d3;
+  color: #fff;
   display: flex;
   flex-direction: column;
   justify-content: center;
