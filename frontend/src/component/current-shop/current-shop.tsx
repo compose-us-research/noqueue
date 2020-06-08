@@ -1,9 +1,9 @@
 import React from "react";
-import { ReactComponent as BookIcon } from "../../asset/image/book-icon.svg";
 import Header from "../header/header";
 import ListItem from "../list-item/list-item";
 import { useShop } from "../../service/server/connection";
 import { Address } from "../../service/domain";
+import StoreIcon from "../store-icon/store-icon";
 
 interface CurrentShopProps {
   onClick?: () => void;
@@ -15,7 +15,11 @@ const CurrentShop: React.FC<CurrentShopProps> = ({ onClick }) => {
 
   return (
     <Header onClick={onClick}>
-      <ListItem text={address} icon={<BookIcon />} label={shop.name} />
+      <ListItem
+        text={address}
+        icon={<StoreIcon name={shop.name} />}
+        label={shop.name}
+      />
     </Header>
   );
 };

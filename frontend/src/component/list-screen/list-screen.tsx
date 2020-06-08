@@ -1,12 +1,12 @@
 import React from "react";
 import cn from "classnames";
 
-import { ReactComponent as BookIcon } from "../../asset/image/book-icon.svg";
 import styles from "./list-screen.module.css";
 import Button from "../button/button";
 import Spacer from "../spacer/spacer";
 import ListItem from "../list-item/list-item";
 import Headline from "../headline/headline";
+import StoreIcon from "../store-icon/store-icon";
 
 export type Item = {
   id: string;
@@ -51,7 +51,7 @@ const ListScreen: React.FC<ListScreenProps> = ({
               <ListItem
                 label={item.label}
                 text={item.text}
-                icon={<BookIcon />}
+                icon={<StoreIcon name={item.label} />}
               />
             </li>
           ))}
