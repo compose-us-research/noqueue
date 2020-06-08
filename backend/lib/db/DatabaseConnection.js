@@ -69,7 +69,7 @@ class DatabaseConnection {
   }
 
   async getShops () {
-    const result = await this.client.query('SELECT * FROM shops')
+    const result = await this.client.query(`SELECT * FROM shops ORDER BY data->>'name'`)
 
     return result.rows
   }
