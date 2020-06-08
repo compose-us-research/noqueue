@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import useLocalTickets from "../../service/tickets/use-local-tickets";
 import { useParams, Switch, Route, useRouteMatch } from "react-router-dom";
@@ -35,7 +35,7 @@ function isLocalTicket(
 
 const ShowTicketRoute: React.FC<ShowTicketRouteProps> = ({ backToIndex }) => {
   const { ticketId } = useParams();
-  const { tickets } = useLocalTickets();
+  const { saveTickets, tickets } = useLocalTickets();
   const { path } = useRouteMatch();
   const retrievedTicket = useShopFetch<RegisteredTicket | LocalTicket>(
     `/ticket/${ticketId}`,
@@ -60,6 +60,12 @@ const ShowTicketRoute: React.FC<ShowTicketRouteProps> = ({ backToIndex }) => {
         shop,
         ticketUrl: `${shop["@id"]}/ticket/${retrievedTicket.id}`,
       };
+
+  useEffect(() => {
+    if (!tickets[ticket.id]) {
+      saveTickets({ ...tickets, [ticket.id]: ticket });
+    }
+  }, [saveTickets, ticket, tickets]);
   return (
     <Switch>
       <Route path={`${path}/update`}>
