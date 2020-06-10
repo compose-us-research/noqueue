@@ -26,13 +26,12 @@ services:
       - "traefik.http.routers.platzhalterio.rule=Host(`beta.platzhalter.io`)"
       - "traefik.http.routers.platzhalterio.entrypoints=websecure"
       - "traefik.http.routers.platzhalterio.tls.certresolver=leresolver"
+      - "traefik.http.services.platzhalterio.loadbalancer.server.port=80"
     links:
       - "postgres:postgres"
     networks:
       - web
       - platzhalterio
-    ports:
-      - "0.0.0.0:8080:80"
 
   postgres:
     container_name: postgres
@@ -44,7 +43,5 @@ services:
       - traefik.enable=false
     networks:
       - platzhalterio
-    ports:
-      - "0.0.0.0:5432:5432"
     volumes:
       - platzhalterio-data:/var/lib/postgresql/data
