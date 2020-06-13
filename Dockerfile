@@ -25,11 +25,9 @@ RUN yarn build
 FROM node:12-alpine AS runner
 RUN mkdir -p /app/backend && mkdir -p /app/frontend
 WORKDIR /app/backend
-COPY backend/package.json /app/backend/package.json
-COPY backend/package-lock.json /app/backend/package-lock.json
-RUN npm ci --only=production
-COPY backend /app/backend
+COPY --from=build /app/backend /app/backend
 COPY --from=build /app/frontend/build /app/frontend/build
+RUN npm ci --only=production
 
 # Run the backend
 CMD ["npm", "start"]
