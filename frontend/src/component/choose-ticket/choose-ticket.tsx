@@ -40,23 +40,22 @@ const ChooseTicket: React.FC<ChooseTicketProps> = ({ onSelect }) => {
         />
       </Suspense>
       <div className={styles.bottomSubmit}>
-        <p className={styles.info}>
+        <p>
           Achtung: Du kannst deinen Zeitraum natürlich nachträglich verändern /
           stornieren, wenn dir etwas dazwischen kommen sollte.
         </p>
         <Spacer />
-        <div className={styles.action}>
-          <Button
-            disabled={selectedTicket === null}
-            onClick={() => {
-              if (selectedTicket) {
-                onSelect(selectedTicket);
-              }
-            }}
-          >
-            Zeitraum {!shop.needsRegistration && "verbindlich"} buchen
-          </Button>
-        </div>
+        <Button
+          disabled={selectedTicket === null}
+          onClick={() => {
+            if (selectedTicket) {
+              onSelect(selectedTicket);
+            }
+          }}
+        >
+          Zeitraum {!shop.needsRegistration && "verbindlich"} buchen
+        </Button>
+        <Spacer />
       </div>
     </div>
   );
