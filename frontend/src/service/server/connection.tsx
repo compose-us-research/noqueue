@@ -41,7 +41,6 @@ export const FetcherProvider: React.FC<FetcherProviderProps> = ({
 };
 
 const useFetch = (path: string, options: ConfigInterface = {}) => {
-  console.log("useFetch", path, options);
   const { connection } = useContext(FetcherContext);
   const { data } = useSWR(`${API_URL}${path}`, connection.fetcher.fetcher, {
     suspense: true,
