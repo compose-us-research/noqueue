@@ -16,7 +16,6 @@ interface ShowTicketRouteProps {
 }
 
 const mapper: (from: any) => RegisteredTicket = (ticket) => {
-  console.log("mapping", { ticket });
   return {
     ...ticket,
     end: new Date(ticket.end),
