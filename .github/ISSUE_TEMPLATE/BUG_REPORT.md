@@ -1,11 +1,11 @@
 ---
 name: Bug report
 about: Create a report of the issue you've encountered.
+title: ''
+labels: ":ant: bug"
+assignees: ''
+
 ---
-
-**Please check each**
-
-- [ ] Added label "bug"
 
 **Steps to reproduce**
 

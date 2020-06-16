@@ -9,6 +9,7 @@ interface SliderProps {
   max?: number;
   min?: number;
   onChange?: (value: number | number[] | null | undefined) => void;
+  step?: number;
 }
 
 const noop = () => {};
@@ -18,6 +19,7 @@ const Slider: React.FC<SliderProps> = ({
   max = 120,
   min = 5,
   onChange = noop,
+  step = 15,
 }) => {
   return (
     <div className={cn(styles.root, disabled && styles.disabled)}>
@@ -31,6 +33,7 @@ const Slider: React.FC<SliderProps> = ({
             <div className={styles.thumbInfo}>{state.valueNow} Minuten</div>
           </div>
         )}
+        step={step}
         thumbClassName={styles.thumb}
         trackClassName={styles.track}
       />

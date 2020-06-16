@@ -1,0 +1,24 @@
+/* elements */
+.root {
+  align-items: left;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.day {
+  width: 100%;
+}
+
+.selectInDay {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
+  column-gap: 25px;
+  row-gap: 25px;
+}
+
+.button {
+  width: 125px;
+}
+
+/* modifiers */

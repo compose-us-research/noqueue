@@ -2,6 +2,6 @@
 
 ./shop-get.sh
 ./shop-put.sh
-./timeslot-post.sh
+./timeslot-put.sh
 ./ticket-post.sh
 ./ticket-put.sh

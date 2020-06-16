@@ -1,0 +1,30 @@
+.root {
+  align-items: center;
+  background: #4643d3;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding: 0 25px;
+  width: 100%;
+}
+
+.screen {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 600px;
+}
+
+.button {
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.button > span {
+  padding-left: 25px;
+}

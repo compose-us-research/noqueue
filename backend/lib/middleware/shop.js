@@ -10,26 +10,22 @@ function shop ({ db }) {
   router.use(absoluteUrl())
 
   router.get('/', async (req, res, next) => {
-    if (req.accepts('html')) {
-      return next()
-    }
-
     const config = await db.getConfig()
 
     res.json({
-      '@id': req.absoluteUrl(),
-      label: config.label
+      ...config,
+      '@id': req.absoluteUrl()
     })
   })
 
   router.put('/', bodyParser.json(), async (req, res, next) => {
-    if (req.accepts('html')) {
-      return next()
-    }
-
     await db.setConfig(req.body)
 
     res.status(201).end()
+  })
+
+  router.delete('/', async (req, res, next) => {
+    await db.delete()
   })
 
   router.use('/ticket', ticket({ db }))

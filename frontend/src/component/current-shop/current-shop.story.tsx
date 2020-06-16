@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import CurrentShop from "./current-shop";
 
 export default {
@@ -6,4 +6,8 @@ export default {
   component: CurrentShop,
 };
 
-export const Default = () => <CurrentShop />;
+export const Default = () => (
+  <Suspense fallback={<div>Lade...</div>}>
+    <CurrentShop />
+  </Suspense>
+);

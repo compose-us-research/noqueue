@@ -1,7 +1,12 @@
 ---
 name: Feature Request
 about: Request a new feature
+title: ''
+labels: ''
+assignees: ''
+
 ---
+
 **Description**
 (Please give a description of the new feature)
 

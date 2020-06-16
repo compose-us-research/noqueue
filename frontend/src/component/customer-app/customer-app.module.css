@@ -5,6 +5,7 @@
 
 .screen {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   margin: auto;
   max-width: 600px;

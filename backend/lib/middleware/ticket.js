@@ -1,6 +1,8 @@
 const absoluteUrl = require('absolute-url')
-const express = require('express')
 const bodyParser = require('body-parser')
+const express = require('express')
+const uuid = require('uuid').v4
+const qrcode = require('./qrcode')
 const urlResolve = require('../urlResolve')
 
 function ticket ({ db }) {
@@ -9,53 +11,84 @@ function ticket ({ db }) {
   router.use(absoluteUrl())
 
   router.post('/', bodyParser.json(), async (req, res, next) => {
-    if (req.accepts('html')) {
-      return next()
+    try {
+      const result = await db.addTicket({
+        id: uuid(),
+        start: req.body.start,
+        end: req.body.end,
+        contact: req.body.contact
+      })
+
+      res
+        .status(201)
+        .set('location', urlResolve(req.absoluteUrl(), result.id))
+        .end()
+    } catch (err) {
+      next(err)
     }
-
-    const result = await db.addTicket({
-      user: 'default',
-      start: req.body.start,
-      end: req.body.end
-    })
-
-    res.status(201).set('location', urlResolve(req.absoluteUrl(), result.id)).end()
   })
 
   router.get('/available', async (req, res, next) => {
-    if (req.accepts('html')) {
-      return next()
+    try {
+      const start =
+        (req.query.start && new Date(req.query.start)) ||
+        new Date(Date.now() - 24 * 60 * 60 * 1000)
+      const end =
+        (req.query.end && new Date(req.query.end)) ||
+        new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+
+      const available = await db.availableTickets({ start, end })
+
+      const result = {
+        member: available
+      }
+
+      res.json(result)
+    } catch (err) {
+      next(err)
     }
-
-    const result = await db.availableTickets({})
-
-    res.json(result)
   })
 
-  router.get('/:id', async (req, res, next) => {
-    if (req.accepts('html')) {
+  router.get('/:id', qrcode, async (req, res, next) => {
+    const supportedContent =
+      req.accepts('image/png') || req.accepts('application/json')
+    if (!supportedContent) {
       return next()
     }
 
-    const ticket = await db.getTicket(parseInt(req.params.id))
+    try {
+      const ticket = await db.getTicket(req.params.id)
 
-    res.json(ticket)
+      // not found?
+      if (!ticket) {
+        return next()
+      }
+
+      // sendQrCode is only attached if images are accepted
+      if (res.sendQrCode) {
+        res.set('content-type', 'image/png').sendQrCode(req.absoluteUrl())
+        return
+      }
+
+      res.json(ticket)
+    } catch (err) {
+      next(err)
+    }
   })
 
   router.put('/:id', bodyParser.json(), async (req, res, next) => {
-    if (req.accepts('html')) {
-      return next()
+    try {
+      await db.setTicket({
+        id: req.params.id,
+        start: req.body.start,
+        end: req.body.end,
+        contact: req.body.contact
+      })
+
+      res.status(201).end()
+    } catch (err) {
+      next(err)
     }
-
-    await db.setTicket({
-      id: parseInt(req.params.id),
-      start: req.body.start,
-      end: req.body.end,
-      ready: req.body.ready === 'true',
-      used: req.body.used === 'true'
-    })
-
-    res.status(201).end()
   })
 
   return router

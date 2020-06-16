@@ -35,6 +35,7 @@ const Button: React.FC<ButtonProps> = ({
         disabled && styles.disabled,
         className
       )}
+      disabled={disabled}
       onClick={onClick}
       type={type}
     >

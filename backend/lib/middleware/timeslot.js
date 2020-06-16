@@ -1,50 +1,52 @@
 const absoluteUrl = require('absolute-url')
-const express = require('express')
 const bodyParser = require('body-parser')
-const urlResolve = require('../urlResolve')
+const express = require('express')
 
 function timeslot ({ db }) {
   const router = new express.Router()
 
   router.use(absoluteUrl())
 
-  router.post('/', bodyParser.json(), async (req, res, next) => {
-    if (req.accepts('html')) {
-      return next()
-    }
-
-    const result = await db.addTimeslot({
-      start: req.body.start,
-      end: req.body.end,
-      customers: req.body.customers
-    })
-
-    res.status(201).set('location', urlResolve(req.absoluteUrl(), result.id)).end()
-  })
-
   router.get('/', async (req, res, next) => {
-    if (req.accepts('html')) {
-      return next()
+    try {
+      const timeslots = await db.getTimeslots()
+
+      const result = {
+        member: timeslots.map(timeslot => {
+          return {
+            day: timeslot.day,
+            start: timeslot.start,
+            end: timeslot.end,
+            customers: timeslot.customers,
+            minDuration: timeslot.min_duration,
+            maxDuration: timeslot.max_duration
+          }
+        })
+      }
+
+      res.json(result)
+    } catch (err) {
+      next(err)
     }
-
-    const timeslot = await db.getTimeslots()
-
-    res.json(timeslot)
   })
 
-  router.put('/:id', bodyParser.json(), async (req, res, next) => {
-    if (req.accepts('html')) {
-      return next()
+  router.put('/', bodyParser.json(), async (req, res, next) => {
+    try {
+      await db.replaceTimeslots(
+        req.body.member.map(member => ({
+          day: member.day,
+          start: member.start,
+          end: member.end,
+          customers: member.customers,
+          minDuration: member.minDuration,
+          maxDuration: member.maxDuration
+        }))
+      )
+
+      res.status(201).end()
+    } catch (err) {
+      next(err)
     }
-
-    await db.setTimeslot({
-      id: parseInt(req.params.id),
-      start: req.body.start,
-      end: req.body.end,
-      customers: req.body.customers
-    })
-
-    res.status(201).end()
   })
 
   return router

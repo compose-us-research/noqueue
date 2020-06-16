@@ -1,0 +1,112 @@
+/* elements */
+.root {
+  align-items: center;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.chevron {
+  transform: rotate(180deg);
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  flex-flow: wrap;
+  max-width: 600px;
+  padding: 25px;
+  width: 100%;
+}
+
+.fields > * {
+  width: 100%;
+}
+
+.expander {
+  align-items: center;
+  border-radius: 0;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.expandText {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+}
+
+.label {
+  text-align: left;
+}
+
+.slots {
+  color: #000;
+  font-weight: normal;
+}
+
+.remover {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.details {
+  display: none;
+}
+
+.timeframe {
+  display: inline-flex;
+  justify-content: stretch;
+}
+
+.timeframe > * {
+  flex-grow: 1;
+}
+
+.rangeDescription {
+  font-weight: 400;
+}
+
+.addButton {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  width: 100%;
+}
+
+.submit {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* modifiers */
+
+.error.root {
+  border-top: 2px solid #f00;
+}
+
+.error.open.root {
+  border-top: 2px solid #f00;
+}
+
+.open.root {
+  border: 1px solid #fff;
+}
+
+.open .expander {
+  background: linear-gradient(180deg, #fff 0%, #f3f6ff 100%);
+}
+
+.open .details {
+  display: block;
+}
+
+.open .chevron {
+  transform: rotate(0deg);
+}
