@@ -23,6 +23,17 @@ Platzhalter.io is a project started at ITC1's digital hackathon.
 
 # Building / setup 🛠 #
 
+To start the backend server, run:
+
+```
+docker-compose up
+```
+
+If you need to rebuild the code, run `docker-compose build`. To make 
+development faster, use frontend and backend as docker volumes and add them to
+the docker command or use your own `docker-compose.yml` file.
+
+## Deployment ##
 To initialize the server, run `server-install.sh`. It will setup the (Ubuntu)
 server by creating a user to work with and install docker if its not installed
 yet.
