@@ -6,7 +6,6 @@ import styles from "./choose-duration.module.css";
 import { useShop } from "../../service/server/connection";
 
 interface ChooseDurationProps {
-  defaultValue?: number;
   onChange: (duration: number) => void;
 }
 
