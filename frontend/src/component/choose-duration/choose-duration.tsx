@@ -23,7 +23,7 @@ const ChooseDuration: React.FC<ChooseDurationProps> = ({ onChange }) => {
       : 0;
   const maxDuration =
     timeslots.length > 0
-      ? timeslots.sort((a, b) => a.maxDuration - b.maxDuration)[0].maxDuration
+      ? timeslots.sort((a, b) => b.maxDuration - a.maxDuration)[0].maxDuration
       : 0;
 
   return (
