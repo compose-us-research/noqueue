@@ -22,13 +22,13 @@ const ChooseTicket: React.FC<ChooseTicketProps> = ({ onSelect }) => {
     const now = Math.floor(Date.now() / (5 * 60 * 1000)) * (5 * 60 * 1000);
     return new Date(now);
   }, []);
-  const end = useMemo(() => new Date(+start + 2 * 24 * 60 * 60 * 1000), [
+  const end = useMemo(() => new Date(+start + 4 * 24 * 60 * 60 * 1000), [
     start,
   ]);
 
   return (
     <div className={styles.root}>
-      <ChooseDuration defaultValue={duration} onChange={setDuration} />
+      <ChooseDuration onChange={setDuration} />
       <Spacer />
       <Suspense fallback={<Loader />}>
         <AvailableTickets

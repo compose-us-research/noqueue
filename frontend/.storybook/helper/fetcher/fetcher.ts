@@ -22,10 +22,53 @@ export const fetcher: fetcherFn<any> = async (url: string) => {
     return shop;
   }
   if (/\/shop\/([^/]+?)\/timeslot\/?$/.test(url)) {
-    return [];
+    return {
+      member: [
+        {
+          day: 1,
+          start: "16:30:00",
+          end: "23:30:00",
+          customers: 3,
+          minDuration: 15,
+          maxDuration: 60,
+        },
+        {
+          day: 2,
+          start: "16:30:00",
+          end: "23:30:00",
+          customers: 3,
+          minDuration: 15,
+          maxDuration: 60,
+        },
+        {
+          day: 3,
+          start: "16:30:00",
+          end: "23:30:00",
+          customers: 3,
+          minDuration: 15,
+          maxDuration: 60,
+        },
+        {
+          day: 4,
+          start: "16:30:00",
+          end: "23:30:00",
+          customers: 3,
+          minDuration: 15,
+          maxDuration: 60,
+        },
+        {
+          day: 5,
+          start: "16:30:00",
+          end: "23:30:00",
+          customers: 3,
+          minDuration: 15,
+          maxDuration: 60,
+        },
+      ],
+    };
   }
   if (/\/shop\/([^/]+?)\/ticket\/?$/.test(url)) {
-    return [];
+    return { member: [] };
   }
   return [];
 };
