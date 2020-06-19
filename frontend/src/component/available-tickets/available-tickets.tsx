@@ -38,14 +38,17 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
     start.toISOString()
   )}&end=${encodeURIComponent(end.toISOString())}`;
   const data = useShopFetch<Ticket[]>(url, { mapper });
-  const slots = generateSlotsFromData({
+  const from = new Date(
+    Math.floor(Date.now() / (15 * 60 * 1000)) * 15 * 60 * 1000
+  );
+  const generatedSlots = generateSlotsFromData({
     slots: data,
     duration,
-    from: new Date(),
+    from,
   });
-  const hasSlots = slots.length > 0;
+  const hasSlots = generatedSlots.length > 0;
   const noSlots = !hasSlots;
-  const dailySlots = slotsPerDays(slots);
+  const dailySlots = slotsPerDays(generatedSlots);
   return (
     <div className={styles.root}>
       {hasSlots && (
