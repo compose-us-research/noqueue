@@ -91,6 +91,22 @@ function ticket ({ db }) {
     }
   })
 
+  router.delete('/:id', bodyParser.json(), async (req, res, next) => {
+    try {
+      const affectedRowCount = await db.removeTicket({
+        id: req.params.id,
+      })
+
+      if (affectedRowCount === 0) {
+        res.status(404).end()
+      } else {
+        res.status(204).end()
+      }
+    } catch (err) {
+      next(err)
+    }
+  })
+
   return router
 }
 
