@@ -32,10 +32,13 @@ const ShowTicket: React.FC<ShowTicketProps> = ({
   }, [ticket.ticketUrl]);
   const removeTicket = useCallback(async () => {
     try {
-      await api.removeTicket({ ticketUrl: ticket.ticketUrl });
-      const { [ticket.id]: toRemove, ...newTickets } = tickets;
-      saveTickets(newTickets);
-      push(`/show-tickets`);
+      const yes = window.confirm("Möchtest Du das Ticket wirklich stornieren?");
+      if (yes) {
+        await api.removeTicket({ ticketUrl: ticket.ticketUrl });
+        const { [ticket.id]: toRemove, ...newTickets } = tickets;
+        saveTickets(newTickets);
+        push(`/show-tickets`);
+      }
     } catch (e) {
       setError(() => {
         throw e;
