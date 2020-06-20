@@ -9,9 +9,22 @@ import {
 import { fetcher } from "./fetcher";
 import { toRegisteredTicket } from "../tickets/use-local-tickets";
 
+export const deleteUrl = (url: string) => sendUrl("DELETE", url);
 export const putData = (url: string, data: any) => sendData("PUT", url, data);
 export const postData = (url: string, data: any) => sendData("POST", url, data);
 
+async function sendUrl(method: string, url: string): Promise<any> {
+  const res = await fetch(url, {
+    method,
+    headers: {
+      Accept: "application/json",
+    },
+  });
+  if (!res.ok) {
+    throw Error("could not fulfill request");
+  }
+  return res;
+}
 async function sendData(method: string, url: string, data: any): Promise<any> {
   const res = await fetch(url, {
     method,
@@ -55,4 +68,14 @@ export async function registerTicket({
   const fetchedTicket = await fetcher(ticketUrl);
   const registeredTicket = toRegisteredTicket(fetchedTicket);
   return { ...dataToPost, ...registeredTicket, ticketUrl, shop };
+}
+
+interface RemoveTicketParams {
+  ticketUrl: string;
+}
+
+export async function removeTicket({
+  ticketUrl,
+}: RemoveTicketParams): Promise<void> {
+  return await deleteUrl(ticketUrl);
 }

@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 
 import { ReactComponent as BookmarkIcon } from "../../asset/image/bookmark-icon.svg";
 import { ReactComponent as EditIcon } from "../../asset/image/edit-icon.svg";
@@ -7,8 +7,10 @@ import { LocalTicket } from "../../service/domain";
 import styles from "./show-ticket.module.css";
 import Button from "../button/button";
 import Spacer from "../spacer/spacer";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import contactToString from "../../lib/contact-to-string/contact-to-string";
+import { usePush } from "../../service/server/connection";
+import useLocalTickets from "../../service/tickets/use-local-tickets";
 
 interface ShowTicketProps {
   backToIndex: () => void;
@@ -22,13 +24,24 @@ const ShowTicket: React.FC<ShowTicketProps> = ({
   ticket,
 }) => {
   const { push } = useHistory();
-  const { url } = useRouteMatch();
+  const [, setError] = useState(null);
+  const api = usePush();
+  const { saveTickets, tickets } = useLocalTickets();
   const copyLink = useCallback(async () => {
     await navigator.clipboard.writeText(ticket.ticketUrl);
   }, [ticket.ticketUrl]);
-  const navigateToUpdate = useCallback(() => {
-    push(`${url}/update`);
-  }, [push, url]);
+  const removeTicket = useCallback(async () => {
+    try {
+      await api.removeTicket({ ticketUrl: ticket.ticketUrl });
+      const { [ticket.id]: toRemove, ...newTickets } = tickets;
+      saveTickets(newTickets);
+      push(`/show-tickets`);
+    } catch (e) {
+      setError(() => {
+        throw e;
+      });
+    }
+  }, [api, push, saveTickets, ticket.id, ticket.ticketUrl, tickets]);
   return (
     <div className={styles.root}>
       <div className={styles.screen}>
@@ -65,10 +78,10 @@ const ShowTicket: React.FC<ShowTicketProps> = ({
         <Button
           className={styles.button}
           variant="secondary"
-          onClick={navigateToUpdate}
+          onClick={removeTicket}
         >
           <EditIcon />
-          <span>Ticket bearbeiten / stornieren</span>
+          <span>Ticket stornieren</span>
         </Button>
 
         <Spacer />
