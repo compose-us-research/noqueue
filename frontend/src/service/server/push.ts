@@ -9,13 +9,12 @@ import {
 import { fetcher } from "./fetcher";
 import { toRegisteredTicket } from "../tickets/use-local-tickets";
 
-export const deleteUrl = (url: string) => sendUrl("DELETE", url);
 export const putData = (url: string, data: any) => sendData("PUT", url, data);
 export const postData = (url: string, data: any) => sendData("POST", url, data);
 
-async function sendUrl(method: string, url: string): Promise<any> {
+async function deleteUrl(url: string): Promise<any> {
   const res = await fetch(url, {
-    method,
+    method: "DELETE",
     headers: {
       Accept: "application/json",
     },
@@ -25,6 +24,7 @@ async function sendUrl(method: string, url: string): Promise<any> {
   }
   return res;
 }
+
 async function sendData(method: string, url: string, data: any): Promise<any> {
   const res = await fetch(url, {
     method,
