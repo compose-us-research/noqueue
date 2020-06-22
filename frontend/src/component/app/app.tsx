@@ -25,6 +25,7 @@ import Stub from "../stub/stub";
 import ShowTicketRoute from "../show-ticket-route/show-ticket-route";
 import ShowTicketsRoute from "../show-tickets-route/show-tickets-route";
 import ChooseShop from "../choose-shop/choose-shop";
+import ErrorBoundary from "../error-boundary/error-boundary";
 
 const subject = "Registrierung eines Geschäfts";
 const body = `Herzlich Willkommen!
@@ -152,9 +153,11 @@ const App: React.FC<AppProps> = ({ connection = defaultConnection }) => {
     <div className={styles.root}>
       <Router>
         <LocalTicketsProvider>
-          <Suspense fallback={<Loader />}>
-            <RoutedApp connection={connection} />
-          </Suspense>
+          <ErrorBoundary resetKeys={[]}>
+            <Suspense fallback={<Loader />}>
+              <RoutedApp connection={connection} />
+            </Suspense>
+          </ErrorBoundary>
         </LocalTicketsProvider>
       </Router>
     </div>

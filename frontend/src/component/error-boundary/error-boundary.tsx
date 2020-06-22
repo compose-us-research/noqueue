@@ -1,5 +1,5 @@
 import React from "react";
-import Error from "../error/error";
+import ErrorComponent from "../error-component/error-component";
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -24,7 +24,7 @@ export default class ErrorBoundary extends React.Component<
 
   static getDerivedStateFromError(error: Error) {
     // Update state so the next render will show the fallback UI.
-    return { hasError: true, error: `${error.name}: ${error.message}` };
+    return { hasError: true, error };
   }
 
   componentDidCatch(error: Error, errorInfo: object) {
@@ -50,7 +50,7 @@ export default class ErrorBoundary extends React.Component<
   render() {
     if (this.state.hasError) {
       // You can render any custom fallback UI
-      return <Error error={this.state.error} />;
+      return <ErrorComponent error={this.state.error} />;
     }
 
     return this.props.children;

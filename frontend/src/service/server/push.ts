@@ -8,6 +8,7 @@ import {
 } from "../domain";
 import { fetcher } from "./fetcher";
 import { toRegisteredTicket } from "../tickets/use-local-tickets";
+import HttpRequestError from "../error/http-request-error";
 
 export const putData = (url: string, data: any) => sendData("PUT", url, data);
 export const postData = (url: string, data: any) => sendData("POST", url, data);
@@ -20,7 +21,7 @@ async function deleteUrl(url: string): Promise<any> {
     },
   });
   if (!res.ok) {
-    throw Error("could not fulfill request");
+    throw new HttpRequestError("DELETE", url, res.status, res.statusText);
   }
   return res;
 }
@@ -35,7 +36,7 @@ async function sendData(method: string, url: string, data: any): Promise<any> {
     body: JSON.stringify(data),
   });
   if (!res.ok) {
-    throw Error("could not update");
+    throw new HttpRequestError(method, url, res.status, res.statusText);
   }
   return res;
 }
