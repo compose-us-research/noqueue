@@ -35,7 +35,7 @@ const ShowTicket: React.FC<ShowTicketProps> = ({
       const yes = window.confirm("Möchtest Du das Ticket wirklich stornieren?");
       if (yes) {
         await api.removeTicket({ ticketUrl: ticket.ticketUrl });
-        const { [ticket.id]: toRemove, ...newTickets } = tickets;
+        const { [ticket.id]: _toRemove, ...newTickets } = tickets;
         saveTickets(newTickets);
         push(`/show-tickets`);
       }
