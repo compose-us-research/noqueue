@@ -33,19 +33,20 @@ const ShowTicket: React.FC<ShowTicketProps> = ({
     await navigator.clipboard.writeText(ticket.ticketUrl);
   }, [ticket.ticketUrl]);
   const removeTicket = useCallback(async () => {
+    const doTicketRemove = () => {
+      const { [ticket.id]: _toRemove, ...newTickets } = tickets;
+      saveTickets(newTickets);
+      push(`/show-tickets`);
+    };
     try {
       const yes = window.confirm("Möchtest Du das Ticket wirklich stornieren?");
       if (yes) {
         await api.removeTicket({ ticketUrl: ticket.ticketUrl });
-        const { [ticket.id]: _toRemove, ...newTickets } = tickets;
-        saveTickets(newTickets);
-        push(`/show-tickets`);
+        doTicketRemove();
       }
     } catch (e) {
       if (e instanceof NotFoundError) {
-        const { [ticket.id]: _toRemove, ...newTickets } = tickets;
-        saveTickets(newTickets);
-        push(`/show-tickets`);
+        doTicketRemove();
       } else {
         setError(() => {
           throw e;
