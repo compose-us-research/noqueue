@@ -79,6 +79,13 @@ class ShopConnection {
     await this.client.query(query, values)
   }
 
+  async removeTicket ({ id }) {
+    const query = `DELETE FROM "${this.prefix}_tickets" WHERE "id"=$1`
+    const values = [id]
+    const result = await this.client.query(query, values)
+    return result.rowCount
+  }
+
   async getTicket (id) {
     const query = `SELECT * FROM "${this.prefix}_tickets" WHERE "id"=$1`
     const values = [id]
