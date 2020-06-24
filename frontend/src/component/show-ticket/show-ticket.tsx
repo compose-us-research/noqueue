@@ -11,6 +11,8 @@ import { useHistory } from "react-router-dom";
 import contactToString from "../../lib/contact-to-string/contact-to-string";
 import { usePush } from "../../service/server/connection";
 import useLocalTickets from "../../service/tickets/use-local-tickets";
+import NotFoundError from "../../service/error/not-found-error";
+import HttpRequestError from "../../service/error/http-request-error";
 
 interface ShowTicketProps {
   backToIndex: () => void;
@@ -40,9 +42,15 @@ const ShowTicket: React.FC<ShowTicketProps> = ({
         push(`/show-tickets`);
       }
     } catch (e) {
-      setError(() => {
-        throw e;
-      });
+      if (e instanceof NotFoundError) {
+        const { [ticket.id]: _toRemove, ...newTickets } = tickets;
+        saveTickets(newTickets);
+        push(`/show-tickets`);
+      } else {
+        setError(() => {
+          throw e;
+        });
+      }
     }
   }, [api, push, saveTickets, ticket.id, ticket.ticketUrl, tickets]);
   return (

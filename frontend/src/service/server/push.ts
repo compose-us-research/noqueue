@@ -9,6 +9,7 @@ import {
 import { fetcher } from "./fetcher";
 import { toRegisteredTicket } from "../tickets/use-local-tickets";
 import HttpRequestError from "../error/http-request-error";
+import NotFoundError from "../error/not-found-error";
 
 export const putData = (url: string, data: any) => sendData("PUT", url, data);
 export const postData = (url: string, data: any) => sendData("POST", url, data);
@@ -21,6 +22,9 @@ async function deleteUrl(url: string): Promise<any> {
     },
   });
   if (!res.ok) {
+    if (res.status === 404) {
+      throw new NotFoundError("DELETE", url);
+    }
     throw new HttpRequestError("DELETE", url, res.status, res.statusText);
   }
   return res;
