@@ -8,6 +8,7 @@ import { Ticket, AvailableSlot } from "../../service/domain";
 import generateSlotsFromData from "../../lib/generate-slots-from-data/generate-slots-from-data";
 import slotsPerDays from "../../lib/slots-per-days/slots-per-days";
 import tdf from "../../lib/two-digit-format/two-digit-format";
+import findFirstSlots from "../../lib/find-first-slots/find-first-slots";
 
 interface AvailableTicketsProps {
   duration: number;
@@ -48,6 +49,7 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
   });
   const hasSlots = generatedSlots.length > 0;
   const noSlots = !hasSlots;
+  const firstSlots = findFirstSlots(generatedSlots);
   const dailySlots = slotsPerDays(generatedSlots);
   return (
     <div className={styles.root}>
