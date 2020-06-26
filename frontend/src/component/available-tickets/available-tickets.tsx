@@ -8,7 +8,7 @@ import { Ticket, AvailableSlot } from "../../service/domain";
 import generateSlotsFromData from "../../lib/generate-slots-from-data/generate-slots-from-data";
 import slotsPerDays from "../../lib/slots-per-days/slots-per-days";
 import tdf from "../../lib/two-digit-format/two-digit-format";
-import findFirstSlots from "../../lib/find-first-slots/find-first-slots";
+import findFirstSlots from "../../lib/find-first-slots/find-first-slot";
 
 interface AvailableTicketsProps {
   duration: number;
@@ -49,10 +49,27 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
   });
   const hasSlots = generatedSlots.length > 0;
   const noSlots = !hasSlots;
-  const firstSlots = findFirstSlots(generatedSlots);
-  const dailySlots = slotsPerDays(generatedSlots);
+  const [first, ...otherSlots] = hasSlots
+    ? generatedSlots
+    : (([null] as unknown) as AvailableSlot[]);
+  const firstIsNow = first.start === from;
+  const dailySlots = slotsPerDays(firstIsNow ? otherSlots : generatedSlots);
   return (
     <div className={styles.root}>
+      {firstIsNow && (
+        <Button
+          onClick={() => onSelect(first)}
+          variant={
+            selectedSlot &&
+            +selectedSlot.start === +first.start &&
+            +selectedSlot.end === +first.end
+              ? "primary"
+              : "secondary"
+          }
+        >
+          {tdf(first.start.getHours())}:{tdf(first.start.getMinutes())}
+        </Button>
+      )}
       {hasSlots && (
         <>
           <h3>Wähle deine Zeit aus</h3>
@@ -73,7 +90,7 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
                         +selectedSlot.start === +slot.start &&
                         +selectedSlot.end === +slot.end
                           ? "primary"
-                          : "unselected"
+                          : "secondary"
                       }
                     >
                       {tdf(slot.start.getHours())}:
