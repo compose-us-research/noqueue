@@ -8,7 +8,6 @@ import { Ticket, AvailableSlot } from "../../service/domain";
 import generateSlotsFromData from "../../lib/generate-slots-from-data/generate-slots-from-data";
 import slotsPerDays from "../../lib/slots-per-days/slots-per-days";
 import tdf from "../../lib/two-digit-format/two-digit-format";
-import findFirstSlots from "../../lib/find-first-slots/find-first-slot";
 
 interface AvailableTicketsProps {
   duration: number;
@@ -52,10 +51,12 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
   const [first, ...otherSlots] = hasSlots
     ? generatedSlots
     : (([null] as unknown) as AvailableSlot[]);
-  const firstIsNow = first.start === from;
+  const firstIsNow = +first.start === +from;
+  console.log({ firstStart: first.start, from, otherSlots });
   const dailySlots = slotsPerDays(firstIsNow ? otherSlots : generatedSlots);
   return (
     <div className={styles.root}>
+      first is now? {JSON.stringify(firstIsNow)}
       {firstIsNow && (
         <Button
           onClick={() => onSelect(first)}
@@ -67,7 +68,12 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
               : "secondary"
           }
         >
-          {tdf(first.start.getHours())}:{tdf(first.start.getMinutes())}
+          <span className={styles.big}>
+            {tdf(first.start.getHours())}:{tdf(first.start.getMinutes())}
+          </span>
+          <span className={styles.mini}>
+            (bis {tdf(first.end.getHours())}:{tdf(first.end.getMinutes())})
+          </span>
         </Button>
       )}
       {hasSlots && (
@@ -93,8 +99,14 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
                           : "secondary"
                       }
                     >
-                      {tdf(slot.start.getHours())}:
-                      {tdf(slot.start.getMinutes())}
+                      <span className={styles.big}>
+                        {tdf(slot.start.getHours())}:
+                        {tdf(slot.start.getMinutes())}
+                      </span>
+                      <span className={styles.mini}>
+                        (bis {tdf(slot.end.getHours())}:
+                        {tdf(slot.end.getMinutes())})
+                      </span>
                     </Button>
                   ))}
                 </div>

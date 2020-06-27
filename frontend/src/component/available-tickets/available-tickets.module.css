@@ -21,4 +21,11 @@
   width: 125px;
 }
 
+.big {
+  font-size: 14px;
+}
+
+.mini {
+  font-size: 10px;
+}
 /* modifiers */
