@@ -59,6 +59,7 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
       first is now? {JSON.stringify(firstIsNow)}
       {firstIsNow && (
         <Button
+          className={styles.button}
           onClick={() => onSelect(first)}
           variant={
             selectedSlot &&
