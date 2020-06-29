@@ -17,6 +17,11 @@
   row-gap: 25px;
 }
 
+.bookNow {
+  display: flex;
+  justify-content: center;
+}
+
 .button {
   align-items: center;
   display: flex;

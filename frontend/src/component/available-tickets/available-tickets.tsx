@@ -56,30 +56,30 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
   const dailySlots = slotsPerDays(firstIsNow ? otherSlots : generatedSlots);
   return (
     <div className={styles.root}>
-      first is now? {JSON.stringify(firstIsNow)}
-      {firstIsNow && (
-        <Button
-          className={styles.button}
-          onClick={() => onSelect(first)}
-          variant={
-            selectedSlot &&
-            +selectedSlot.start === +first.start &&
-            +selectedSlot.end === +first.end
-              ? "primary"
-              : "secondary"
-          }
-        >
-          <span className={styles.big}>
-            {tdf(first.start.getHours())}:{tdf(first.start.getMinutes())}
-          </span>
-          <span className={styles.mini}>
-            (bis {tdf(first.end.getHours())}:{tdf(first.end.getMinutes())})
-          </span>
-        </Button>
-      )}
       {hasSlots && (
         <>
           <h3>Wähle deine Zeit aus</h3>
+          {firstIsNow && (
+            <div className={styles.bookNow}>
+              <Button
+                className={styles.button}
+                onClick={() => onSelect(first)}
+                variant={
+                  selectedSlot &&
+                  +selectedSlot.start === +first.start &&
+                  +selectedSlot.end === +first.end
+                    ? "primary"
+                    : "secondary"
+                }
+              >
+                <span className={styles.big}>Spontan</span>
+                <span className={styles.mini}>
+                  (bis {tdf(first.end.getHours())}:{tdf(first.end.getMinutes())}
+                  )
+                </span>
+              </Button>
+            </div>
+          )}
           <div className={styles.day}>
             {Object.entries(dailySlots).map(([day, slots]) => (
               <React.Fragment key={day}>
