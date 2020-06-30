@@ -52,7 +52,6 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
     ? generatedSlots
     : (([null] as unknown) as AvailableSlot[]);
   const firstIsNow = +first.start === +from;
-  console.log({ firstStart: first.start, from, otherSlots });
   const dailySlots = slotsPerDays(firstIsNow ? otherSlots : generatedSlots);
   return (
     <div className={styles.root}>
