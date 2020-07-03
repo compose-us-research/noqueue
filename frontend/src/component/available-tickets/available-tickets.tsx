@@ -41,7 +41,6 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
   const from = new Date(
     Math.floor(Date.now() / (15 * 60 * 1000)) * 15 * 60 * 1000
   );
-  console.log("rendering available-tickets");
   const spontaneousSlots = generateSlotsFromData({
     slots: data,
     duration: duration + 15,
@@ -58,7 +57,6 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
   const slotRightNow = spontaneousSlots[0];
   const noSlots = !hasSlots;
   const dailySlots = slotsPerDays(generatedSlots);
-  console.log({ firstIsNow, slotRightNow, dailySlots, selectedSlot });
   return (
     <div className={styles.root}>
       {hasSlots && (
