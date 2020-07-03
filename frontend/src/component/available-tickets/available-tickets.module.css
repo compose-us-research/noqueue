@@ -17,8 +17,25 @@
   row-gap: 25px;
 }
 
+.bookNow {
+  display: flex;
+  justify-content: center;
+}
+
 .button {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 12px 0;
   width: 125px;
 }
 
+.big {
+  font-size: 14px;
+}
+
+.mini {
+  font-size: 10px;
+}
 /* modifiers */

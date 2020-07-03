@@ -41,12 +41,20 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
   const from = new Date(
     Math.floor(Date.now() / (15 * 60 * 1000)) * 15 * 60 * 1000
   );
+  const spontaneousSlots = generateSlotsFromData({
+    slots: data,
+    duration: duration + 15,
+    from,
+  });
   const generatedSlots = generateSlotsFromData({
     slots: data,
     duration,
-    from,
+    from: new Date(+from + 15 * 60 * 1000),
   });
+  const firstIsNow =
+    spontaneousSlots.length > 0 && +spontaneousSlots[0].start === +from;
   const hasSlots = generatedSlots.length > 0;
+  const slotRightNow = spontaneousSlots[0];
   const noSlots = !hasSlots;
   const dailySlots = slotsPerDays(generatedSlots);
   return (
@@ -54,6 +62,27 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
       {hasSlots && (
         <>
           <h3>Wähle deine Zeit aus</h3>
+          {firstIsNow && (
+            <div className={styles.bookNow}>
+              <Button
+                className={styles.button}
+                onClick={() => onSelect(slotRightNow)}
+                variant={
+                  selectedSlot &&
+                  +selectedSlot.start === +slotRightNow.start &&
+                  +selectedSlot.end === +slotRightNow.end
+                    ? "primary"
+                    : "secondary"
+                }
+              >
+                <span className={styles.big}>Spontan</span>
+                <span className={styles.mini}>
+                  (bis {tdf(slotRightNow.end.getHours())}:
+                  {tdf(slotRightNow.end.getMinutes())})
+                </span>
+              </Button>
+            </div>
+          )}
           <div className={styles.day}>
             {Object.entries(dailySlots).map(([day, slots]) => (
               <React.Fragment key={day}>
@@ -71,11 +100,17 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
                         +selectedSlot.start === +slot.start &&
                         +selectedSlot.end === +slot.end
                           ? "primary"
-                          : "unselected"
+                          : "secondary"
                       }
                     >
-                      {tdf(slot.start.getHours())}:
-                      {tdf(slot.start.getMinutes())}
+                      <span className={styles.big}>
+                        {tdf(slot.start.getHours())}:
+                        {tdf(slot.start.getMinutes())}
+                      </span>
+                      <span className={styles.mini}>
+                        (bis {tdf(slot.end.getHours())}:
+                        {tdf(slot.end.getMinutes())})
+                      </span>
                     </Button>
                   ))}
                 </div>
