@@ -41,18 +41,24 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
   const from = new Date(
     Math.floor(Date.now() / (15 * 60 * 1000)) * 15 * 60 * 1000
   );
+  console.log("rendering available-tickets");
+  const spontaneousSlots = generateSlotsFromData({
+    slots: data,
+    duration: duration + 15,
+    from,
+  });
   const generatedSlots = generateSlotsFromData({
     slots: data,
     duration,
-    from,
+    from: new Date(+from + 15 * 60 * 1000),
   });
+  const firstIsNow =
+    spontaneousSlots.length > 0 && +spontaneousSlots[0].start === +from;
   const hasSlots = generatedSlots.length > 0;
+  const slotRightNow = spontaneousSlots[0];
   const noSlots = !hasSlots;
-  const [first, ...otherSlots] = hasSlots
-    ? generatedSlots
-    : (([null] as unknown) as AvailableSlot[]);
-  const firstIsNow = +first.start === +from;
-  const dailySlots = slotsPerDays(firstIsNow ? otherSlots : generatedSlots);
+  const dailySlots = slotsPerDays(generatedSlots);
+  console.log({ firstIsNow, slotRightNow, dailySlots, selectedSlot });
   return (
     <div className={styles.root}>
       {hasSlots && (
@@ -62,19 +68,19 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
             <div className={styles.bookNow}>
               <Button
                 className={styles.button}
-                onClick={() => onSelect(first)}
+                onClick={() => onSelect(slotRightNow)}
                 variant={
                   selectedSlot &&
-                  +selectedSlot.start === +first.start &&
-                  +selectedSlot.end === +first.end
+                  +selectedSlot.start === +slotRightNow.start &&
+                  +selectedSlot.end === +slotRightNow.end
                     ? "primary"
                     : "secondary"
                 }
               >
                 <span className={styles.big}>Spontan</span>
                 <span className={styles.mini}>
-                  (bis {tdf(first.end.getHours())}:{tdf(first.end.getMinutes())}
-                  )
+                  (bis {tdf(slotRightNow.end.getHours())}:
+                  {tdf(slotRightNow.end.getMinutes())})
                 </span>
               </Button>
             </div>

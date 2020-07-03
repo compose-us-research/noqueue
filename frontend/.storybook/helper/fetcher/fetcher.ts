@@ -70,5 +70,46 @@ export const fetcher: fetcherFn<any> = async (url: string) => {
   if (/\/shop\/([^/]+?)\/ticket\/?$/.test(url)) {
     return { member: [] };
   }
+  if (/\/shop\/([^/]+?)\/ticket\/available/.test(url)) {
+    return {
+      member: [
+        {
+          start: "2020-07-03T00:00:00.000Z",
+          end: "2020-07-03T23:59:00.000Z",
+          reserved: 0,
+          allowed: 4,
+          available: 4,
+        },
+        {
+          start: "2020-07-04T00:00:00.000Z",
+          end: "2020-07-04T23:59:00.000Z",
+          reserved: 0,
+          allowed: 4,
+          available: 4,
+        },
+        {
+          start: "2020-07-05T00:00:00.000Z",
+          end: "2020-07-05T23:59:00.000Z",
+          reserved: 0,
+          allowed: 4,
+          available: 4,
+        },
+        {
+          start: "2020-07-06T00:00:00.000Z",
+          end: "2020-07-06T23:59:00.000Z",
+          reserved: 0,
+          allowed: 4,
+          available: 4,
+        },
+        {
+          start: "2020-07-07T00:00:00.000Z",
+          end: "2020-07-07T23:59:00.000Z",
+          reserved: 0,
+          allowed: 4,
+          available: 4,
+        },
+      ],
+    };
+  }
   return [];
 };
