@@ -12,7 +12,6 @@ import contactToString from "../../lib/contact-to-string/contact-to-string";
 import { usePush } from "../../service/server/connection";
 import useLocalTickets from "../../service/tickets/use-local-tickets";
 import NotFoundError from "../../service/error/not-found-error";
-import HttpRequestError from "../../service/error/http-request-error";
 
 interface ShowTicketProps {
   backToIndex: () => void;
