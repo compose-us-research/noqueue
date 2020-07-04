@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { ReactComponent as PlusIcon } from "../../asset/image/plus-icon.svg";
 import { Timerange, Timeslot } from "../../service/domain";
@@ -28,13 +28,14 @@ const mapper = (data: any): Timeslot[] => {
   return data.member;
 };
 
-let id = 1;
+let id = 0;
 const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
   const timeslots = useShopFetch("/timeslot", { mapper });
   const timeranges = generateTimerangesFromTimeslots(timeslots);
+  const [opened, setOpened] = useState<{ [key: number]: boolean }>({});
   const methods = useForm({
     defaultValues: {
-      ranges: timeranges.map((range) => ({ ...range, id: id++ })),
+      ranges: timeranges.map((range) => ({ ...range, id: ++id })),
     },
   });
   const { fields, append, remove } = useFieldArray({
@@ -49,18 +50,28 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
         <form onSubmit={methods.handleSubmit(handleSubmit)}>
           <Spacer />
           <div className={styles.fields}>
-            {fields.map((range, index) => (
-              <React.Fragment key={range.id}>
-                <TimerangeSetter
-                  index={index}
-                  label={`Zeitraum ${index + 1}`}
-                  name={"ranges"}
-                  range={range as Timerange}
-                  remover={() => remove(index)}
-                />
-                <Spacer />
-              </React.Fragment>
-            ))}
+            {fields.map((range, index) => {
+              const id = range.id as any;
+              return (
+                <React.Fragment key={id}>
+                  <TimerangeSetter
+                    index={index}
+                    isOpen={opened[id]}
+                    label={`Zeitraum ${index + 1}`}
+                    name={"ranges"}
+                    range={range as Timerange}
+                    remover={() => remove(index)}
+                    toggleOpen={() =>
+                      setOpened((old) => ({
+                        ...old,
+                        [id]: !old[id],
+                      }))
+                    }
+                  />
+                  <Spacer />
+                </React.Fragment>
+              );
+            })}
 
             <Button
               className={styles.addButton}
@@ -68,8 +79,11 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
                 const lastRange = fields[fields.length - 1] as Timerange;
                 const appendTimerange = {
                   ...createNewTimerange(lastRange),
-                  id: id++,
+                  id: ++id,
                 };
+                setOpened({
+                  [id]: true,
+                });
                 append(appendTimerange);
               }}
               variant="secondary"
