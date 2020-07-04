@@ -17,24 +17,26 @@ import { checkTime } from "../../lib/calculate-max-duration/calculate-max-durati
 
 interface TimerangeSetterProps {
   index: number;
+  isOpen: boolean;
   label: string;
   name: string;
   range: Timerange;
   remover: () => void;
+  toggleOpen: () => void;
 }
 
 const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
   index,
+  isOpen,
   label,
   name,
   range,
   remover,
+  toggleOpen,
 }) => {
-  const [isOpen, setOpen] = useState<boolean>(false);
   const [days, setDays] = useState<string>(daysToString(range.days));
   const { errors, watch } = useFormContext();
   const slots = `${days} ${range.start} - ${range.end} Uhr`;
-  const toggleOpen = useCallback(() => setOpen((open) => !open), [setOpen]);
   const hasError = errors[name] && errors[name][index];
   const prefix = `${name}[${index}]`;
   const start = watch(`${prefix}.start`, range.start);
