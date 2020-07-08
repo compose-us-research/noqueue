@@ -28,8 +28,18 @@ const ChooseTicket: React.FC<ChooseTicketProps> = ({ onSelect }) => {
   const end = useMemo(
     () =>
       new Date(
-        new URLSearchParams(queryString).get("end") ||
-          +start + 4 * 24 * 60 * 60 * 1000
+        // end shouldn't be greater than 14 days from start
+        Math.min(
+          // end needs to be >= start time
+          Math.max(
+            +new Date(new URLSearchParams(queryString).get("end") || +start),
+            +new Date(
+              new URLSearchParams(queryString).get("end") ||
+                +start + 4 * 24 * 60 * 60 * 1000
+            )
+          ),
+          +start + 14 * 24 * 60 * 60 * 1000
+        )
       ),
     [queryString, start]
   );
