@@ -8,6 +8,7 @@ import styles from "./choose-ticket.module.css";
 import Button from "../button/button";
 import { useShop } from "../../service/server/connection";
 import Loader from "../loader/loader";
+import { useLocation } from "react-router-dom";
 
 interface ChooseTicketProps {
   onSelect: (ticket: AvailableSlot) => void;
@@ -17,15 +18,21 @@ const ChooseTicket: React.FC<ChooseTicketProps> = ({ onSelect }) => {
   const shop = useShop();
   const [duration, setDuration] = useState<number>(15);
   const [selectedTicket, setSelectedTicket] = useState<AvailableSlot>();
-  // use start / end from url
+  const queryString = useLocation().search;
   const start = useMemo(() => {
-    // The latest 5 minutes
-    const now = Math.floor(Date.now() / (5 * 60 * 1000)) * (5 * 60 * 1000);
-    return new Date(now);
-  }, []);
-  const end = useMemo(() => new Date(+start + 4 * 24 * 60 * 60 * 1000), [
-    start,
-  ]);
+    return new Date(
+      new URLSearchParams(queryString).get("start") ||
+        Math.floor(Date.now() / (5 * 60 * 1000)) * (5 * 60 * 1000)
+    );
+  }, [queryString]);
+  const end = useMemo(
+    () =>
+      new Date(
+        new URLSearchParams(queryString).get("end") ||
+          +start + 4 * 24 * 60 * 60 * 1000
+      ),
+    [queryString, start]
+  );
 
   return (
     <div className={styles.root}>
