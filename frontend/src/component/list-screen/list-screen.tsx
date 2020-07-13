@@ -66,6 +66,8 @@ const ListScreen: React.FC<ListScreenProps> = ({
         >
           <span>Zurück zum Anfang</span>
         </Button>
+
+        <Spacer />
       </div>
     </div>
   );
