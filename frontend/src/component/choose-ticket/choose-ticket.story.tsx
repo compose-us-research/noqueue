@@ -1,7 +1,8 @@
-import React, { Suspense } from "react";
+import React from "react";
 import ChooseTicket from "./choose-ticket";
 import { action } from "@storybook/addon-actions";
-import Loader from "../loader/loader";
+import Connected from "../../../.storybook/helper/connected";
+import { BrowserRouter } from "react-router-dom";
 
 export default {
   title: "Screens/ChooseTicket",
@@ -9,7 +10,9 @@ export default {
 };
 
 export const Simple = () => (
-  <Suspense fallback={<Loader />}>
-    <ChooseTicket onSelect={action("reserved slot")} />
-  </Suspense>
+  <Connected>
+    <BrowserRouter>
+      <ChooseTicket onSelect={action("reserved slot")} />
+    </BrowserRouter>
+  </Connected>
 );
