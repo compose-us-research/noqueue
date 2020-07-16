@@ -1,25 +1,14 @@
-import React, { Suspense } from "react";
+import React from "react";
 import ShowTicket from "./show-ticket";
 import { action } from "@storybook/addon-actions";
 import { Customer, LocalTicket } from "../../service/domain";
-import { connection } from "../../../.storybook/helper/fetcher/connection";
-import { FetcherProvider, useShop } from "../../service/server/connection";
+import { useShop } from "../../service/server/connection";
 import { BrowserRouter } from "react-router-dom";
+import Connected from "../../../.storybook/helper/connected";
 
 export default {
   title: "Screens/ShowTicket",
   component: ShowTicket,
-  decorators: [
-    (storyFn: any) => <BrowserRouter>{storyFn()}</BrowserRouter>,
-    (storyFn: any) => (
-      <FetcherProvider
-        currentShopId="buchhandlung-pustet"
-        connection={connection}
-      >
-        {storyFn()}
-      </FetcherProvider>
-    ),
-  ],
 };
 
 const SimpleStory = ({ header }: { header?: (t: LocalTicket) => string }) => {
@@ -53,15 +42,19 @@ const SimpleStory = ({ header }: { header?: (t: LocalTicket) => string }) => {
 };
 
 export const Simple = () => (
-  <Suspense fallback={<div>Lade...</div>}>
-    <SimpleStory />
-  </Suspense>
+  <Connected>
+    <BrowserRouter>
+      <SimpleStory />
+    </BrowserRouter>
+  </Connected>
 );
 
 export const WithLabel = () => (
-  <Suspense fallback={<div>Lade...</div>}>
-    <SimpleStory
-      header={(ticket) => `Dein gespeichertes Ticket für ${ticket.shop.name}`}
-    />
-  </Suspense>
+  <Connected>
+    <BrowserRouter>
+      <SimpleStory
+        header={(ticket) => `Dein gespeichertes Ticket für ${ticket.shop.name}`}
+      />
+    </BrowserRouter>
+  </Connected>
 );

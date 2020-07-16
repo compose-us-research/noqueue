@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import ShowTickets from "./show-tickets";
 import { action } from "@storybook/addon-actions";
 import { useShop } from "../../service/server/connection";
-import { BrowserRouter as Router } from "react-router-dom";
+import Connected from "../../../.storybook/helper/connected";
 
 export default {
   title: "Screens/ShowTickets",
@@ -55,9 +55,7 @@ const SimpleStory = () => {
 };
 
 export const Simple = () => (
-  <Router>
-    <Suspense fallback={<div>Lade...</div>}>
-      <SimpleStory />
-    </Suspense>
-  </Router>
+  <Connected>
+    <SimpleStory />
+  </Connected>
 );
