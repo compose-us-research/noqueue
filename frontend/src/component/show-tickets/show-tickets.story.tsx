@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React from "react";
 import ShowTickets from "./show-tickets";
 import { action } from "@storybook/addon-actions";
 import { useShop } from "../../service/server/connection";
