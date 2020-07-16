@@ -3,13 +3,14 @@ import RegisterCustomer from "./register-customer";
 import { action } from "@storybook/addon-actions";
 import { LocalTicket } from "../../service/domain";
 import { useShop } from "../../service/server/connection";
+import Connected from "../../../.storybook/helper/connected";
 
 export default {
   title: "Screens/RegisterCustomer",
   component: RegisterCustomer,
 };
 
-export const Default = () => {
+const RegisterWithSelectedTicket = () => {
   const shop = useShop();
   const now = Date.now();
   const ticketUrl = `${shop["@id"]}/ticket/1`;
@@ -26,3 +27,9 @@ export const Default = () => {
   };
   return <RegisterCustomer onRegister={action("register")} ticket={ticket} />;
 };
+
+export const Default = () => (
+  <Connected>
+    <RegisterWithSelectedTicket />
+  </Connected>
+);
