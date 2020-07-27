@@ -1,6 +1,7 @@
 const debug = require('debug')('noqueue-database')
 const { Client } = require('pg')
 const defaults = require('../defaults')
+const migrations = require('./migrations')
 const tables = require('./tables')
 
 class DatabaseConnection {
@@ -24,7 +25,21 @@ class DatabaseConnection {
 
     // version table should exist now
     const result = await this.client.query(`SELECT version FROM version`)
-    const version = result.rows[0].version
+    const initialVersion =
+      (result.rows && result.rows[0] && result.rows[0].version) || 0;
+    const updateVersionQuery = `UPDATE version SET current_version=$1 WHERE current_version=$2`
+    const resultVersion = await migrations.reduce(async (thisUpdate, migration) => {
+      const currentVersion = await thisUpdate;
+      if (currentVersion < migration.version) {
+        debug(`Updating to version ${migration.version}`)
+        await migration.update(this.client)
+        const values = [migration.version, current_version]
+        await this.client.query(updateVersionQuery, values)
+        return migration.version
+      }
+      return currentVersion
+    }, Promise.resolve(initialVersion))
+    debug(`Version of database is ${resultVersion}`)
   }
 
   disconnect () {
