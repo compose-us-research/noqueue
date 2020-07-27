@@ -21,6 +21,10 @@ class DatabaseConnection {
         await this.client.query(config.create)
       }
     }
+
+    // version table should exist now
+    const result = await this.client.query(`SELECT version FROM version`)
+    const version = result.rows[0].version
   }
 
   disconnect () {
