@@ -6,8 +6,15 @@ const tables = {
       "prefix" character varying(1024) UNIQUE,
       "data" jsonb
     );`,
-    delete: `DROP TABLE shops;`
-  }
-}
+    delete: `DROP TABLE shops;`,
+  },
+  version: {
+    clear: `TRUNCATE versions;`,
+    create: `CREATE TABLE versions (
+      "current_version" integer PRIMARY KEY
+    );`,
+    delete: `DROP TABLE versions;`,
+  },
+};
 
-module.exports = tables
+module.exports = tables;
