@@ -9,11 +9,11 @@ const tables = {
     delete: `DROP TABLE shops;`,
   },
   version: {
-    clear: `TRUNCATE versions;`,
-    create: `CREATE TABLE versions (
+    clear: `TRUNCATE version;`,
+    create: `CREATE TABLE version (
       "current_version" integer PRIMARY KEY
     );`,
-    delete: `DROP TABLE versions;`,
+    delete: `DROP TABLE version;`,
   },
 };
 
