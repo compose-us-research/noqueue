@@ -3,8 +3,8 @@ const migrations = [
   {
     version: 1,
     update: async (client) => {
-      client.query("INSERT INTO version (version) VALUES (1)");
+      client.query("INSERT INTO version (current_version) VALUES (1)");
     },
   },
 ];
-export default migrations;
+module.exports = migrations;
