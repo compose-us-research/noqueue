@@ -26,7 +26,7 @@ class DatabaseConnection {
     // version table should exist now
     const result = await this.client.query(`SELECT current_version FROM version`)
     const initialVersion =
-      (result.rows && result.rows[0] && result.rows[0].version) || 0;
+      (result.rows && result.rows[0] && result.rows[0].current_version) || 0;
     const updateVersionQuery = `UPDATE version SET current_version=$1 WHERE current_version=$2`
     const resultVersion = await migrations.reduce(async (thisUpdate, migration) => {
       const currentVersion = await thisUpdate;
