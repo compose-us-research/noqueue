@@ -75,7 +75,7 @@ export async function registerTicket({
   return { ...dataToPost, ...registeredTicket, ticketUrl, shop };
 }
 
-interface RemoveTicketParams {
+export interface RemoveTicketParams {
   ticketUrl: string;
 }
 
