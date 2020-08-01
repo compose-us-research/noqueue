@@ -38,7 +38,11 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
       ranges: timeranges.map((range) => ({ ...range, id: ++id })),
     },
   });
-  const { fields, append, remove } = useFieldArray({
+  const {
+    fields: rangesFields,
+    append: rangesAppend,
+    remove: rangesRemove,
+  } = useFieldArray({
     control: methods.control,
     name: "ranges",
   });
@@ -50,7 +54,7 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
         <form onSubmit={methods.handleSubmit(handleSubmit)}>
           <Spacer />
           <div className={styles.fields}>
-            {fields.map((range, index) => {
+            {rangesFields.map((range, index) => {
               const id = range.id as any;
               return (
                 <React.Fragment key={id}>
@@ -60,7 +64,7 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
                     label={`Zeitraum ${index + 1}`}
                     name={"ranges"}
                     range={range as Timerange}
-                    remover={() => remove(index)}
+                    remover={() => rangesRemove(index)}
                     toggleOpen={() =>
                       setOpened((old) => ({
                         ...old,
@@ -76,7 +80,9 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
             <Button
               className={styles.addButton}
               onClick={() => {
-                const lastRange = fields[fields.length - 1] as Timerange;
+                const lastRange = rangesFields[
+                  rangesFields.length - 1
+                ] as Timerange;
                 const appendTimerange = {
                   ...createNewTimerange(lastRange),
                   id: ++id,
@@ -84,7 +90,7 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
                 setOpened({
                   [id]: true,
                 });
-                append(appendTimerange);
+                rangesAppend(appendTimerange);
               }}
               variant="secondary"
             >
