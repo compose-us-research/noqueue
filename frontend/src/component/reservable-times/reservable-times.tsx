@@ -35,6 +35,7 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
   const [opened, setOpened] = useState<{ [key: number]: boolean }>({});
   const methods = useForm({
     defaultValues: {
+      holidays: [],
       ranges: timeranges.map((range) => ({ ...range, id: ++id })),
     },
   });
@@ -45,6 +46,14 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
   } = useFieldArray({
     control: methods.control,
     name: "ranges",
+  });
+  const {
+    fields: holidaysFields,
+    append: holidaysAppend,
+    remove: holidaysRemove,
+  } = useFieldArray({
+    control: methods.control,
+    name: "holidays",
   });
 
   return (
