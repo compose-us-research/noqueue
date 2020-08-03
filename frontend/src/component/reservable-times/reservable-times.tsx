@@ -56,6 +56,8 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
     name: "holidays",
   });
 
+  console.log({ holidaysFields });
+
   return (
     <div className={styles.root}>
       <h2>Buchbare Zeiten hinterlegen</h2>
@@ -104,6 +106,21 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
               variant="secondary"
             >
               <span>Zeitraum hinzufügen</span>
+              <PlusIcon />
+            </Button>
+            <Spacer />
+
+            <Button
+              className={styles.addButton}
+              onClick={() => {
+                const appendHoliday = {
+                  id: ++id,
+                };
+                holidaysAppend(appendHoliday);
+              }}
+              variant="secondary"
+            >
+              <span>Urlaubstage hinzufügen</span>
               <PlusIcon />
             </Button>
             <Spacer />
