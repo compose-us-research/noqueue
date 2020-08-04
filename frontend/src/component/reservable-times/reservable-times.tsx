@@ -1,21 +1,20 @@
 import React, { useState } from "react";
-
-import { ReactComponent as PlusIcon } from "../../asset/image/plus-icon.svg";
-import { Timerange, Timeslot } from "../../service/domain";
-import Button from "../button/button";
-import styles from "./reservable-times.module.css";
 import {
   FormProvider,
   useForm,
   SubmitHandler,
   useFieldArray,
 } from "react-hook-form";
+
+import { ReactComponent as PlusIcon } from "../../asset/image/plus-icon.svg";
+import { Timerange, Timeslot } from "../../service/domain";
+import Button from "../button/button";
+import styles from "./reservable-times.module.css";
+import HolidaySelector from "../holiday-selector/holiday-selector";
 import Spacer from "../spacer/spacer";
 import TimerangeSetter from "../timerange-setter/timerange-setter";
 import { useShopFetch } from "../../service/server/connection";
 import generateTimerangesFromTimeslots from "../../lib/generate-timeranges-from-timeslots/generate-timeranges-from-timeslots";
-import HolidaySelector from "../holiday-selector/holiday-selector";
-import Stub from "../stub/stub";
 
 interface ReservableTimesProps {
   handleSubmit: SubmitHandler<Record<string, any>>;
