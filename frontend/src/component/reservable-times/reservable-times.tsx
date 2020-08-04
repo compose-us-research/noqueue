@@ -9,6 +9,8 @@ import Spacer from "../spacer/spacer";
 import TimerangeSetter from "../timerange-setter/timerange-setter";
 import { useShopFetch } from "../../service/server/connection";
 import generateTimerangesFromTimeslots from "../../lib/generate-timeranges-from-timeslots/generate-timeranges-from-timeslots";
+import HolidaySelector from "../holiday-selector/holiday-selector";
+import Stub from "../stub/stub";
 
 interface ReservableTimesProps {
   handleSubmit: OnSubmit<Record<string, any>>;
@@ -47,16 +49,6 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
     control: methods.control,
     name: "ranges",
   });
-  const {
-    fields: holidaysFields,
-    append: holidaysAppend,
-    remove: holidaysRemove,
-  } = useFieldArray({
-    control: methods.control,
-    name: "holidays",
-  });
-
-  console.log({ holidaysFields });
 
   return (
     <div className={styles.root}>
@@ -110,20 +102,9 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
             </Button>
             <Spacer />
 
-            <Button
-              className={styles.addButton}
-              onClick={() => {
-                const appendHoliday = {
-                  id: ++id,
-                };
-                holidaysAppend(appendHoliday);
-              }}
-              variant="secondary"
-            >
-              <span>Urlaubstage hinzufügen</span>
-              <PlusIcon />
-            </Button>
+            <HolidaySelector name="holidays" />
             <Spacer />
+
             <Button className={styles.submit} type="submit">
               Fertig! Erzähl es deinen Kunden!
             </Button>

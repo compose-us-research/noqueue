@@ -1,0 +1,13 @@
+/* elements */
+.root {
+}
+
+.addButton {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  width: 100%;
+}
+
+/* modifiers */
