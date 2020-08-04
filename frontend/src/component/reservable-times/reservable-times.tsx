@@ -4,7 +4,12 @@ import { ReactComponent as PlusIcon } from "../../asset/image/plus-icon.svg";
 import { Timerange, Timeslot } from "../../service/domain";
 import Button from "../button/button";
 import styles from "./reservable-times.module.css";
-import { FormContext, useForm, OnSubmit, useFieldArray } from "react-hook-form";
+import {
+  FormProvider,
+  useForm,
+  SubmitHandler,
+  useFieldArray,
+} from "react-hook-form";
 import Spacer from "../spacer/spacer";
 import TimerangeSetter from "../timerange-setter/timerange-setter";
 import { useShopFetch } from "../../service/server/connection";
@@ -13,7 +18,7 @@ import HolidaySelector from "../holiday-selector/holiday-selector";
 import Stub from "../stub/stub";
 
 interface ReservableTimesProps {
-  handleSubmit: OnSubmit<Record<string, any>>;
+  handleSubmit: SubmitHandler<Record<string, any>>;
 }
 
 function createNewTimerange(lastRange?: Timerange): Timerange {
@@ -53,7 +58,7 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
   return (
     <div className={styles.root}>
       <h2>Buchbare Zeiten hinterlegen</h2>
-      <FormContext {...methods}>
+      <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(handleSubmit)}>
           <Spacer />
           <div className={styles.fields}>
@@ -110,7 +115,7 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
             </Button>
           </div>
         </form>
-      </FormContext>
+      </FormProvider>
     </div>
   );
 };
