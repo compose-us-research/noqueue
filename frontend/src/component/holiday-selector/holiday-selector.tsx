@@ -23,20 +23,7 @@ const HolidaySelector: React.FC<HolidaySelectorProps> = ({ name }) => {
         const id = holiday.id as any;
         return (
           <React.Fragment key={id}>
-            <Stub
-              next={() => {
-                console.log("pressed next");
-              }}
-            >
-              <Button
-                className={styles.remover}
-                onClick={() => remove(index)}
-                variant="secondary"
-              >
-                <Spacer direction="column" />
-                Löschen
-              </Button>
-            </Stub>
+            <Stub next={() => remove(index)}></Stub>
             <Spacer />
           </React.Fragment>
         );
