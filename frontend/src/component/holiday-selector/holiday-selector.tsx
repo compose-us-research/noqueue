@@ -12,9 +12,31 @@ interface HolidaySelectorProps {
   name: string;
 }
 
+interface RangePickerProps {
+  endDate: Date;
+  onChange: (dates: [Date, Date]) => void;
+  startDate: Date;
+}
+
+const RangePicker: React.FC<RangePickerProps> = ({
+  endDate,
+  startDate,
+  onChange,
+}) => {
+  return (
+    <DatePicker
+      endDate={endDate}
+      inline
+      onChange={onChange}
+      selectsRange
+      startDate={startDate}
+    />
+  );
+};
+
 let id = 0;
 const HolidaySelector: React.FC<HolidaySelectorProps> = ({ name }) => {
-  const { control } = useFormContext();
+  const { control, setValue } = useFormContext();
   const { append, fields, remove } = useFieldArray({ control, name });
 
   return (
@@ -23,7 +45,14 @@ const HolidaySelector: React.FC<HolidaySelectorProps> = ({ name }) => {
         const id = holiday.id as any;
         return (
           <React.Fragment key={id}>
-            <Stub next={() => remove(index)}></Stub>
+            <RangePicker
+              endDate={holiday.end}
+              onChange={([start, end]) => {
+                setValue(`${name}[${index}].start`, start);
+                setValue(`${name}[${index}].end`, end);
+              }}
+              startDate={holiday.start}
+            />
             <Spacer />
           </React.Fragment>
         );
