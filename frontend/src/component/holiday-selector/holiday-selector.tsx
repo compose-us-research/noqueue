@@ -48,7 +48,7 @@ const HolidaySelector: React.FC<HolidaySelectorProps> = ({ name }) => {
               holiday={holiday}
               onChange={([start, end]) => {
                 console.log({ start, end });
-                setValue(prefix, { ...holiday, start, end });
+                setValue(`${prefix}[${index}]`, { ...holiday, start, end });
               }}
             />
             <Button
