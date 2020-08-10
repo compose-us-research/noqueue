@@ -15,18 +15,20 @@ interface HolidaySelectorProps {
 }
 
 interface RangePickerProps {
-  holiday: any;
+  holiday: { end?: Date; start?: Date };
   onChange: (dates: [Date, Date]) => void;
 }
 
 const RangePicker: React.FC<RangePickerProps> = ({ holiday, onChange }) => {
+  const startDate = holiday.start || new Date();
   return (
     <DatePicker
       endDate={holiday.end}
       inline
       onChange={onChange}
+      selected={startDate}
       selectsRange
-      startDate={holiday.start}
+      startDate={startDate}
     />
   );
 };
@@ -34,7 +36,13 @@ const RangePicker: React.FC<RangePickerProps> = ({ holiday, onChange }) => {
 let id = 0;
 const HolidaySelector: React.FC<HolidaySelectorProps> = ({ name }) => {
   const { control, setValue } = useFormContext();
-  const { append, fields, remove } = useFieldArray({ control, name });
+  const { append, fields, remove } = useFieldArray<{
+    end?: Date;
+    start?: Date;
+  }>({
+    control,
+    name,
+  });
 
   return (
     <div className={cn(styles.root)}>
@@ -48,7 +56,7 @@ const HolidaySelector: React.FC<HolidaySelectorProps> = ({ name }) => {
               holiday={holiday}
               onChange={([start, end]) => {
                 console.log({ start, end });
-                setValue(`${prefix}[${index}]`, { ...holiday, start, end });
+                setValue(prefix, { ...holiday, start, end });
               }}
             />
             <Button
