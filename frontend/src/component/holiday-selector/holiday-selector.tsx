@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import cn from "classnames";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -16,16 +16,28 @@ interface HolidaySelectorProps {
 
 interface RangePickerProps {
   holiday: { end?: Date; start?: Date };
-  onChange: (dates: [Date, Date]) => void;
+  name: string;
 }
 
-const RangePicker: React.FC<RangePickerProps> = ({ holiday, onChange }) => {
-  const startDate = holiday.start || new Date();
+const RangePicker: React.FC<RangePickerProps> = ({ holiday, name }) => {
+  const { setValue } = useFormContext();
+  const [startDate, setStartDate] = useState<Date | undefined>(holiday.start);
+  const [endDate, setEndDate] = useState<Date | undefined>(holiday.end);
+  const change = useCallback(
+    (change) => {
+      const [start, end] = change as [Date, Date];
+      setStartDate(start);
+      setEndDate(end);
+      console.log("setValue", name, { start, end });
+      setValue(name, { ...holiday, start, end });
+    },
+    [setEndDate, setStartDate, setValue]
+  );
   return (
     <DatePicker
-      endDate={holiday.end}
+      endDate={endDate}
       inline
-      onChange={onChange}
+      onChange={change}
       selected={startDate}
       selectsRange
       startDate={startDate}
@@ -35,7 +47,7 @@ const RangePicker: React.FC<RangePickerProps> = ({ holiday, onChange }) => {
 
 let id = 0;
 const HolidaySelector: React.FC<HolidaySelectorProps> = ({ name }) => {
-  const { control, setValue } = useFormContext();
+  const { control } = useFormContext();
   const { append, fields, remove } = useFieldArray<{
     end?: Date;
     start?: Date;
@@ -52,13 +64,7 @@ const HolidaySelector: React.FC<HolidaySelectorProps> = ({ name }) => {
         console.log({ holiday });
         return (
           <React.Fragment key={id}>
-            <RangePicker
-              holiday={holiday}
-              onChange={([start, end]) => {
-                console.log({ start, end });
-                setValue(prefix, { ...holiday, start, end });
-              }}
-            />
+            <RangePicker holiday={holiday} name={prefix} />
             <Button
               className={styles.addButton}
               onClick={() => {
