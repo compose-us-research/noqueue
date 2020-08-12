@@ -46,7 +46,7 @@ const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
     (value: string) => parseInt(value, 10) > 0,
     []
   );
-  const checkTimeValidator = useCallback<Validate>((value) => {
+  const checkTimeValidator = useCallback<Validate>((value: string) => {
     try {
       checkTime(value);
       return true;
