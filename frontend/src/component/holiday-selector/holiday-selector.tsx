@@ -1,7 +1,5 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import cn from "classnames";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 
 import { ReactComponent as PlusIcon } from "../../asset/image/plus-icon.svg";
 import { ReactComponent as RemoveIcon } from "../../asset/image/remove-icon.svg";
@@ -9,41 +7,11 @@ import styles from "./holiday-selector.module.css";
 import { useFormContext, useFieldArray } from "react-hook-form";
 import Button from "../button/button";
 import Spacer from "../spacer/spacer";
+import RangePicker from "../range-picker/range-picker";
 
 interface HolidaySelectorProps {
   name: string;
 }
-
-interface RangePickerProps {
-  holiday: { end?: Date; start?: Date };
-  name: string;
-}
-
-const RangePicker: React.FC<RangePickerProps> = ({ holiday, name }) => {
-  const { setValue } = useFormContext();
-  const [startDate, setStartDate] = useState<Date | undefined>(holiday.start);
-  const [endDate, setEndDate] = useState<Date | undefined>(holiday.end);
-  const change = useCallback(
-    (change) => {
-      const [start, end] = change as [Date, Date];
-      setStartDate(start);
-      setEndDate(end);
-      console.log("setValue", name, { start, end });
-      setValue(name, { ...holiday, start, end });
-    },
-    [setEndDate, setStartDate, setValue]
-  );
-  return (
-    <DatePicker
-      endDate={endDate}
-      inline
-      onChange={change}
-      selected={startDate}
-      selectsRange
-      startDate={startDate}
-    />
-  );
-};
 
 let id = 0;
 const HolidaySelector: React.FC<HolidaySelectorProps> = ({ name }) => {
@@ -64,7 +32,11 @@ const HolidaySelector: React.FC<HolidaySelectorProps> = ({ name }) => {
         console.log({ holiday, prefix });
         return (
           <React.Fragment key={id}>
-            <RangePicker holiday={holiday} name={prefix} />
+            <RangePicker
+              start={holiday.start}
+              end={holiday.end}
+              name={prefix}
+            />
             <Button
               className={styles.addButton}
               onClick={() => {
