@@ -1,6 +1,6 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React from "react";
 import DatePicker from "react-datepicker";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, Controller } from "react-hook-form";
 import "react-datepicker/dist/react-datepicker.css";
 
 interface RangePickerProps {
@@ -10,32 +10,26 @@ interface RangePickerProps {
 }
 
 const RangePicker: React.FC<RangePickerProps> = ({ start, end, name }) => {
-  const { register, setValue } = useFormContext();
-  const [startDate, setStartDate] = useState<Date | undefined>(start);
-  const [endDate, setEndDate] = useState<Date | undefined>(end);
-  const change = useCallback(
-    (change) => {
-      const [start, end] = change as [Date, Date];
-      setStartDate(start);
-      setEndDate(end);
-      setValue(name, { ...end, start });
-    },
-    [name, setEndDate, setStartDate, setValue]
-  );
-
-  useEffect(() => {
-    register(name);
-  }, [name, register]);
+  const { control } = useFormContext();
 
   return (
-    <DatePicker
+    <Controller
+      control={control}
+      defaultValue={[start, end]}
       name={name}
-      endDate={endDate}
-      inline
-      onChange={change}
-      selected={startDate}
-      selectsRange
-      startDate={startDate}
+      render={({ onChange, onBlur, value }) => (
+        <DatePicker
+          endDate={value[1]}
+          inline
+          onChange={(x) => {
+            console.log("change", x);
+            onChange(x);
+          }}
+          selected={value[0]}
+          selectsRange
+          startDate={value[0]}
+        />
+      )}
     />
   );
 };
