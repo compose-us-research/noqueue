@@ -9,6 +9,6 @@ export default {
 
 export const Regular = () => (
   <Form>
-    <RangePicker name="days" />
+    <RangePicker name="days" range={{ id: "1" }} />
   </Form>
 );

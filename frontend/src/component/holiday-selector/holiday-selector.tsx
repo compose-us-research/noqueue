@@ -32,11 +32,7 @@ const HolidaySelector: React.FC<HolidaySelectorProps> = ({ name }) => {
         console.log({ holiday, prefix });
         return (
           <React.Fragment key={id}>
-            <RangePicker
-              start={holiday.start}
-              end={holiday.end}
-              name={prefix}
-            />
+            <RangePicker range={holiday} name={prefix} />
             <Button
               className={styles.addButton}
               onClick={() => {

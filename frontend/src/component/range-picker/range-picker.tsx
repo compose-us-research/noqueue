@@ -4,12 +4,12 @@ import { useFormContext, Controller } from "react-hook-form";
 import "react-datepicker/dist/react-datepicker.css";
 
 interface RangePickerProps {
-  end?: Date;
+  range: { id?: any; start?: Date; end?: Date };
   name: string;
-  start?: Date;
 }
 
-const RangePicker: React.FC<RangePickerProps> = ({ start, end, name }) => {
+const RangePicker: React.FC<RangePickerProps> = ({ range, name }) => {
+  const { start, end } = range;
   return (
     <Controller
       defaultValue={{ start, end }}
@@ -18,7 +18,7 @@ const RangePicker: React.FC<RangePickerProps> = ({ start, end, name }) => {
         <DatePicker
           endDate={value.end}
           inline
-          onChange={([start, end]: any) => onChange({ start, end })}
+          onChange={([start, end]: any) => onChange({ ...range, start, end })}
           selectsRange
           startDate={value.start}
         />
