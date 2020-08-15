@@ -10,24 +10,17 @@ interface RangePickerProps {
 }
 
 const RangePicker: React.FC<RangePickerProps> = ({ start, end, name }) => {
-  const { control } = useFormContext();
-
   return (
     <Controller
-      control={control}
-      defaultValue={[start, end]}
+      defaultValue={{ start, end }}
       name={name}
-      render={({ onChange, onBlur, value }) => (
+      render={({ onChange, value }) => (
         <DatePicker
-          endDate={value[1]}
+          endDate={value.end}
           inline
-          onChange={(x) => {
-            console.log("change", x);
-            onChange(x);
-          }}
-          selected={value[0]}
+          onChange={([start, end]: any) => onChange({ start, end })}
           selectsRange
-          startDate={value[0]}
+          startDate={value.start}
         />
       )}
     />
