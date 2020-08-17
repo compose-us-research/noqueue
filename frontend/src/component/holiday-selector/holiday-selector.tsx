@@ -29,10 +29,9 @@ const HolidaySelector: React.FC<HolidaySelectorProps> = ({ name }) => {
       {fields.map((holiday, index) => {
         const id = holiday.id as any;
         const prefix = `${name}[${index}]`;
-        console.log({ holiday, prefix });
         return (
           <React.Fragment key={id}>
-            <RangePicker range={holiday} name={prefix} />
+            <RangePicker range={holiday} name={`${prefix}.range`} />
             <Button
               className={styles.addButton}
               onClick={() => {
