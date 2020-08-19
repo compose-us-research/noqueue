@@ -35,7 +35,7 @@ Die Basisversion stellen wir kostenfrei zur Verfügung. Wem die WebApp hilft, de
 Soll die Webapp spezielle Funktionalitäten haben, ist der Preis vernünftig und fallabhängig. Sprechen Sie uns einfach an.
 
 # Technology used 💻 #
-In general Javascript, Frontend with Typescript, Backend tba.
+In general Javascript, Typescript
 
 # Team 🧝🏻‍♀️🧝🏻‍♀️🧝🏻🧝🏻 #
 Platzhalter.io is a project started at ITC1's digital hackathon.
