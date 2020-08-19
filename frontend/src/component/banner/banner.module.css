@@ -1,0 +1,13 @@
+/* elements */
+.root {
+  align-items: center;
+  background: linear-gradient(#08039f7e, #4643d3);
+  border: 0;
+  color: #fff;
+  display: flex;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: center;
+  padding: 1.5em 0;
+  width: 100%;
+}

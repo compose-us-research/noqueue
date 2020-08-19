@@ -26,6 +26,7 @@ import ShowTicketRoute from "../show-ticket-route/show-ticket-route";
 import ShowTicketsRoute from "../show-tickets-route/show-tickets-route";
 import ChooseShop from "../choose-shop/choose-shop";
 import ErrorBoundary from "../error-boundary/error-boundary";
+import Banner from "../banner/banner";
 
 const subject = "Registrierung eines Geschäfts";
 const body = `Herzlich Willkommen!
@@ -151,6 +152,10 @@ const RoutedApp: React.FC<CurrentShopAppProps> = ({ connection }) => {
 const App: React.FC<AppProps> = ({ connection = defaultConnection }) => {
   return (
     <div className={styles.root}>
+      <Banner>
+        Achtung: Demo - aktuell wird Deine Buchung in den Geschäften noch nicht
+        genutzt!
+      </Banner>
       <Router>
         <LocalTicketsProvider>
           <ErrorBoundary resetKeys={[]}>
