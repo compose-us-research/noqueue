@@ -65,6 +65,11 @@ const UpdateShop: React.FC<UpdateShopProps> = ({ onSave, shop }) => {
             />
             <Spacer />
             <Checkbox
+              name="usesDayslots"
+              label="Das Geschäft ist tageweise buchbar, statt stundenbasierte Öffnungszeiten anzubieten."
+            />
+            <Spacer />
+            <Checkbox
               name="needsRegistration"
               label="Das Geschäft unterliegt der Aufzeichnungspflicht, um im Falle einer Infektion Kontaktpersonen ausfindig machen zu können."
             />
