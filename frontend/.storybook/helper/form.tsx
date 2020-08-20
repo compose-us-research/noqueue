@@ -1,5 +1,5 @@
 import React from "react";
-import { FormContext, useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { action } from "@storybook/addon-actions";
 
 interface FormProps {
@@ -10,10 +10,10 @@ const Form: React.FC<FormProps> = ({ children }) => {
   const methods = useForm();
   return (
     <form onSubmit={methods.handleSubmit(action("submit"))}>
-      <FormContext {...methods}>
+      <FormProvider {...methods}>
         {children}
         <button type="submit">submit</button>
-      </FormContext>
+      </FormProvider>
     </form>
   );
 };
