@@ -1,17 +1,41 @@
 # The problem 🤯 #
-When the shops, restaurants and studios reopen, they have to somehow manage their visitors, guests and patients so that the distances etc. can be kept. Customers also have an interest in not being in full shops, practices, etc. This will remain the case until at least spring 2021.
+Sporteln, Essen gehen, in den Urlaub fahren, Ausflüge machen und generell unter Menschen sein - das erfordert aktuell alles etwas mehr Planung. Das Ganze muss außerdem unter Wahrung des Datenschutzes stattfinden.
+
+platzhalter.io wurde von uns erstellt um Gewerbetreibenden und Kommunen dabei zu helfen, die neue Realität zu bewältigen.
 
 # The solution 💡 #
-With "Platzhalter.io", businesses and non-profits can easily manage their availabilities and thus meet their requirements.
-The customer, on the other hand, books his or her project relaxed by using a smartphone. This avoids queues in front of and in shops.
-"Platzhalter.io" combines simple usability with data economy, which in turn allows business and coexistence despite Covid19.
-If "Platzhalter.io" is a relief, the user can donate. 
+Anwendungsfall - Gastronomie
+Sie haben bereits ein funktionierendes Buchungssystem, aber Sie müssen Personendaten fürs Gesundheitsamt vorhalten. Sie erledigen das aktuell mit Zettel und Stift. Das ist unangenehm für Ihre Besucher und für Sie.
+
+Bieten Sie einfach die kostenlose, datensparsame digitale Gästeliste von platzhalter.io an. Die Personendaten werden vier Wochen vorgehalten und dann automatisch gelöscht.
+
+Anwendungsfall - Camping Platz
+Sie haben bereits ein funktionierendes Buchungssystem, aber Sie müssen Personendaten fürs Gesundheitsamt vorhalten. Außerdem ist Ihr Platz aktuell sehr gefragt - Sie müssen ständig am Telefon sein. Vor Ihrem Platz herrscht das Chaos weil dieses Jahr der Campingsommer ist.
+
+Tragen Sie ihre Verfügbarkeiten in die Camping Karte von platzhalter.io ein und Ihre Besucher können sich selbst informieren, ob noch Platz ist. Außerdem werden die Personendaten Ihrer Besucher vier Wochen vorgehalten und dann automatisch gelöscht.
+
+Anwendungsfall - öffentliche Stell- und Parkplätze der Kommune
+Sie sind eine Kommune, die einen Badesee verwaltet. Dort gibt es nur begrenzt Parkplätze. Es staut sich und Chaos entsteht. Tragen Sie ihre Verfügbarkeiten in die Stellplatz Karte von platzhalter.io ein und Ihre Besucher können sich selbst informieren und sich so einen Alternativplan zurechtlegen. Die Personendaten derer, die kommen können, werden vier Wochen vorgehalten und dann automatisch gelöscht.
+
+Anwendungsfall - Körpernahe Dienstleistungen, zum Beispiel Frisör
+Durch die Covid19 Auflagen werden bei Ihnen alle Termine nur noch per Telefon gebucht. Dazu müssen alle personenbezogenen Daten abgefragt werden und bei Nachfrage dem Gesundheitsamt übermittelt werden. Das führt zu Zettelwirtschaft und Koordinations-overhead.
+
+Mit platzhalter.io hinterlegen Sie Ihre Kapazitäten in der Web App. Ihr Besucher wiederum surft auf Ihre Website, gibt seinen Buchungswunsch ein und erhält ein QR Ticket auf sein Mobilgerät. Die Personendaten des Kunden werden - nach seinem Einverständnis - automatisch per Mobilgerät in Ihre Datenbank übertragen. Sollte ein Covid19 Fall auftreten, können Sie per Knopfdruck die Daten an das Gesundheitsamt übermitteln. Die Daten werden nach vier Wochen automatisch gelöscht.
 
 # What it does 🎫 #
-Businesses and non-profits can assign fixed slots and appointments to their customers and thus easily avoid queues, waiting times and distance problems. There is no technical know-how, no installation necessary - this applies to both the businss and the customer.
+Wie funktioniert das?
+Sie brauchen kein Technik-KnowHow. Wer Whatsapp bedienen kann, kann auch die WebApp bedienen. Es ist kein Download nötig - das gilt sowohl für Sie als auch für Ihre Besucher. Ihnen wird von uns eine individuelle Internetadresse (Url) zugewiesen. Diese können Sie dann in Ihre Website einpflegen. Ihr Besucher surft auf diese Url, trägt sich ein und gibt gegebenenfalls noch an wann er kommen möchte. Er oder sie bekommt die von Ihnen hinterlegten Verfügbarkeiten angezeigt. Die Buchung und/oder der Check-in per funktioniert über einen QR Code.
+
+Wie ist das mit dem Datenschutz?
+Die WebApp wurde von vornherein datensparsam programmiert - sie fragt nur ab, was unbedingt sein muss. Unser Ziel ist dezentrale Speicherung der Daten. Unser Code ist open source, also einsehbar und weiterverwendbar.
+
+Was kostet das?
+Die Basisversion stellen wir kostenfrei zur Verfügung. Wem die WebApp hilft, der kann dafür spenden. Entstanden ist die WebApp weil wir unseren Beitrag zur Erleichterung der Umstände leisten wollen.
+
+Soll die Webapp spezielle Funktionalitäten haben, ist der Preis vernünftig und fallabhängig. Sprechen Sie uns einfach an.
 
 # Technology used 💻 #
-In general Javascript, Frontend with Typescript, Backend tba.
+In general Javascript, Typescript
 
 # Team 🧝🏻‍♀️🧝🏻‍♀️🧝🏻🧝🏻 #
 Platzhalter.io is a project started at ITC1's digital hackathon.
