@@ -53,6 +53,7 @@ export interface BaseShopConfig {
   name: ShopName;
   needsRegistration: boolean;
   path: string;
+  usesDayslots: boolean;
 }
 
 export interface UpdateShopConfig extends BaseShopConfig {

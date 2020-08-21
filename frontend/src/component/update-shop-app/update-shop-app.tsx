@@ -9,6 +9,7 @@ import ShareShop from "../share-shop/share-shop";
 import { usePush, useShop } from "../../service/server/connection";
 import generateTimeslotsFromTimeranges from "../../lib/generate-timeslots-from-timeranges/generate-timeslots-from-timeranges";
 import styles from "./update-shop-app.module.css";
+import Stub from "../stub/stub";
 
 interface UpdateShopAppProps {
   backToIndex: () => void;
@@ -29,21 +30,25 @@ const UpdateShopApp: React.FC<UpdateShopAppProps> = ({ backToIndex }) => {
             <ShareShop backToIndex={backToIndex} />
           </Route>
           <Route path={`${path}/slots`}>
-            <ReservableTimes
-              handleSubmit={async ({ ranges }) => {
-                try {
-                  await updateOpeningHours(
-                    shop,
-                    generateTimeslotsFromTimeranges(ranges)
-                  );
-                  push(`${url}/share`);
-                } catch (e) {
-                  setError(() => {
-                    throw e;
-                  });
-                }
-              }}
-            />
+            {shop.usesDayslots ? (
+              <Stub next={() => push(`${path}`)}>Should use dayslots here</Stub>
+            ) : (
+              <ReservableTimes
+                handleSubmit={async ({ ranges }) => {
+                  try {
+                    await updateOpeningHours(
+                      shop,
+                      generateTimeslotsFromTimeranges(ranges)
+                    );
+                    push(`${url}/share`);
+                  } catch (e) {
+                    setError(() => {
+                      throw e;
+                    });
+                  }
+                }}
+              />
+            )}
           </Route>
           <Route path="/">
             <UpdateShop
