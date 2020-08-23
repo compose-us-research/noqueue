@@ -31,7 +31,7 @@ const UpdateShopApp: React.FC<UpdateShopAppProps> = ({ backToIndex }) => {
           </Route>
           <Route path={`${path}/slots`}>
             {shop.usesDayslots ? (
-              <Stub next={() => push(`${path}`)}>Should use dayslots here</Stub>
+              <Stub next={() => push(`${url}`)}>Should use dayslots here</Stub>
             ) : (
               <ReservableTimes
                 handleSubmit={async ({ ranges }) => {

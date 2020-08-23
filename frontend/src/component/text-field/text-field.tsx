@@ -1,10 +1,10 @@
 import React from "react";
 import cn from "classnames";
-import { useFormContext, Validate } from "react-hook-form";
+import { useFormContext, ValidationRules } from "react-hook-form";
 
 import styles from "./text-field.module.css";
 
-interface TextFieldProps {
+interface TextFieldProps extends ValidationRules {
   className?: string;
   defaultValue?: string;
   disabled?: boolean;
@@ -13,7 +13,7 @@ interface TextFieldProps {
   placeholder?: string;
   required?: boolean;
   type?: "number" | "tel" | "text";
-  validate?: Validate;
+  // validate?: Validate;
 }
 
 const TextField: React.FC<TextFieldProps> = ({
