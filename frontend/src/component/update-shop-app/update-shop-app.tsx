@@ -10,6 +10,7 @@ import { usePush, useShop } from "../../service/server/connection";
 import generateTimeslotsFromTimeranges from "../../lib/generate-timeslots-from-timeranges/generate-timeslots-from-timeranges";
 import styles from "./update-shop-app.module.css";
 import Stub from "../stub/stub";
+import ReservableDays from "../reservable-days/reservable-days";
 
 interface UpdateShopAppProps {
   backToIndex: () => void;
@@ -31,7 +32,18 @@ const UpdateShopApp: React.FC<UpdateShopAppProps> = ({ backToIndex }) => {
           </Route>
           <Route path={`${path}/slots`}>
             {shop.usesDayslots ? (
-              <Stub next={() => push(`${url}`)}>Should use dayslots here</Stub>
+              <ReservableDays
+                handleSubmit={async (...args) => {
+                  try {
+                    console.log("not implemented yet!", args);
+                    push(`${url}/share`);
+                  } catch (e) {
+                    setError(() => {
+                      throw e;
+                    });
+                  }
+                }}
+              />
             ) : (
               <ReservableTimes
                 handleSubmit={async ({ ranges }) => {
