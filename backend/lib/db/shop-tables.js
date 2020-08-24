@@ -21,6 +21,16 @@ const tables = {
       "max_duration" integer
     );`,
     delete: prefix => `DROP TABLE "${prefix}_timeslots";`
+  },
+  dayslots: {
+    clear: prefix => `TRUNCATE "${prefix}_dayslots";`,
+    create: prefix => `CREATE TABLE "${prefix}_dayslots" (
+      "id" serial PRIMARY KEY,
+      "start" date,
+      "end" date,
+      "customers" integer
+    );`,
+    delete: prefix => `DROP TABLE "${prefix}_dayslots";`
   }
 }
 

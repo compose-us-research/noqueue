@@ -153,6 +153,36 @@ ORDER BY "range"."start"
     return result.rows
   }
 
+  async replaceDayslots (listOfSlots) {
+    const query = `WITH inserted_ids AS (INSERT INTO "${
+      this.prefix
+    }_dayslots"("start", "end", "customers") VALUES ${listOfSlots
+      .map((_slot, idx) => {
+        const row = idx * 3
+        return `($${row + 1}, $${row + 2}, $${row + 3})`
+      })
+      .join(',')} RETURNING id) DELETE FROM "${
+      this.prefix
+    }_dayslots" WHERE id NOT IN (SELECT id FROM inserted_ids)`
+    const values = listOfSlots.reduce(
+      (acc, { start, end, customers }) => [
+        ...acc,
+        start,
+        end,
+        customers,
+      ],
+      []
+    )
+    await this.client.query(query, values)
+  }
+
+  async getDayslots () {
+    const query = `SELECT * FROM "${this.prefix}_dayslots"`
+    const result = await this.client.query(query)
+
+    return result.rows
+  }
+
   async replaceTimeslots (listOfSlots) {
     const query = `WITH inserted_ids AS (INSERT INTO "${
       this.prefix
