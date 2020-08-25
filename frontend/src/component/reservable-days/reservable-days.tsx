@@ -1,5 +1,5 @@
 import React from "react";
-import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
+import { SubmitHandler, useFieldArray, useForm, FormProvider } from "react-hook-form";
 
 import styles from "./reservable-days.module.css";
 import RangePicker from "../range-picker/range-picker";
@@ -32,20 +32,27 @@ const ReservableDays: React.FC<ReservableDaysProps> = ({ handleSubmit }) => {
   return (
     <div className={styles.root}>
       <h2>Buchbare Tage hinterlegen</h2>
-      {fields.map((range, index) => {
-        return (
-          <>
-            <RangePicker name={`ranges[${index}]`} range={range} />
-            <Button onClick={() => remove(index)}>Löschen</Button>
-            <Spacer />
-          </>
-        );
-      })}
-      <Button
-        onClick={() => append({ id: ++id, start: new Date(), end: new Date() })}
-      >
-        Hinzufügen
-      </Button>
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(handleSubmit)}>
+          <Spacer />
+          {fields.map((range, index) => {
+            return (
+              <>
+                <RangePicker name={`ranges[${index}]`} range={range} />
+                <Button onClick={() => remove(index)}>Löschen</Button>
+                <Spacer />
+              </>
+            );
+          })}
+          <Button
+            onClick={() =>
+              append({ id: ++id, start: new Date(), end: new Date() })
+            }
+          >
+            Hinzufügen
+          </Button>
+        </form>
+      </FormProvider>
     </div>
   );
 };
