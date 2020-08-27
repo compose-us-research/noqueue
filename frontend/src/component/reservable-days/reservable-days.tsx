@@ -1,5 +1,10 @@
 import React from "react";
-import { SubmitHandler, useFieldArray, useForm, FormProvider } from "react-hook-form";
+import {
+  SubmitHandler,
+  useFieldArray,
+  useForm,
+  FormProvider,
+} from "react-hook-form";
 
 import styles from "./reservable-days.module.css";
 import RangePicker from "../range-picker/range-picker";
@@ -50,6 +55,11 @@ const ReservableDays: React.FC<ReservableDaysProps> = ({ handleSubmit }) => {
             }
           >
             Hinzufügen
+          </Button>
+
+          <Spacer />
+          <Button className={styles.submit} type="submit">
+            Fertig! Erzähl es deinen Kunden!
           </Button>
         </form>
       </FormProvider>
