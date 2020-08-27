@@ -18,7 +18,7 @@ const mapper = (data: any): AvailableSlot[] => {
 
 let id = 0;
 const ReservableDays: React.FC<ReservableDaysProps> = ({ handleSubmit }) => {
-  const dayslots = useShopFetch("/dayslots", { mapper });
+  const dayslots = useShopFetch("/dayslot", { mapper });
   const methods = useForm({
     defaultValues: {
       holidays: [],
