@@ -156,10 +156,10 @@ ORDER BY "range"."start"
   async replaceDayslots (listOfSlots) {
     const query = `WITH inserted_ids AS (INSERT INTO "${
       this.prefix
-    }_dayslots"("start", "end", "customers") VALUES ${listOfSlots
+    }_dayslots"("start", "end", "customers", "min_duration", "max_duration") VALUES ${listOfSlots
       .map((_slot, idx) => {
-        const row = idx * 3
-        return `($${row + 1}, $${row + 2}, $${row + 3})`
+        const row = idx * 5
+        return `($${row + 1}, $${row + 2}, $${row + 3}), $${row + 4}), $${row + 5})`
       })
       .join(',')} RETURNING id) DELETE FROM "${
       this.prefix
@@ -170,6 +170,8 @@ ORDER BY "range"."start"
         start,
         end,
         customers,
+        minDuration,
+        maxDuration
       ],
       []
     )

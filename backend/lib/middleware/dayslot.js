@@ -25,9 +25,11 @@ function dayslot ({ db }) {
     try {
       await db.replaceDayslots(
         req.body.member.map(member => ({
-          start: member.start,
-          end: member.end,
           customers: member.customers,
+          end: member.end,
+          maxDuration: member.maxDuration,
+          minDuration: member.minDuration,
+          start: member.start
         }))
       )
 
