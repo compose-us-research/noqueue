@@ -7,7 +7,7 @@ import styles from "./holiday-selector.module.css";
 import { useFormContext, useFieldArray } from "react-hook-form";
 import Button from "../button/button";
 import Spacer from "../spacer/spacer";
-import RangePicker from "../range-picker/range-picker";
+import RangePicker from "../day-range-picker/day-range-picker";
 
 interface HolidaySelectorProps {
   name: string;

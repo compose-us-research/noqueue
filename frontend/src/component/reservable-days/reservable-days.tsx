@@ -7,7 +7,7 @@ import {
 } from "react-hook-form";
 
 import styles from "./reservable-days.module.css";
-import RangePicker from "../range-picker/range-picker";
+import DayRangePicker from "../day-range-picker/day-range-picker";
 import Spacer from "../spacer/spacer";
 import Button from "../button/button";
 import { useShopFetch } from "../../service/server/connection";
@@ -41,9 +41,10 @@ const ReservableDays: React.FC<ReservableDaysProps> = ({ handleSubmit }) => {
         <form onSubmit={methods.handleSubmit(handleSubmit)}>
           <Spacer />
           {fields.map((range, index) => {
+            console.log({ range });
             return (
               <>
-                <RangePicker name={`ranges[${index}]`} range={range} />
+                <DayRangePicker name={`ranges[${index}]`} range={range} />
                 <Button onClick={() => remove(index)}>Löschen</Button>
                 <Spacer />
               </>
