@@ -159,13 +159,13 @@ ORDER BY "range"."start"
     }_dayslots"("start", "end", "customers", "min_duration", "max_duration") VALUES ${listOfSlots
       .map((_slot, idx) => {
         const row = idx * 5
-        return `($${row + 1}, $${row + 2}, $${row + 3}), $${row + 4}), $${row + 5})`
+        return `($${row + 1}, $${row + 2}, $${row + 3}, $${row + 4}, $${row + 5})`
       })
       .join(',')} RETURNING id) DELETE FROM "${
       this.prefix
     }_dayslots" WHERE id NOT IN (SELECT id FROM inserted_ids)`
     const values = listOfSlots.reduce(
-      (acc, { start, end, customers }) => [
+      (acc, { customers, end, minDuration, maxDuration, start }) => [
         ...acc,
         start,
         end,

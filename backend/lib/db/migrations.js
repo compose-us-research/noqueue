@@ -31,12 +31,13 @@ const migrations = [
         const name = shop.prefix;
         await client.query(`DROP TABLE "${name}_dayslots";`);
         return client.query(`
-          CREATE TABLE "${name}_dayslots"
-            "customers" int default 0,
+          CREATE TABLE "${name}_dayslots" (
+            "id" serial PRIMARY KEY,
+            "customers" integer default 0,
             "end" date,
-            "min_duration" int default 0,
-            "max_duration" int default 0,
-            "start" date not null,
+            "min_duration" integer default 0,
+            "max_duration" integer default 0,
+            "start" date not null
           );`);
       }, Promise.resolve());
     },
