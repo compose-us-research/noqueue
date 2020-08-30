@@ -30,6 +30,7 @@ export type Address = {
   streetAddress: StreetAddress;
 };
 export type AmountOfPeople = Flavor<number, "AmountOfPeople">;
+export type AmountOfDays = Flavor<number, "AmountOfDays">;
 export type City = Flavor<string, "City">;
 export type Day = "Mo" | "Di" | "Mi" | "Do" | "Fr" | "Sa" | "So";
 export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6;
@@ -100,6 +101,14 @@ export interface Timeslot {
   end: Time;
   minDuration: Minutes;
   maxDuration: Minutes;
+}
+
+export interface Dayslot {
+  end: Date;
+  customers: AmountOfPeople;
+  maxDuration: AmountOfDays;
+  minDuration: AmountOfDays;
+  start: Date;
 }
 
 export type TicketMap = { [id: string]: LocalTicket };

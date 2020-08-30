@@ -11,6 +11,7 @@ import generateTimeslotsFromTimeranges from "../../lib/generate-timeslots-from-t
 import styles from "./update-shop-app.module.css";
 import Stub from "../stub/stub";
 import ReservableDays from "../reservable-days/reservable-days";
+import { updateOpeningDays } from "../../service/server/push";
 
 interface UpdateShopAppProps {
   backToIndex: () => void;
@@ -33,9 +34,9 @@ const UpdateShopApp: React.FC<UpdateShopAppProps> = ({ backToIndex }) => {
           <Route path={`${path}/slots`}>
             {shop.usesDayslots ? (
               <ReservableDays
-                handleSubmit={async (...args) => {
+                handleSubmit={async ({ ranges }) => {
                   try {
-                    console.log("not implemented yet!", args);
+                    await updateOpeningDays(shop, ranges);
                     push(`${url}/share`);
                   } catch (e) {
                     setError(() => {

@@ -5,6 +5,7 @@ import {
   ShopConfig,
   Timeslot,
   UpdateShopConfig,
+  Dayslot,
 } from "../domain";
 import { fetcher } from "./fetcher";
 import { toRegisteredTicket } from "../tickets/use-local-tickets";
@@ -54,6 +55,13 @@ export async function updateOpeningHours(
   timeslots: Timeslot[]
 ): Promise<void> {
   await putData(`${shop["@id"]}/timeslot/`, { member: timeslots });
+}
+
+export async function updateOpeningDays(
+  shop: ShopConfig,
+  dayslots: Dayslot[]
+): Promise<void> {
+  await putData(`${shop["@id"]}/dayslot/`, { member: dayslots });
 }
 
 export type RegisterTicketParams = {
