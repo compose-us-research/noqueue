@@ -9,7 +9,6 @@ import ShareShop from "../share-shop/share-shop";
 import { usePush, useShop } from "../../service/server/connection";
 import generateTimeslotsFromTimeranges from "../../lib/generate-timeslots-from-timeranges/generate-timeslots-from-timeranges";
 import styles from "./update-shop-app.module.css";
-import Stub from "../stub/stub";
 import ReservableDays from "../reservable-days/reservable-days";
 import { updateOpeningDays } from "../../service/server/push";
 
