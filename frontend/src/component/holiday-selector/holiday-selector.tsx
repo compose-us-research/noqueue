@@ -1,13 +1,13 @@
 import React from "react";
 import cn from "classnames";
+import DatePicker from "react-datepicker";
 
 import { ReactComponent as PlusIcon } from "../../asset/image/plus-icon.svg";
 import { ReactComponent as RemoveIcon } from "../../asset/image/remove-icon.svg";
 import styles from "./holiday-selector.module.css";
-import { useFormContext, useFieldArray } from "react-hook-form";
+import { useFormContext, useFieldArray, Controller } from "react-hook-form";
 import Button from "../button/button";
 import Spacer from "../spacer/spacer";
-import RangePicker from "../day-range-picker/day-range-picker";
 
 interface HolidaySelectorProps {
   name: string;
@@ -31,7 +31,23 @@ const HolidaySelector: React.FC<HolidaySelectorProps> = ({ name }) => {
         const prefix = `${name}[${index}]`;
         return (
           <React.Fragment key={id}>
-            <RangePicker range={holiday} name={`${prefix}.range`} />
+            <Controller
+              defaultValue={holiday}
+              name={`${prefix}.range`}
+              render={({ onChange, value }) => (
+                <>
+                  <DatePicker
+                    endDate={value.end}
+                    inline
+                    onChange={([start, end]: any) => {
+                      onChange({ ...holiday, start, end });
+                    }}
+                    selectsRange
+                    startDate={value.start}
+                  />
+                </>
+              )}
+            />
             <Button
               className={styles.addButton}
               onClick={() => {
