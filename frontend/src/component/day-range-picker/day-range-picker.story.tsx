@@ -7,8 +7,11 @@ export default {
   component: DayRangePicker,
 };
 
-export const Regular = () => (
-  <Form>
-    <DayRangePicker name="days" range={{ id: "1" }} />
-  </Form>
-);
+export const Regular = () => {
+  const now = new Date();
+  return (
+    <Form>
+      <DayRangePicker name="days" range={{ id: "1", start: now, end: now }} />
+    </Form>
+  );
+};
