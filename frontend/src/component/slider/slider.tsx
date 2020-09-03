@@ -6,6 +6,7 @@ import styles from "./slider.module.css";
 
 interface SliderProps {
   disabled?: boolean;
+  label?: string;
   max?: number;
   min?: number;
   onChange?: (value: number | number[] | null | undefined) => void;
@@ -16,6 +17,7 @@ const noop = () => {};
 
 const Slider: React.FC<SliderProps> = ({
   disabled = false,
+  label = "Minuten",
   max = 120,
   min = 5,
   onChange = noop,
@@ -30,7 +32,7 @@ const Slider: React.FC<SliderProps> = ({
         onChange={onChange}
         renderThumb={(props: any, state: any) => (
           <div {...props}>
-            <div className={styles.thumbInfo}>{state.valueNow} Minuten</div>
+            <div className={styles.thumbInfo}>{state.valueNow} {label}</div>
           </div>
         )}
         step={step}
