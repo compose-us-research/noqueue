@@ -39,7 +39,7 @@ const ControlledRangeSlider: React.FC<ControlledRangeSliderProps> = ({
         </div>
       </div>
     ),
-    []
+    [label]
   );
   const renderTrack = useCallback(
     (props: any, state: any) => (
