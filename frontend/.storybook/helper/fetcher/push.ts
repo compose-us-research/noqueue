@@ -1,4 +1,4 @@
-import { LocalTicket } from "../../../src/service/domain";
+import { LocalTicket, ShopConfig, Dayslot } from "../../../src/service/domain";
 import {
   RegisterTicketParams,
   RemoveTicketParams,
@@ -25,3 +25,8 @@ export async function registerTicket({
 export async function removeTicket({
   ticketUrl,
 }: RemoveTicketParams): Promise<void> {}
+
+export async function updateOpeningDays(
+  shop: ShopConfig,
+  dayslots: Dayslot[]
+): Promise<void> {}
