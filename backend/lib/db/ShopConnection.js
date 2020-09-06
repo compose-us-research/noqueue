@@ -153,6 +153,66 @@ ORDER BY "range"."start"
     return result.rows
   }
 
+  async replaceDailyAvailabilityAndHolidays ({ dailyAvailability, holidays }) {
+    try {
+      await this.client.query('BEGIN')
+      await this.replaceDailyAvailability(dailyAvailability)
+      await this.replaceDailyAvailability(holidays)
+      await this.client.query('COMMIT')
+    } catch (e) {
+      await this.client.query('ROLLBACK')
+      throw e
+    }
+  }
+
+  /**
+   * Replaces all daily availabilities.
+   * @param {array} listOfDailyAvailabilities array of array of start date, end date (or null), min duration, max duration and customers for mon through sun
+   */
+  async replaceDailyAvailability (listOfDailyAvailabilities) {
+    const query = `WITH inserted_ids AS (INSERT INTO "${
+      this.prefix
+    }_daily_availability" (
+      "start",
+      "end",
+      "min_duration",
+      "max_duration",
+      "monday",
+      "tuesday",
+      "wednesday",
+      "thursday",
+      "friday",
+      "saturday",
+      "sunday"
+    ) VALUES ${
+      listOfDailyAvailabilities.map((_slot, index) => {
+        const row = index * 9
+        return `(
+          ${row + 1},
+          ${row + 2},
+          ${row + 3},
+          ${row + 4},
+          ${row + 5},
+          ${row + 6},
+          ${row + 7},
+          ${row + 8},
+          ${row + 9}
+        )`
+      }).join(', ')
+    } RETURNING id) DELETE FROM "${
+      this.prefix
+    }_daily_availability" WHERE id NOT IN (SELECT id FROM inserted_ids)`
+
+    await this.client.query(query, listOfDailyAvailabilities)
+  }
+
+  async getDailyAvailability () {
+    const query = `SELECT * FROM "${this.prefix}_daily_availability"`
+    const result = await this.client.query(query)
+
+    return result.rows[0]
+  }
+
   async replaceDayslots (listOfSlots) {
     const query = `WITH inserted_ids AS (INSERT INTO "${
       this.prefix
