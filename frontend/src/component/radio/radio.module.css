@@ -1,2 +1,34 @@
 .root {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.input {
+  display: none;
+}
+
+.input + .label {
+  color: #00f;
+  display: inline;
+}
+
+.input + .radio {
+  background-color: #fff;
+  border-radius: 50%;
+  content: "";
+  display: inline-block;
+  height: 1.5em;
+  width: 1.5em;
+}
+
+/* Modifiers */
+
+.input:checked + .radio {
+  background-color: #f00;
+}
+
+.input:checked + .label {
+  color: #0f0;
 }
