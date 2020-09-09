@@ -1,6 +1,6 @@
 .root {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: flex-start;
   width: 100%;
 }
@@ -9,26 +9,23 @@
   display: none;
 }
 
-.input + .label {
-  color: #00f;
-  display: inline;
-}
-
 .input + .radio {
   background-color: #fff;
   border-radius: 50%;
   content: "";
-  display: inline-block;
+  flex-grow: 0;
+  flex-shrink: 0;
+  margin: 0 1em;
   height: 1em;
   width: 1em;
 }
 
-/* Modifiers */
-
-.input:checked + .radio {
-  background-color: #fe805c;
+.label {
+  flex-grow: 1;
 }
 
-.input:checked + .label {
-  color: #0f0;
+/* Modifiers */
+
+.checked .radio {
+  background-color: #fe805c;
 }

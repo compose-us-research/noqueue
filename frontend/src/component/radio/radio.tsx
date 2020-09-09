@@ -1,8 +1,8 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
+import cn from "classnames";
 
 import styles from "./radio.module.css";
-import Spacer from "../spacer/spacer";
 
 interface RadioProps {
   label: string;
@@ -11,10 +11,10 @@ interface RadioProps {
 }
 
 const Radio: React.FC<RadioProps> = ({ label, name, value }) => {
-  const { register } = useFormContext();
+  const { register, watch } = useFormContext();
+  const selected = watch(name);
   return (
-    <label className={styles.root}>
-      <Spacer direction="column" />
+    <label className={cn(styles.root, selected === value && styles.checked)}>
       <input
         className={styles.input}
         type="radio"
@@ -23,7 +23,6 @@ const Radio: React.FC<RadioProps> = ({ label, name, value }) => {
         value={value}
       />
       <div className={styles.radio}></div>
-      <Spacer direction="column" />
       <div className={styles.label}>{label}</div>
     </label>
   );

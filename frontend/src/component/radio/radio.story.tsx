@@ -28,7 +28,11 @@ export const MultipleRadios = () => (
     <Spacer />
     <Radio name="testB" value="1" label="B) First" />
     <Spacer />
-    <Radio name="testB" value="2" label="B) Second" />
+    <Radio
+      name="testB"
+      value="2"
+      label="B) Second which is a very long text that could actually break a line if it is really long enough, so it better used lorem ipsum text than me writing this really long line of text but since I'm already doing it there is no way for me to stop now and it's probably faster than finding a dependency for faking some longer text right now. I'll just go with this now."
+    />
     <Spacer />
     <Radio name="testB" value="3" label="B) Third" />
   </Form>
