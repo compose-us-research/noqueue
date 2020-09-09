@@ -19,14 +19,14 @@
   border-radius: 50%;
   content: "";
   display: inline-block;
-  height: 1.5em;
-  width: 1.5em;
+  height: 1em;
+  width: 1em;
 }
 
 /* Modifiers */
 
 .input:checked + .radio {
-  background-color: #f00;
+  background-color: #fe805c;
 }
 
 .input:checked + .label {
