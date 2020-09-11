@@ -54,7 +54,7 @@ export interface BaseShopConfig {
   name: ShopName;
   needsRegistration: boolean;
   path: string;
-  usesDayslots: boolean;
+  slotType: "days" | "times" | "holidays";
 }
 
 export interface UpdateShopConfig extends BaseShopConfig {

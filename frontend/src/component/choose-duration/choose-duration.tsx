@@ -15,8 +15,14 @@ function mapper(data: any): Timeslot[] {
 }
 
 const ChooseDuration: React.FC<ChooseDurationProps> = ({ onChange }) => {
-  const { usesDayslots } = useShop();
-  const url = usesDayslots ? `/dayslot` : `/timeslot`;
+  const { slotType } = useShop();
+  const url =
+    slotType === "days"
+      ? `/dayslot`
+      : slotType === "holidays"
+      ? `/holidays`
+      : `/timeslot`;
+  const usesDays = slotType === "days" || slotType === "holidays";
   const slots = useShopFetch<Timeslot[] | Dayslot[]>(url, { mapper });
   const minDuration =
     slots.length > 0
@@ -38,7 +44,7 @@ const ChooseDuration: React.FC<ChooseDurationProps> = ({ onChange }) => {
       <div className={styles.duration}>
         <h2>Wie viel Zeit benötigst Du?</h2>
         <Slider
-          label={usesDayslots ? "Tage" : "Minuten"}
+          label={usesDays ? "Tage" : "Minuten"}
           max={maxDuration}
           min={minDuration || 0}
           onChange={(value) => {
@@ -46,7 +52,7 @@ const ChooseDuration: React.FC<ChooseDurationProps> = ({ onChange }) => {
               onChange(value as number);
             }
           }}
-          step={usesDayslots ? 1 : 15}
+          step={usesDays ? 1 : 15}
         />
       </div>
     </div>
