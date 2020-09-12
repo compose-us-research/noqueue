@@ -8,6 +8,7 @@ import Spacer from "../spacer/spacer";
 import TextField from "../text-field/text-field";
 
 import styles from "./update-shop.module.css";
+import Radio from "../radio/radio";
 
 interface UpdateShopProps {
   onSave: (newShop: ShopConfig) => void;
@@ -64,9 +65,22 @@ const UpdateShop: React.FC<UpdateShopProps> = ({ onSave, shop }) => {
               required
             />
             <Spacer />
-            <Checkbox
-              name="usesDayslots"
-              label="Das Geschäft ist tageweise buchbar, statt stundenbasierte Öffnungszeiten anzubieten."
+            <Radio
+              name="slotType"
+              value="times"
+              label="Es gibt reguläre Öffnungszeiten pro Tag"
+            />
+            <Spacer />
+            <Radio
+              name="slotType"
+              value="days"
+              label="Nur an ganz bestimmten Tagen buchbar (Festivals, etc.)"
+            />
+            <Spacer />
+            <Radio
+              name="slotType"
+              value="holidays"
+              label="Tageweise buchbar (bestimmte Wochentage, alle Tage, ggf. mit Ferienzeiten)"
             />
             <Spacer />
             <Checkbox
