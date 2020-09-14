@@ -11,6 +11,7 @@ import generateTimeslotsFromTimeranges from "../../lib/generate-timeslots-from-t
 import styles from "./update-shop-app.module.css";
 import ReservableDays from "../reservable-days/reservable-days";
 import { updateOpeningDays } from "../../service/server/push";
+import Stub from "../stub/stub";
 
 interface UpdateShopAppProps {
   backToIndex: () => void;
@@ -31,7 +32,7 @@ const UpdateShopApp: React.FC<UpdateShopAppProps> = ({ backToIndex }) => {
             <ShareShop backToIndex={backToIndex} />
           </Route>
           <Route path={`${path}/slots`}>
-            {shop.usesDayslots ? (
+            {shop.slotType === "days" ? (
               <ReservableDays
                 handleSubmit={async ({ ranges }) => {
                   try {
@@ -44,6 +45,8 @@ const UpdateShopApp: React.FC<UpdateShopAppProps> = ({ backToIndex }) => {
                   }
                 }}
               />
+            ) : shop.slotType === "holidays" ? (
+              <Stub next={() => push(`${url}`)}>Just holidays</Stub>
             ) : (
               <ReservableTimes
                 handleSubmit={async ({ ranges }) => {
