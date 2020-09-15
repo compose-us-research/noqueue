@@ -19,8 +19,6 @@ const ChooseDuration: React.FC<ChooseDurationProps> = ({ onChange }) => {
   const url =
     slotType === "days"
       ? `/dayslot`
-      : slotType === "holidays"
-      ? `/holidays`
       : `/timeslot`;
   const usesDays = slotType === "days" || slotType === "holidays";
   const slots = useShopFetch<Timeslot[] | Dayslot[]>(url, { mapper });
