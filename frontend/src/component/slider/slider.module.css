@@ -16,10 +16,11 @@
 }
 
 .thumbInfo {
+  align-items: center;
+  display: flex;
   font-weight: 600px;
-  left: -50%;
-  position: absolute;
-  text-align: center;
+  justify-content: center;
+  margin-top: 50px;
   top: 50px;
   white-space: nowrap;
 }
