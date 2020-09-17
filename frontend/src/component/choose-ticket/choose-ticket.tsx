@@ -20,11 +20,14 @@ const ChooseTicket: React.FC<ChooseTicketProps> = ({ onSelect }) => {
   const [selectedTicket, setSelectedTicket] = useState<AvailableSlot>();
   const queryString = useLocation().search;
   const start = useMemo(() => {
+    const defaultValue =
+      shop.slotType === "days" || shop.slotType === "holidays"
+        ? Math.floor(Date.now() / (24 * 60 * 60 * 1000)) * (24 * 60 * 60 * 1000)
+        : Math.floor(Date.now() / (5 * 60 * 1000)) * (5 * 60 * 1000);
     return new Date(
-      new URLSearchParams(queryString).get("start") ||
-        Math.floor(Date.now() / (5 * 60 * 1000)) * (5 * 60 * 1000)
+      new URLSearchParams(queryString).get("start") || defaultValue
     );
-  }, [queryString]);
+  }, [queryString, shop.slotType]);
   const end = useMemo(
     () =>
       new Date(
