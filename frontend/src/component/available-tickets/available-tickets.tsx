@@ -15,6 +15,7 @@ interface AvailableTicketsProps {
   onSelect: (slot: AvailableSlot) => void;
   selectedSlot?: AvailableSlot;
   start: Date;
+  usesDays: boolean;
 }
 
 const mapper: (from: any) => Ticket[] = (tickets) => {
@@ -33,23 +34,28 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
   onSelect,
   selectedSlot,
   start,
+  usesDays,
 }) => {
   const url = `/ticket/available?start=${encodeURIComponent(
     start.toISOString()
   )}&end=${encodeURIComponent(end.toISOString())}`;
   const data = useShopFetch<Ticket[]>(url, { mapper });
+  const defaultMinutes = usesDays ? 24 * 60 : 15;
   const from = new Date(
-    Math.floor(Date.now() / (15 * 60 * 1000)) * 15 * 60 * 1000
+    Math.floor(Date.now() / (defaultMinutes * 60 * 1000)) *
+      defaultMinutes *
+      60 *
+      1000
   );
   const spontaneousSlots = generateSlotsFromData({
     slots: data,
-    duration: duration + 15,
+    duration: duration + defaultMinutes,
     from,
   });
   const generatedSlots = generateSlotsFromData({
     slots: data,
     duration,
-    from: new Date(+from + 15 * 60 * 1000),
+    from: new Date(+from + defaultMinutes * 60 * 1000),
   });
   const firstIsNow =
     spontaneousSlots.length > 0 && +spontaneousSlots[0].start === +from;

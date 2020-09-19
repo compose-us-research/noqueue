@@ -26,6 +26,7 @@ export const Simple = () => {
         }}
         selectedSlot={selectedSlot}
         start={start}
+        usesDays={false}
       />
     </Connected>
   );
