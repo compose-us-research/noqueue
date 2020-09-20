@@ -41,6 +41,7 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
   )}&end=${encodeURIComponent(end.toISOString())}`;
   const data = useShopFetch<Ticket[]>(url, { mapper });
   const defaultMinutes = usesDays ? 24 * 60 : 15;
+  const durationInMinutes = usesDays ? duration * 24 * 60 : duration;
   const from = new Date(
     Math.floor(Date.now() / (defaultMinutes * 60 * 1000)) *
       defaultMinutes *
@@ -49,12 +50,12 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
   );
   const spontaneousSlots = generateSlotsFromData({
     slots: data,
-    duration: duration + defaultMinutes,
+    duration: durationInMinutes + defaultMinutes,
     from,
   });
   const generatedSlots = generateSlotsFromData({
     slots: data,
-    duration,
+    duration: durationInMinutes,
     from: new Date(+from + defaultMinutes * 60 * 1000),
   });
   const firstIsNow =
