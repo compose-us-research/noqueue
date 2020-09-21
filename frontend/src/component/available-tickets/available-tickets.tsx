@@ -52,11 +52,13 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
     slots: data,
     duration: durationInMinutes + defaultMinutes,
     from,
+    usesDays,
   });
   const generatedSlots = generateSlotsFromData({
     slots: data,
     duration: durationInMinutes,
     from: new Date(+from + defaultMinutes * 60 * 1000),
+    usesDays,
   });
   const firstIsNow =
     spontaneousSlots.length > 0 && +spontaneousSlots[0].start === +from;

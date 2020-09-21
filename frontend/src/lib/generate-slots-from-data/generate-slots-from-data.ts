@@ -4,12 +4,14 @@ type GenerateSlotsFromDataProps = {
   slots: Ticket[];
   duration: Minutes;
   from: Date;
+  usesDays: boolean;
 };
 
 export default function generateSlotsFromData({
   slots,
   duration,
   from,
+  usesDays,
 }: GenerateSlotsFromDataProps): AvailableSlot[] {
   const durationInMs = duration * 60 * 1000;
   const mergedTicketsAsSlots: AvailableSlot[] = slots
@@ -50,12 +52,12 @@ export default function generateSlotsFromData({
   const splitInSlots: AvailableSlot[] = possibleTimeranges.flatMap((ticket) => {
     const firstSlot = +ticket.start;
     const lastSlot = +ticket.end - durationInMs;
-    const fifteenMinutes = 15 * 60 * 1000;
+    const timeBetweenSlots = usesDays ? 24 * 60 * 60 * 1000 : 15 * 60 * 1000;
     const howManySlots =
-      1 + Math.floor((lastSlot - firstSlot) / fifteenMinutes);
+      1 + Math.floor((lastSlot - firstSlot) / timeBetweenSlots);
 
     return new Array(howManySlots).fill(null).map((_, index) => {
-      const start = new Date(firstSlot + fifteenMinutes * index);
+      const start = new Date(firstSlot + timeBetweenSlots * index);
       const end = new Date(+start + durationInMs);
       return { start, end };
     });

@@ -6,6 +6,7 @@ describe("generateSlotsFromData", () => {
       slots: [],
       duration: 15,
       from: new Date(),
+      usesDays: false,
     });
     expect(result).toEqual([]);
   });
@@ -26,6 +27,7 @@ describe("generateSlotsFromData", () => {
       ],
       duration: 15,
       from: new Date(now),
+      usesDays: false,
     });
     expect(result).toEqual([{ start, end }]);
   });
@@ -46,6 +48,7 @@ describe("generateSlotsFromData", () => {
       ],
       duration: 15,
       from: new Date(now),
+      usesDays: false,
     });
     expect(result).toEqual([]);
   });
@@ -66,6 +69,7 @@ describe("generateSlotsFromData", () => {
       ],
       duration: 15,
       from: new Date(now),
+      usesDays: false,
     });
     expect(result).toEqual([
       {
@@ -108,6 +112,7 @@ describe("generateSlotsFromData", () => {
       ],
       duration: 15,
       from: new Date(now),
+      usesDays: false,
     });
     expect(result).toEqual([
       { start: start1, end: new Date(+start1 + 15 * 60 * 1000) },
@@ -147,6 +152,7 @@ describe("generateSlotsFromData", () => {
       ],
       duration: 15,
       from: new Date(now),
+      usesDays: false,
     });
     expect(result).toEqual([
       {
@@ -181,6 +187,7 @@ describe("generateSlotsFromData", () => {
       ],
       duration: 15,
       from: new Date(now),
+      usesDays: false,
     });
     expect(result).toEqual([]);
   });
@@ -201,6 +208,7 @@ describe("generateSlotsFromData", () => {
       ],
       duration: 15,
       from: new Date(now),
+      usesDays: false,
     });
     expect(result).toEqual([
       {
@@ -230,6 +238,7 @@ describe("generateSlotsFromData", () => {
       ],
       duration: 15,
       from: new Date(now),
+      usesDays: false,
     });
     expect(result).toEqual([
       {
@@ -274,6 +283,7 @@ describe("generateSlotsFromData", () => {
       slots,
       duration: 30,
       from: start,
+      usesDays: false,
     });
     const daySlots = (startOfSlots: Date) => [
       {
