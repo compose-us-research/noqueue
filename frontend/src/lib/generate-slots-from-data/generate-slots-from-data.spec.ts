@@ -1,7 +1,65 @@
 import generateSlotsFromData from "./generate-slots-from-data";
 
 describe("generateSlotsFromData", () => {
-  describe("using days", () => {});
+  describe("using days", () => {
+    const oneDayInMs = 24 * 60 * 60 * 1000;
+    it("returns empty list for empty list", () => {
+      const result = generateSlotsFromData({
+        slots: [],
+        duration: 15,
+        from: new Date(),
+        usesDays: true,
+      });
+      expect(result).toEqual([]);
+    });
+
+    it("returns one slot if duration is same", () => {
+      const now = Date.now();
+      const start = new Date(now);
+      const end = new Date(now + oneDayInMs);
+      const result = generateSlotsFromData({
+        slots: [
+          {
+            allowed: 1,
+            available: 1,
+            end,
+            start,
+            reserved: 0,
+          },
+        ],
+        duration: 1,
+        from: new Date(now),
+        usesDays: true,
+      });
+      expect(result).toEqual([{ start, end }]);
+    });
+
+    it("returns multiple slots in days", () => {
+      const now = Date.now();
+      const start1 = new Date(now);
+      const end1 = new Date(now + oneDayInMs);
+      const start2 = new Date(now + oneDayInMs);
+      const end2 = new Date(now + oneDayInMs);
+      const result = generateSlotsFromData({
+        slots: [
+          {
+            allowed: 1,
+            available: 1,
+            end: end1,
+            start: start1,
+            reserved: 0,
+          },
+        ],
+        duration: 1,
+        from: new Date(now),
+        usesDays: true,
+      });
+      expect(result).toEqual([
+        { start: start1, end: end1 },
+        { start: start2, end: end2 },
+      ]);
+    });
+  });
 
   describe("not using days", () => {
     it("returns empty list for empty list", () => {

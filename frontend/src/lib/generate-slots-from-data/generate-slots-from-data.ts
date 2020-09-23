@@ -13,7 +13,9 @@ export default function generateSlotsFromData({
   from,
   usesDays,
 }: GenerateSlotsFromDataProps): AvailableSlot[] {
-  const durationInMs = duration * 60 * 1000;
+  const durationInMs = usesDays
+    ? duration * 24 * 60 * 60 * 1000
+    : duration * 60 * 1000;
   const mergedTicketsAsSlots: AvailableSlot[] = slots
     .filter((ticket) => {
       const ticketInPast = +ticket.end < +from;
