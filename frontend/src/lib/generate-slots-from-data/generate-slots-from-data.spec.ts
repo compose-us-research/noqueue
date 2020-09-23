@@ -39,13 +39,13 @@ describe("generateSlotsFromData", () => {
       const start1 = new Date(now);
       const end1 = new Date(now + oneDayInMs);
       const start2 = new Date(now + oneDayInMs);
-      const end2 = new Date(now + oneDayInMs);
+      const end2 = new Date(+start2 + oneDayInMs);
       const result = generateSlotsFromData({
         slots: [
           {
             allowed: 1,
             available: 1,
-            end: end1,
+            end: end2,
             start: start1,
             reserved: 0,
           },
