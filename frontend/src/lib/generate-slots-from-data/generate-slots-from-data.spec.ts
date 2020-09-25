@@ -59,6 +59,27 @@ describe("generateSlotsFromData", () => {
         { start: start2, end: end2 },
       ]);
     });
+
+    it("returns no slots if time is less than a day", () => {
+      const now = Date.now();
+      const start = new Date(now);
+      const end = new Date(now + oneDayInMs - 1);
+      const result = generateSlotsFromData({
+        slots: [
+          {
+            allowed: 1,
+            available: 1,
+            end,
+            start,
+            reserved: 0,
+          },
+        ],
+        duration: 1,
+        from: new Date(now),
+        usesDays: true,
+      });
+      expect(result).toEqual([]);
+    });
   });
 
   describe("not using days", () => {
