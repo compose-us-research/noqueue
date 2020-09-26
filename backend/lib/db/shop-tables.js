@@ -46,7 +46,9 @@ const tables = {
       "id" serial PRIMARY KEY,
       "start" date,
       "end" date,
-      "customers" integer
+      "customers" integer,
+      "min_duration" integer default 0,
+      "max_duration" integer default 0
     );`,
     delete: prefix => `DROP TABLE "${prefix}_dayslots";`
   }
