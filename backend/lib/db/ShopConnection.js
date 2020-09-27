@@ -112,26 +112,26 @@ class ShopConnection {
           -- the next 3 selects combine all possible start timestamps for varying number of allowed and reserved customers 
 
           -- find all tickets issued in the given time range and get start...
-          SELECT "start" FROM "${this.prefix}_tickets" WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+          SELECT "start" FROM "${this.prefix}_tickets" WHERE "start" >= $1::date AND "end" <= $2::date UNION
 
           -- ...and end date
-          SELECT "end" AS "start" FROM "${this.prefix}_tickets" WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+          SELECT "end" AS "start" FROM "${this.prefix}_tickets" WHERE "start" >= $1::date AND "end" <= $2::date UNION
 
           -- combine the day range with the start time of the available days
-          SELECT "dayslots"."start" AS "start" FROM "${this.prefix}_dayslots" AS dayslots WHERE dayslots.start >= $1::timestamp AND $1::timestamp <= dayslots.end
+          SELECT "dayslots"."start" AS "start" FROM "${this.prefix}_dayslots" AS dayslots WHERE dayslots.start <= $1::date AND $1::date <= dayslots.end
 
           ORDER BY "start"
         ) AS "start", (
           -- the next 3 selects combine all possible end timestamps for varying number of allowed and reserved customers
 
           -- find all tickets issued in the given time range and get start...
-          SELECT "start" AS "raw_end" FROM "${this.prefix}_tickets" WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+          SELECT "start" AS "raw_end" FROM "${this.prefix}_tickets" WHERE "start" >= $1::date AND "end" <= $2::date UNION
 
           -- ...and end date
-          SELECT "end" AS "raw_end" FROM "${this.prefix}_tickets" WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+          SELECT "end" AS "raw_end" FROM "${this.prefix}_tickets" WHERE "start" >= $1::date AND "end" <= $2::date UNION
 
           -- combine the day range with the end time of the timeslot matching the day of week
-          SELECT "dayslots"."end" AS "raw_end" FROM "${this.prefix}_dayslots" AS dayslots WHERE dayslots.start >= $2::timestamp AND $2::timestamp <= dayslots.end
+          SELECT "dayslots"."end" AS "raw_end" FROM "${this.prefix}_dayslots" AS dayslots WHERE dayslots.start <= $2::date AND $2::date <= dayslots.end
 
           ORDER BY "raw_end"
         ) AS "end"
@@ -213,11 +213,6 @@ class ShopConnection {
     const query = this.getAvailableTicketsQuery(config.slotType);
     const values = [start.toISOString(), end.toISOString()]
     const result = await this.client.query(query, values)
-
-    console.log({rows:result.rows})
-    // const query2 = this.getAvailableTicketsQueryByDays();
-    // const result2 = await this.client.query(query2, values);
-    // console.log({rows2:result2.rows})
 
     return result.rows
   }
