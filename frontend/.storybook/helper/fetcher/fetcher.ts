@@ -1,3 +1,4 @@
+import { startOfDay } from "date-fns";
 import { ShopConfig } from "../../../src/service/domain";
 import { fetcherFn } from "swr/dist/types";
 
@@ -21,6 +22,22 @@ export const fetcher: fetcherFn<any> = async (url: string) => {
   if (/\/shop\/([^/]+?)\/?$/.test(url)) {
     return shop;
   }
+  if (/\/shop\/([^/]+?)\/dayslot\/?$/.test(url)) {
+    const now = new Date();
+    return {
+      member: [
+        {
+          id: 13,
+          customers: 4,
+          end: startOfDay(new Date(+now + 5 * 24 * 60 * 60 * 1000)),
+          min_duration: 1,
+          max_duration: 3,
+          start: startOfDay(now),
+        },
+      ],
+    };
+  }
+
   if (/\/shop\/([^/]+?)\/timeslot\/?$/.test(url)) {
     return {
       member: [
