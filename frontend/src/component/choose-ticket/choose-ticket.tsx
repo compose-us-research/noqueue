@@ -27,7 +27,7 @@ const ChooseTicket: React.FC<ChooseTicketProps> = ({ onSelect }) => {
     return new Date(
       new URLSearchParams(queryString).get("start") || defaultValue
     );
-  }, [queryString, shop.slotType]);
+  }, [queryString, usesDays]);
   const end = useMemo(
     () =>
       new Date(
