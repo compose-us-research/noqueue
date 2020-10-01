@@ -2,6 +2,22 @@ import { startOfDay } from "date-fns";
 import { ShopConfig } from "../../../src/service/domain";
 import { fetcherFn } from "swr/dist/types";
 
+const lovelyLamps: ShopConfig = {
+  address: {
+    streetAddress: "Am Bahnhofsplatz 1",
+    postalCode: "94032",
+    city: "Passau",
+  },
+  "@id": "/shop/lovely-lamps",
+  mail: "someone@example.org",
+  maxDuration: 120,
+  minDuration: 15,
+  name: "Lovely Lamps",
+  needsRegistration: true,
+  path: "lovely-lamps",
+  slotType: "days",
+};
+
 const shop: ShopConfig = {
   address: {
     streetAddress: "Am Bahnhofsplatz 1",
@@ -20,6 +36,9 @@ const shop: ShopConfig = {
 
 export const fetcher: fetcherFn<any> = async (url: string) => {
   console.log("fetching", { url });
+  if (/\/shop\/lovely-lamps\/?$/.test(url)) {
+    return lovelyLamps;
+  }
   if (/\/shop\/([^/]+?)\/?$/.test(url)) {
     return shop;
   }

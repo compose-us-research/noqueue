@@ -16,3 +16,11 @@ export const Simple = () => (
     </BrowserRouter>
   </Connected>
 );
+
+export const DayslotShop = () => (
+  <Connected shopId="lovely-lamps">
+    <BrowserRouter>
+      <ChooseTicket onSelect={action("reserved slot")} />
+    </BrowserRouter>
+  </Connected>
+);
