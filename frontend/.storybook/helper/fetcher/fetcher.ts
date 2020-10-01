@@ -15,6 +15,7 @@ const shop: ShopConfig = {
   name: "Buchhandlung Pustet",
   needsRegistration: true,
   path: "buchhandlung-pustet",
+  slotType: "times",
 };
 
 export const fetcher: fetcherFn<any> = async (url: string) => {

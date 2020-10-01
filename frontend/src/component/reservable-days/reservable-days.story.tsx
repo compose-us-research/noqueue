@@ -1,17 +1,17 @@
 import React from "react";
-import ReservableTimes from "./reservable-days";
+import ReservableDays from "./reservable-days";
 import { action } from "@storybook/addon-actions";
 import Connected from "../../../.storybook/helper/connected";
 
 export default {
-  title: "Screens/ReservableTimes",
-  component: ReservableTimes,
+  title: "Screens/ReservableDays",
+  component: ReservableDays,
 };
 
 export const Default = () => {
   return (
     <Connected>
-      <ReservableTimes handleSubmit={action("submit")} />
+      <ReservableDays handleSubmit={action("submit")} />
     </Connected>
   );
 };
