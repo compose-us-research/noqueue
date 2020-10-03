@@ -2,19 +2,35 @@ import { startOfDay } from "date-fns";
 import { ShopConfig } from "../../../src/service/domain";
 import { fetcherFn } from "swr/dist/types";
 
-const lovelyLamps: ShopConfig = {
+const featureFestival: ShopConfig = {
+  address: {
+    streetAddress: "Auf der Wiese 17",
+    postalCode: "94032",
+    city: "Passau",
+  },
+  "@id": "/shop/feature-festival",
+  mail: "someone@example.org",
+  maxDuration: 5,
+  minDuration: 3,
+  name: "Feature Festival",
+  needsRegistration: true,
+  path: "feature-festival",
+  slotType: "holidays",
+};
+
+const lovelyLandmark: ShopConfig = {
   address: {
     streetAddress: "Am Bahnhofsplatz 1",
     postalCode: "94032",
     city: "Passau",
   },
-  "@id": "/shop/lovely-lamps",
+  "@id": "/shop/lovely-landmark",
   mail: "someone@example.org",
-  maxDuration: 120,
-  minDuration: 15,
-  name: "Lovely Lamps",
+  maxDuration: 28,
+  minDuration: 1,
+  name: "Lovely Landmark",
   needsRegistration: true,
-  path: "lovely-lamps",
+  path: "lovely-landmark",
   slotType: "days",
 };
 
@@ -36,8 +52,11 @@ const shop: ShopConfig = {
 
 export const fetcher: fetcherFn<any> = async (url: string) => {
   console.log("fetching", { url });
-  if (/\/shop\/lovely-lamps\/?$/.test(url)) {
-    return lovelyLamps;
+  if (/\/shop\/lovely-landmark\/?$/.test(url)) {
+    return lovelyLandmark;
+  }
+  if (/\/shop\/feature-festival\/?$/.test(url)) {
+    return featureFestival;
   }
   if (/\/shop\/([^/]+?)\/?$/.test(url)) {
     return shop;
