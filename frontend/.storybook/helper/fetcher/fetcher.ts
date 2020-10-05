@@ -40,13 +40,13 @@ const shop: ShopConfig = {
     postalCode: "94032",
     city: "Passau",
   },
-  "@id": "/shop/buchhandlung-pustet",
+  "@id": "/shop/cozy-costumes",
   mail: "someone@example.org",
   maxDuration: 120,
   minDuration: 15,
-  name: "Buchhandlung Pustet",
+  name: "Cozy Costumes",
   needsRegistration: true,
-  path: "buchhandlung-pustet",
+  path: "cozy-costumes",
   slotType: "times",
 };
 
@@ -126,20 +126,6 @@ export const fetcher: fetcherFn<any> = async (url: string) => {
   if (/\/shop\/([^/]+?)\/ticket\/?$/.test(url)) {
     return { member: [] };
   }
-  if (/\/shop\/([^/]+?)\/ticket\/available/.test(url)) {
-    const now = new Date();
-    return {
-      member: [
-        {
-          start: startOfDay(now),
-          end: endOfDay(now),
-          reserved: 0,
-          allowed: 4,
-          available: 4,
-        },
-      ],
-    };
-  }
   if (/\/shop\/cozy-costumes\/ticket\/available/.test(url)) {
     const now = new Date();
     return {
@@ -175,6 +161,20 @@ export const fetcher: fetcherFn<any> = async (url: string) => {
         {
           start: startOfDay(+now + 4 * 24 * 60 * 60 * 1000),
           end: endOfDay(+now + 4 * 24 * 60 * 60 * 1000),
+          reserved: 0,
+          allowed: 4,
+          available: 4,
+        },
+      ],
+    };
+  }
+  if (/\/shop\/([^/]+?)\/ticket\/available/.test(url)) {
+    const now = new Date();
+    return {
+      member: [
+        {
+          start: startOfDay(now),
+          end: endOfDay(now),
           reserved: 0,
           allowed: 4,
           available: 4,
