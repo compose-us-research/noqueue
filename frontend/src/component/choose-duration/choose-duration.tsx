@@ -10,14 +10,14 @@ interface ChooseDurationProps {
   onChange: (duration: number) => void;
 }
 
-function mapper(data: any): Timeslot[] {
-  return data.member as Timeslot[];
+function mapper(data: any): (Dayslot | Timeslot)[] {
+  return data.member;
 }
 
 const ChooseDuration: React.FC<ChooseDurationProps> = ({ onChange }) => {
   const { slotType } = useShop();
-  const url = slotType === "days" ? `/dayslot` : `/timeslot`;
   const usesDays = slotType === "days" || slotType === "holidays";
+  const url = usesDays ? `/dayslot` : `/timeslot`;
   const slots = useShopFetch<Timeslot[] | Dayslot[]>(url, { mapper });
   const minDuration =
     slots.length > 0

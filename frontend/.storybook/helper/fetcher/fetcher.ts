@@ -1,4 +1,4 @@
-import { startOfDay } from "date-fns";
+import { startOfDay, endOfDay } from "date-fns";
 import { ShopConfig } from "../../../src/service/domain";
 import { fetcherFn } from "swr/dist/types";
 
@@ -69,8 +69,8 @@ export const fetcher: fetcherFn<any> = async (url: string) => {
           id: 13,
           customers: 4,
           end: startOfDay(new Date(+now + 5 * 24 * 60 * 60 * 1000)),
-          min_duration: 1,
-          max_duration: 3,
+          minDuration: 1,
+          maxDuration: 3,
           start: startOfDay(now),
         },
       ],
@@ -127,39 +127,54 @@ export const fetcher: fetcherFn<any> = async (url: string) => {
     return { member: [] };
   }
   if (/\/shop\/([^/]+?)\/ticket\/available/.test(url)) {
+    const now = new Date();
     return {
       member: [
         {
-          start: "2020-07-13T00:00:00.000Z",
-          end: "2020-07-13T23:59:00.000Z",
+          start: startOfDay(now),
+          end: endOfDay(now),
+          reserved: 0,
+          allowed: 4,
+          available: 4,
+        },
+      ],
+    };
+  }
+  if (/\/shop\/cozy-costumes\/ticket\/available/.test(url)) {
+    const now = new Date();
+    return {
+      member: [
+        {
+          start: startOfDay(now),
+          end: endOfDay(now),
           reserved: 0,
           allowed: 4,
           available: 4,
         },
         {
-          start: "2020-07-14T00:00:00.000Z",
-          end: "2020-07-14T23:59:00.000Z",
+          start: startOfDay(+now + 24 * 60 * 60 * 1000),
+          end: endOfDay(+now + 24 * 60 * 60 * 1000),
           reserved: 0,
           allowed: 4,
           available: 4,
         },
         {
-          start: "2020-07-15T00:00:00.000Z",
-          end: "2020-07-15T23:59:00.000Z",
+          start: startOfDay(+now + 2 * 24 * 60 * 60 * 1000),
+          end: endOfDay(+now + 2 * 24 * 60 * 60 * 1000),
           reserved: 0,
           allowed: 4,
           available: 4,
         },
         {
-          start: "2020-07-16T00:00:00.000Z",
-          end: "2020-07-16T23:59:00.000Z",
+          start: startOfDay(+now + 3 * 24 * 60 * 60 * 1000),
+          end: endOfDay(+now + 3 * 24 * 60 * 60 * 1000),
           reserved: 0,
           allowed: 4,
           available: 4,
         },
         {
-          start: "2020-07-17T00:00:00.000Z",
-          end: "2020-07-17T23:59:00.000Z",
+          start: startOfDay(+now + 4 * 24 * 60 * 60 * 1000),
+          end: endOfDay(+now + 4 * 24 * 60 * 60 * 1000),
           reserved: 0,
           allowed: 4,
           available: 4,
