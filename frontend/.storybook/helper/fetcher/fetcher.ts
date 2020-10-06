@@ -1,4 +1,4 @@
-import { startOfDay, endOfDay } from "date-fns";
+import { addDays, endOfDay, startOfDay } from "date-fns";
 import { ShopConfig } from "../../../src/service/domain";
 import { fetcherFn } from "swr/dist/types";
 
@@ -174,7 +174,7 @@ export const fetcher: fetcherFn<any> = async (url: string) => {
       member: [
         {
           start: startOfDay(now),
-          end: endOfDay(now),
+          end: addDays(startOfDay(now), 5),
           reserved: 0,
           allowed: 4,
           available: 4,

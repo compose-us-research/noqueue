@@ -16,10 +16,10 @@ interface ChooseTicketProps {
 
 const ChooseTicket: React.FC<ChooseTicketProps> = ({ onSelect }) => {
   const shop = useShop();
-  const [duration, setDuration] = useState<number>(15);
+  const usesDays = shop.slotType === "days" || shop.slotType === "holidays";
+  const [duration, setDuration] = useState<number>(usesDays ? 1 : 15);
   const [selectedTicket, setSelectedTicket] = useState<AvailableSlot>();
   const queryString = useLocation().search;
-  const usesDays = shop.slotType === "days" || shop.slotType === "holidays";
   const start = useMemo(() => {
     const defaultValue = usesDays
       ? Math.floor(Date.now() / (24 * 60 * 60 * 1000)) * (24 * 60 * 60 * 1000)

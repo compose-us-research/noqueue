@@ -56,7 +56,7 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
   });
   const generatedSlots = generateSlotsFromData({
     slots: data,
-    duration: durationInMinutes,
+    duration,
     from: new Date(+from + defaultMinutes * 60 * 1000),
     usesDays,
   });
