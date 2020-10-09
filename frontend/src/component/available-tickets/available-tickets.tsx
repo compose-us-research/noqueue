@@ -86,8 +86,13 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
               >
                 <span className={styles.big}>Spontan</span>
                 <span className={styles.mini}>
-                  (bis {tdf(slotRightNow.end.getHours())}:
-                  {tdf(slotRightNow.end.getMinutes())})
+                  {usesDays
+                    ? `(bis ${tdf(slotRightNow.end.getUTCDate())}.${tdf(
+                        slotRightNow.end.getUTCMonth() + 1
+                      )}.${slotRightNow.end.getUTCFullYear()})`
+                    : `(bis ${tdf(slotRightNow.end.getHours())}:${tdf(
+                        slotRightNow.end.getMinutes()
+                      )})`}
                 </span>
               </Button>
             </div>
@@ -113,12 +118,22 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
                       }
                     >
                       <span className={styles.big}>
-                        {tdf(slot.start.getHours())}:
-                        {tdf(slot.start.getMinutes())}
+                        {usesDays
+                          ? `${tdf(slot.start.getUTCDate())}.${tdf(
+                              slot.start.getUTCMonth() + 1
+                            )}.${slot.start.getUTCFullYear()}`
+                          : `${tdf(slot.start.getHours())}:${tdf(
+                              slot.start.getMinutes()
+                            )}`}
                       </span>
                       <span className={styles.mini}>
-                        (bis {tdf(slot.end.getHours())}:
-                        {tdf(slot.end.getMinutes())})
+                        {usesDays
+                          ? `(bis ${tdf(slot.end.getUTCDate())}.${tdf(
+                              slot.end.getUTCMonth() + 1
+                            )}.${slot.end.getUTCFullYear()})`
+                          : `(bis ${tdf(slot.end.getHours())}:${tdf(
+                              slot.end.getMinutes()
+                            )})`}
                       </span>
                     </Button>
                   ))}
