@@ -31,3 +31,25 @@ export const Simple = () => {
     </Connected>
   );
 };
+export const UsingDays = () => {
+  const now = Date.now();
+  const start = new Date(now);
+  const end = new Date(now + 20 * 24 * 60 * 60 * 1000);
+  const [selectedSlot, setSelectedSlot] = useState<AvailableSlot>();
+
+  return (
+    <Connected shopId="feature-festival">
+      <AvailableTickets
+        duration={2}
+        end={end}
+        onSelect={(slot) => {
+          setSelectedSlot(slot);
+          action("onSelect")(slot);
+        }}
+        selectedSlot={selectedSlot}
+        start={start}
+        usesDays={true}
+      />
+    </Connected>
+  );
+};
