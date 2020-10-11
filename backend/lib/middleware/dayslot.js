@@ -1,45 +1,60 @@
-const absoluteUrl = require('absolute-url')
-const bodyParser = require('body-parser')
-const express = require('express')
+const absoluteUrl = require("absolute-url");
+const bodyParser = require("body-parser");
+const express = require("express");
 
-function dayslot ({ db }) {
-  const router = new express.Router()
+function dayslot({ db }) {
+  const router = new express.Router();
 
-  router.use(absoluteUrl())
+  router.use(absoluteUrl());
 
-  router.get('/', async (req, res, next) => {
+  router.get("/", async (req, res, next) => {
     try {
-      const dayslots = await db.getDayslots()
+      const dayslots = await db.getDayslots();
 
       const result = {
-        member: dayslots
+        member: dayslots,
+      };
+
+      res.json(result);
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  router.put("/", bodyParser.json(), async (req, res, next) => {
+    try {
+      const validates = req.body.member.every((member) => {
+        const isZeroOrMore = (n) => n >= 0;
+        return (
+          isZeroOrMore(member.customers) &&
+          isZeroOrMore(member.minDuration) &&
+          isZeroOrMore(member.maxDuration)
+        );
+      });
+
+      if (!validates) {
+        throw new Error(
+          "InvalidRequest - customers, minDuration and maxDuration need to be a number >= 0"
+        );
       }
 
-      res.json(result)
-    } catch (err) {
-      next(err)
-    }
-  })
-
-  router.put('/', bodyParser.json(), async (req, res, next) => {
-    try {
       await db.replaceDayslots(
-        req.body.member.map(member => ({
+        req.body.member.map((member) => ({
           customers: member.customers,
           end: member.end,
           maxDuration: member.maxDuration,
           minDuration: member.minDuration,
-          start: member.start
+          start: member.start,
         }))
-      )
+      );
 
-      res.status(201).end()
+      res.status(201).end();
     } catch (err) {
-      next(err)
+      next(err);
     }
-  })
+  });
 
-  return router
+  return router;
 }
 
-module.exports = dayslot
+module.exports = dayslot;
