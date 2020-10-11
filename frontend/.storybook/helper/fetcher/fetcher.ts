@@ -61,7 +61,7 @@ export const fetcher: fetcherFn<any> = async (url: string) => {
   if (/\/shop\/([^/]+?)\/?$/.test(url)) {
     return shop;
   }
-  if (/\/shop\/([^/]+?)\/dayslot\/?$/.test(url)) {
+  if (/\/shop\/feature-festival\/dayslot\/?$/.test(url)) {
     const now = new Date();
     return {
       member: [
@@ -69,6 +69,21 @@ export const fetcher: fetcherFn<any> = async (url: string) => {
           id: 13,
           customers: 4,
           end: startOfDay(new Date(+now + 5 * 24 * 60 * 60 * 1000)),
+          minDuration: 1,
+          maxDuration: 3,
+          start: startOfDay(now),
+        },
+      ],
+    };
+  }
+  if (/\/shop\/lovely-landmark\/dayslot\/?$/.test(url)) {
+    const now = new Date();
+    return {
+      member: [
+        {
+          id: 13,
+          customers: 4,
+          end: startOfDay(new Date(+now + 30 * 24 * 60 * 60 * 1000)),
           minDuration: 1,
           maxDuration: 3,
           start: startOfDay(now),
