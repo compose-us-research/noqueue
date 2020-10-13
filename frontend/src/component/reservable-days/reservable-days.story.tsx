@@ -10,7 +10,7 @@ export default {
 
 export const Default = () => {
   return (
-    <Connected>
+    <Connected shopId="feature-festival">
       <ReservableDays handleSubmit={action("submit")} />
     </Connected>
   );
