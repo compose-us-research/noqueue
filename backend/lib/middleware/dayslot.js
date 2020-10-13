@@ -24,7 +24,7 @@ function dayslot({ db }) {
   router.put("/", bodyParser.json(), async (req, res, next) => {
     try {
       const validates = req.body.member.every((member) => {
-        const isZeroOrMore = (n) => n >= 0;
+        const isZeroOrMore = (n) => !!n && n >= 0;
         return (
           isZeroOrMore(member.customers) &&
           isZeroOrMore(member.minDuration) &&
@@ -33,9 +33,12 @@ function dayslot({ db }) {
       });
 
       if (!validates) {
-        throw new Error(
-          "InvalidRequest - customers, minDuration and maxDuration need to be a number >= 0"
-        );
+        const error = {
+          code: 400,
+          message:
+            "InvalidRequest - customers, minDuration and maxDuration need to be a number >= 0",
+        };
+        return res.status(400).send(JSON.stringify(error));
       }
 
       await db.replaceDayslots(
