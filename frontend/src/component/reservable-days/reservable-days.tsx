@@ -5,6 +5,7 @@ import {
   useForm,
   FormProvider,
 } from "react-hook-form";
+import { parseISO } from "date-fns";
 
 import styles from "./reservable-days.module.css";
 import DayRangePicker from "../day-range-picker/day-range-picker";
@@ -18,7 +19,11 @@ interface ReservableDaysProps {
 }
 
 const mapper = (data: any): AvailableSlot[] => {
-  return data.member;
+  return data.member.map((m: any) => ({
+    ...m,
+    start: parseISO(m.start),
+    end: parseISO(m.end),
+  }));
 };
 
 let id = 0;
@@ -27,7 +32,7 @@ const ReservableDays: React.FC<ReservableDaysProps> = ({ handleSubmit }) => {
   const methods = useForm({
     defaultValues: {
       holidays: [],
-      ranges: dayslots.map((range) => ({ ...range, id: ++id })),
+      ranges: dayslots.map((range) => ({ ...range, id: id++ })),
     },
   });
   const { append, fields, remove } = useFieldArray({
@@ -43,16 +48,16 @@ const ReservableDays: React.FC<ReservableDaysProps> = ({ handleSubmit }) => {
           {fields.map((range, index) => {
             console.log({ range });
             return (
-              <>
+              <React.Fragment key={range.id}>
                 <DayRangePicker name={`ranges[${index}]`} range={range} />
                 <Button onClick={() => remove(index)}>Löschen</Button>
                 <Spacer />
-              </>
+              </React.Fragment>
             );
           })}
           <Button
             onClick={() =>
-              append({ id: ++id, start: new Date(), end: new Date() })
+              append({ id: id++, start: new Date(), end: new Date() })
             }
           >
             Hinzufügen

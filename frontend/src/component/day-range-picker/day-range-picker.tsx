@@ -21,12 +21,14 @@ interface DayRangePickerProps {
 }
 
 const DayRangePicker: React.FC<DayRangePickerProps> = ({ range, name }) => {
+  console.log("DayRangePicker render", { range });
   return (
     <>
       <Controller
         defaultValue={range}
         name={name}
         render={({ onChange, value }) => {
+          console.log("render in controller", { value });
           return (
             <>
               <DatePicker
