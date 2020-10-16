@@ -21,8 +21,10 @@ interface ReservableDaysProps {
 const mapper = (data: any): AvailableSlot[] => {
   return data.member.map((m: any) => ({
     ...m,
-    start: parseISO(m.start),
     end: parseISO(m.end),
+    maxDuration: m.max_duration,
+    minDuration: m.min_duration,
+    start: parseISO(m.start),
   }));
 };
 
@@ -46,7 +48,6 @@ const ReservableDays: React.FC<ReservableDaysProps> = ({ handleSubmit }) => {
         <form onSubmit={methods.handleSubmit(handleSubmit)}>
           <Spacer />
           {fields.map((range, index) => {
-            console.log({ range });
             return (
               <React.Fragment key={range.id}>
                 <DayRangePicker name={`ranges[${index}]`} range={range} />
