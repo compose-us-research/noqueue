@@ -25,6 +25,14 @@ const DayRangePicker: React.FC<DayRangePickerProps> = ({ range, name }) => {
     <Controller
       defaultValue={range}
       name={name}
+      rules={{
+        validate: (value: typeof range) => {
+          const customerOk = value.customers >= 0;
+          const durationOk =
+            0 < value.minDuration && value.minDuration <= value.maxDuration;
+          return customerOk && durationOk;
+        },
+      }}
       render={({ onChange, value }) => {
         return (
           <>
