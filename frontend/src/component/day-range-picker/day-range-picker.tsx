@@ -22,61 +22,84 @@ interface DayRangePickerProps {
 
 const DayRangePicker: React.FC<DayRangePickerProps> = ({ range, name }) => {
   const { getValues } = useFormContext();
-  console.log("rendering DayRangePicker");
+  console.log("rendering DayRangePicker", { range, name });
   return (
-    <Controller
-      defaultValue={range}
-      name={name}
-      rules={{
-        validate: () => {
-          console.log("getting validated?");
-          const value = getValues(name);
-          const customerOk = value.customers >= 0;
-          const durationOk =
-            0 < value.minDuration && value.minDuration <= value.maxDuration;
-          return customerOk && durationOk;
-        },
-      }}
-      render={({ onChange, value }) => {
-        return (
-          <>
-            <DatePicker
-              endDate={value.end}
-              inline
-              onChange={([start, end]: any) => {
-                onChange({ ...value, start, end });
-              }}
-              selectsRange
-              startDate={value.start}
-            />
-            <Spacer />
-            <ControlledTextField
-              name={`${name}.customers`}
-              value={value.customers}
-              onChange={(event: any) =>
-                onChange({ ...value, customers: event.target.value })
+    <>
+      <Controller
+        defaultValue={{ start: range.start, end: range.end }}
+        name={`${name}.duration`}
+        rules={{
+          validate: () => {
+            const value = getValues(`${name}.duration`);
+            return value.start < value.end;
+          },
+        }}
+        render={({ onChange, value }) => (
+          <DatePicker
+            endDate={value.end}
+            inline
+            onChange={([start, end]: any) => {
+              onChange({ ...value, start, end });
+            }}
+            selectsRange
+            startDate={value.start}
+          />
+        )}
+      />
+      <Spacer />
+      <Controller
+        defaultValue={range.customers}
+        name={`${name}.customers`}
+        rules={{
+          validate: () => {
+            const value = getValues(`${name}.customers`);
+            console.log("getting validated customers?", value);
+            return value >= 0;
+          },
+        }}
+        render={({ onChange, value }) => (
+          <ControlledTextField
+            name={`${name}.customers`}
+            value={value}
+            onChange={(event: any) => onChange(event.target.value)}
+            label="Mögliche Anzahl von Kunden"
+          />
+        )}
+      />
+      <Spacer />
+      <Controller
+        defaultValue={{
+          start: range.start,
+          end: range.end,
+          minDuration: range.minDuration,
+          maxDuration: range.maxDuration,
+        }}
+        name={`${name}.days`}
+        rules={{
+          validate: () => {
+            const value = getValues(`${name}.days`);
+            console.log("getting validated days?", value);
+            return value >= 0;
+          },
+        }}
+        render={({ onChange, value }) => (
+          <ControlledRangeSlider
+            label="Tage"
+            max={Math.abs(differenceInDays(value.start, value.end)) + 1}
+            min={1}
+            minDistance={0}
+            onChange={(nextValue) => {
+              if (Array.isArray(nextValue)) {
+                const [min, max] = nextValue;
+                onChange({ ...value, minDuration: min, maxDuration: max });
               }
-              label="Mögliche Anzahl von Kunden"
-            />
-            <Spacer />
-            <ControlledRangeSlider
-              label="Tage"
-              max={Math.abs(differenceInDays(value.start, value.end)) + 1}
-              min={1}
-              minDistance={0}
-              onChange={(nextValue) => {
-                if (Array.isArray(nextValue)) {
-                  const [min, max] = nextValue;
-                  onChange({ ...value, minDuration: min, maxDuration: max });
-                }
-              }}
-              step={1}
-              value={[value.minDuration || 1, value.maxDuration || 1]}
-            />
-          </>
-        );
-      }}
-    />
+            }}
+            step={1}
+            value={[value.minDuration || 1, value.maxDuration || 1]}
+          />
+        )}
+      />
+    </>
   );
 };
 
