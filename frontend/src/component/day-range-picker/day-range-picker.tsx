@@ -1,6 +1,6 @@
 import React from "react";
 import DatePicker from "react-datepicker";
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { differenceInDays } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
 import ControlledTextField from "../controlled-text-field/controlled-text-field";
@@ -21,12 +21,16 @@ interface DayRangePickerProps {
 }
 
 const DayRangePicker: React.FC<DayRangePickerProps> = ({ range, name }) => {
+  const { getValues } = useFormContext();
+  console.log("rendering DayRangePicker");
   return (
     <Controller
       defaultValue={range}
       name={name}
       rules={{
-        validate: (value: typeof range) => {
+        validate: () => {
+          console.log("getting validated?");
+          const value = getValues(name);
           const customerOk = value.customers >= 0;
           const durationOk =
             0 < value.minDuration && value.minDuration <= value.maxDuration;
