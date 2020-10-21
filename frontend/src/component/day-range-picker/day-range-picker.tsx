@@ -9,6 +9,7 @@ import ControlledRangeSlider from "../controlled-range-slider/controlled-range-s
 import Spacer from "../spacer/spacer";
 
 interface DayRangePickerProps {
+  error?: any;
   range: {
     id?: any;
     customers?: AmountOfPeople;
@@ -20,9 +21,12 @@ interface DayRangePickerProps {
   name: string;
 }
 
-const DayRangePicker: React.FC<DayRangePickerProps> = ({ range, name }) => {
+const DayRangePicker: React.FC<DayRangePickerProps> = ({
+  error,
+  name,
+  range,
+}) => {
   const { getValues } = useFormContext();
-  console.log("rendering DayRangePicker", { range, name });
   return (
     <>
       <Controller
@@ -59,6 +63,7 @@ const DayRangePicker: React.FC<DayRangePickerProps> = ({ range, name }) => {
         }}
         render={({ onChange, value }) => (
           <ControlledTextField
+            hasError={error?.customers}
             name={`${name}.customers`}
             value={value}
             onChange={(event: any) => onChange(event.target.value)}

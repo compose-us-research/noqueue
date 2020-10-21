@@ -50,7 +50,11 @@ const ReservableDays: React.FC<ReservableDaysProps> = ({ handleSubmit }) => {
           {fields.map((range, index) => {
             return (
               <React.Fragment key={range.id}>
-                <DayRangePicker name={`ranges[${index}]`} range={range} />
+                <DayRangePicker
+                  error={methods.errors.ranges?.[index]}
+                  name={`ranges[${index}]`}
+                  range={range}
+                />
                 <Button onClick={() => remove(index)}>Löschen</Button>
                 <Spacer />
               </React.Fragment>
