@@ -7,6 +7,7 @@ import ControlledTextField from "../controlled-text-field/controlled-text-field"
 import { AmountOfDays, AmountOfPeople } from "../../service/domain";
 import ControlledRangeSlider from "../controlled-range-slider/controlled-range-slider";
 import Spacer from "../spacer/spacer";
+import styles from "./day-range-picker.module.css";
 
 interface DayRangePickerProps {
   error?: any;
@@ -26,7 +27,7 @@ const DayRangePicker: React.FC<DayRangePickerProps> = ({
   name,
   range,
 }) => {
-  const { getValues } = useFormContext();
+  const { getValues, watch } = useFormContext();
   return (
     <>
       <Controller
@@ -57,7 +58,6 @@ const DayRangePicker: React.FC<DayRangePickerProps> = ({
         rules={{
           validate: () => {
             const value = getValues(`${name}.customers`);
-            console.log("getting validated customers?", value);
             return value >= 0;
           },
         }}
@@ -72,37 +72,49 @@ const DayRangePicker: React.FC<DayRangePickerProps> = ({
         )}
       />
       <Spacer />
+      <span className={styles.label}>Mögliche Dauer</span>
       <Controller
         defaultValue={{
-          start: range.start,
-          end: range.end,
           minDuration: range.minDuration,
           maxDuration: range.maxDuration,
         }}
         name={`${name}.days`}
         rules={{
           validate: () => {
-            const value = getValues(`${name}.days`);
-            console.log("getting validated days?", value);
-            return value >= 0;
+            const duration = getValues(`${name}.duration`);
+            const amountOfDays = getValues(`${name}.days`);
+
+            return (
+              1 <= amountOfDays.minDuration &&
+              amountOfDays.maxDuration <=
+                Math.abs(differenceInDays(duration.start, duration.end)) + 1
+            );
           },
         }}
-        render={({ onChange, value }) => (
-          <ControlledRangeSlider
-            label="Tage"
-            max={Math.abs(differenceInDays(value.start, value.end)) + 1}
-            min={1}
-            minDistance={0}
-            onChange={(nextValue) => {
-              if (Array.isArray(nextValue)) {
-                const [min, max] = nextValue;
-                onChange({ ...value, minDuration: min, maxDuration: max });
-              }
-            }}
-            step={1}
-            value={[value.minDuration || 1, value.maxDuration || 1]}
-          />
-        )}
+        render={({ onChange, value }) => {
+          const duration = watch(`${name}.duration`);
+          const hasDuration = duration?.start && duration?.end;
+          const max = hasDuration
+            ? Math.abs(differenceInDays(duration.start, duration.end)) + 1
+            : 1;
+          return (
+            <ControlledRangeSlider
+              disabled={!hasDuration}
+              label="Tage"
+              max={max}
+              min={1}
+              minDistance={0}
+              onChange={(nextValue) => {
+                if (Array.isArray(nextValue)) {
+                  const [min, max] = nextValue;
+                  onChange({ minDuration: min, maxDuration: max });
+                }
+              }}
+              step={1}
+              value={[value.minDuration || 1, value.maxDuration || 1]}
+            />
+          );
+        }}
       />
     </>
   );
