@@ -12,6 +12,7 @@ import styles from "./update-shop-app.module.css";
 import ReservableDays from "../reservable-days/reservable-days";
 import { updateOpeningDays } from "../../service/server/push";
 import Stub from "../stub/stub";
+import { Dayslot } from "../../service/domain";
 
 interface UpdateShopAppProps {
   backToIndex: () => void;
@@ -35,8 +36,17 @@ const UpdateShopApp: React.FC<UpdateShopAppProps> = ({ backToIndex }) => {
             {shop.slotType === "days" ? (
               <ReservableDays
                 handleSubmit={async ({ ranges }) => {
+                  const toSubmit: Dayslot[] = (ranges as any[]).map<Dayslot>(
+                    (range) => ({
+                      start: range.duration.start,
+                      end: range.duration.end,
+                      minDuration: range.days.minDuration,
+                      maxDuration: range.days.maxDuration,
+                      customers: range.customers,
+                    })
+                  );
                   try {
-                    await updateOpeningDays(shop, ranges);
+                    await updateOpeningDays(shop, toSubmit);
                     push(`${url}/share`);
                   } catch (e) {
                     setError(() => {
