@@ -12,10 +12,19 @@ import DayRangePicker from "../day-range-picker/day-range-picker";
 import Spacer from "../spacer/spacer";
 import Button from "../button/button";
 import { useShopFetch } from "../../service/server/connection";
-import { AvailableSlot } from "../../service/domain";
+import { AvailableSlot, Dayslot } from "../../service/domain";
 
 interface ReservableDaysProps {
-  handleSubmit: SubmitHandler<Record<string, any>>;
+  handleSubmit: SubmitHandler<
+    Record<
+      string,
+      {
+        customers: number;
+        duration: { start: Date; end: Date };
+        days: { minDuration: number; maxDuration: number };
+      }[]
+    >
+  >;
 }
 
 const mapper = (data: any): AvailableSlot[] => {
