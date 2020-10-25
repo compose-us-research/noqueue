@@ -12,7 +12,7 @@ import DayRangePicker from "../day-range-picker/day-range-picker";
 import Spacer from "../spacer/spacer";
 import Button from "../button/button";
 import { useShopFetch } from "../../service/server/connection";
-import { AvailableSlot, Dayslot } from "../../service/domain";
+import { AvailableSlot } from "../../service/domain";
 
 interface ReservableDaysProps {
   handleSubmit: SubmitHandler<
