@@ -32,7 +32,7 @@ const ChooseDuration: React.FC<ChooseDurationProps> = ({ onChange }) => {
           (a: Timeslot | Dayslot, b: Timeslot | Dayslot) =>
             b.maxDuration - a.maxDuration
         )[0].maxDuration
-      : 0;
+      : 1;
 
   return (
     <div className={styles.root}>
@@ -43,7 +43,7 @@ const ChooseDuration: React.FC<ChooseDurationProps> = ({ onChange }) => {
             usesDays ? (v) => (v === 1 ? "1 Tag" : `${v} Tage`) : "Minuten"
           }
           max={maxDuration}
-          min={minDuration || 0}
+          min={minDuration || (usesDays ? 1 : 15)}
           onChange={(value) => {
             if (value) {
               onChange(value as number);
