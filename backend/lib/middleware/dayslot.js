@@ -12,7 +12,14 @@ function dayslot({ db }) {
       const dayslots = await db.getDayslots();
 
       const result = {
-        member: dayslots,
+        member: dayslots.map((slot) => ({
+          id: slot.id,
+          customers: slot.customers,
+          start: slot.start,
+          end: slot.end,
+          maxDuration: slot.max_duration,
+          minDuration: slot.min_duration,
+        })),
       };
 
       res.json(result);
