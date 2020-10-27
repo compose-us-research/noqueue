@@ -1,0 +1,50 @@
+version: "3"
+
+volumes:
+  platzhalterio-data:
+
+services:
+  frontend:
+    image: node:14
+    container_name: platzhalterio_frontend
+    environment:
+      NODE_ENV: "development"
+    ports:
+      - "0.0.0.0:9000:3000"
+      - "0.0.0.0:9009:9009"
+    volumes:
+      - ./backend:/app/backend
+      - ./frontend:/app/frontend
+
+  platzhalterio:
+    container_name: platzhalterio
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    environment:
+      DB_PASSWORD: "abcd"
+      DB_HOST: "postgres"
+      NODE_ENV: "development"
+    links:
+      - "postgres:postgres"
+    ports:
+      - "0.0.0.0:9090:80"
+    volumes:
+      - ./backend:/app/backend
+      - ./frontend:/app/frontend
+
+  postgres:
+    container_name: postgres
+    image: postgres:12
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: "abcd"
+    labels:
+      - traefik.enable=false
+    ports:
+      - "0.0.0.0:5432:5432"
+    volumes:
+      - platzhalterio-data:/var/lib/postgresql/data
