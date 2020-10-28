@@ -36,14 +36,12 @@ services:
       - ./backend:/app/backend
       - ./frontend:/app/frontend
 
-  postgres:
+  platzhalterio-db:
     container_name: postgres
     image: postgres:12
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: "abcd"
-    labels:
-      - traefik.enable=false
     ports:
       - "0.0.0.0:5432:5432"
     volumes:
