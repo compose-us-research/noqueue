@@ -77,12 +77,12 @@ Running everything in development is possible by using the
 these commands in them:
 
 1. `docker-compose up platzhalterio-db`
-2. `docker-compose run --service-ports platzhalterio bash` - runs the backend
-   container: In the shell change into the `/app/backend` directory to install
-   all necessary packages (`npm ci`). In this directory, `npm start` can be used
-   to run the server. If anything in the backend changes, press `CTRL+C` to stop
-   it and restart it again with `npm start`.
-3. `docker-compose run --service-ports frontend bash` - runs the frontend
+2. `docker-compose run --service-ports --rm platzhalterio bash` - runs the
+   backend container: In the shell change into the `/app/backend` directory to
+   install all necessary packages (`npm ci`). In this directory, `npm start` can
+   be used to run the server. If anything in the backend changes, press `CTRL+C`
+   to stop it and restart it again with `npm start`.
+3. `docker-compose run --service-ports --rm frontend bash` - runs the frontend
    container: In the shell, have a look into `/app/frontend` and run one of the
    frontend scripts after installing the dependencies (`yarn`). `yarn storybook`
    starts Storybook and allows you to change the various components with hot
