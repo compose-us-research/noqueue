@@ -76,19 +76,19 @@ Running everything in development is possible by using the
 `dev-docker-compose.yml` file with `docker-compose`. Open three terminals, run
 these commands in them:
 
-1. `docker-compose up platzhalterio-db`
-2. `docker-compose run --service-ports --rm platzhalterio bash` - runs the
+1. `docker-compose -f dev-docker-compose.yml up platzhalterio-db`
+2. `docker-compose -f dev-docker-compose.yml run --service-ports --rm platzhalterio bash` - runs the
    backend container: In the shell change into the `/app/backend` directory to
    install all necessary packages (`npm ci`). In this directory, `npm start` can
    be used to run the server. If anything in the backend changes, press `CTRL+C`
    to stop it and restart it again with `npm start`.
-3. `docker-compose run --service-ports --rm frontend bash` - runs the frontend
-   container: In the shell, have a look into `/app/frontend` and run one of the
-   frontend scripts after installing the dependencies (`yarn`). `yarn storybook`
-   starts Storybook and allows you to change the various components with hot
-   module reload. `yarn start` starts a development server to see changes live
-   in the app. Since the live backend will send you the URL of the backend
-   service when selecting a shop, the URL might change and as a result changes
-   might not be visible. Use the local URL to check this. With `yarn build`, a
-   static version of the page will be built and the live backend is going to use
-   that.
+3. `docker-compose -f dev-docker-compose.yml run --service-ports --rm frontend bash` -
+   runs the frontend container: In the shell, have a look into `/app/frontend`
+   and run one of the frontend scripts after installing the dependencies
+   (`yarn`). `yarn storybook` starts Storybook and allows you to change the
+   various components with hot module reload. `yarn start` starts a development
+   server to see changes live in the app. Since the live backend will send you
+   the URL of the backend service when selecting a shop, the URL might change
+   and as a result changes might not be visible. Use the local URL to check
+   this. With `yarn build`, a static version of the page will be built and the
+   live backend is going to use that.
