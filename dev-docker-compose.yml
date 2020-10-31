@@ -4,7 +4,7 @@ volumes:
   platzhalterio-data:
 
 services:
-  frontend:
+  platzhalterio-frontend:
     image: node:14
     container_name: platzhalterio_frontend
     environment:
@@ -23,13 +23,13 @@ services:
       dockerfile: Dockerfile-dev
     restart: unless-stopped
     depends_on:
-      - postgres
+      - platzhalterio-db
     environment:
       DB_PASSWORD: "abcd"
-      DB_HOST: "postgres"
+      DB_HOST: "platzhalterio-db"
       NODE_ENV: "development"
     links:
-      - "postgres:postgres"
+      - "platzhalterio-db:platzhalterio-db"
     ports:
       - "0.0.0.0:9090:80"
     volumes:
@@ -37,7 +37,7 @@ services:
       - ./frontend:/app/frontend
 
   platzhalterio-db:
-    container_name: postgres
+    container_name: platzhalterio_db
     image: postgres:12
     restart: unless-stopped
     environment:
