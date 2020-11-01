@@ -10,7 +10,8 @@ export type ShopFetcher = (shopId: ShopId) => Promise<ShopConfig>;
 
 export type Connection = typeof connection;
 
-const API_URL = (window as any).config?.BASE_URL || "";
+const API_URL =
+  (window as any).config?.BASE_URL || process?.env?.REACT_APP_BASE_URL || "";
 
 interface FetcherContextProps {
   connection: Connection;
