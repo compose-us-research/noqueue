@@ -187,4 +187,25 @@ describe("generateTimerangesFromTimeslots", () => {
     };
     expect(result).toEqual([expected]);
   });
+
+  it("understands full days", () => {
+    const result = generateTimerangesFromTimeslots([
+      {
+        customers: 2,
+        day: 1,
+        start: "00:00",
+        end: "00:00",
+        minDuration: 60,
+        maxDuration: 60,
+      },
+    ]);
+    const expected: Timerange = {
+      amountOfPeopleInShop: 2,
+      days: [false, true, false, false, false, false, false],
+      start: "00:00",
+      end: "00:00",
+      duration: [60, 60],
+    };
+    expect(result).toEqual([expected]);
+  });
 });
