@@ -215,9 +215,7 @@ class ShopConnection {
     const config = await this.getConfig()
     const query = this.getAvailableTicketsQuery(config.slotType);
     const values = [start.toISOString(), end.toISOString()]
-    console.log({query, values});
     const result = await this.client.query(query, values)
-    console.log({rows:result.rows});
 
     return result.rows
   }
