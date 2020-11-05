@@ -19,9 +19,7 @@ services:
 
   platzhalterio:
     container_name: platzhalterio
-    build:
-      context: .
-      dockerfile: Dockerfile-dev
+    image: node:14
     restart: unless-stopped
     depends_on:
       - platzhalterio-db
