@@ -5,9 +5,10 @@ import {
   SubmitHandler,
   useFieldArray,
 } from "react-hook-form";
+import { parseISO } from "date-fns";
 
 import { ReactComponent as PlusIcon } from "../../asset/image/plus-icon.svg";
-import { Timerange, Timeslot } from "../../service/domain";
+import { AvailableSlot, Timerange, Timeslot } from "../../service/domain";
 import Button from "../button/button";
 import styles from "./reservable-times.module.css";
 import HolidaySelector from "../holiday-selector/holiday-selector";
@@ -34,15 +35,29 @@ const mapper = (data: any): Timeslot[] => {
   return data.member;
 };
 
+const holidayMapper = (data: any): AvailableSlot[] => {
+  return data.member
+    .filter((m: any) => m.customer <= 0)
+    .map((m: any) => ({
+      ...m,
+      end: parseISO(m.end),
+      maxDuration: m.max_duration,
+      minDuration: m.min_duration,
+      start: parseISO(m.start),
+    }));
+};
+
 let id = 0;
+let holidayId = 0;
 const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
   const timeslots = useShopFetch("/timeslot", { mapper });
+  const holidays = useShopFetch("/dayslot", { mapper: holidayMapper });
   const timeranges = generateTimerangesFromTimeslots(timeslots);
   const [opened, setOpened] = useState<{ [key: number]: boolean }>({});
-  console.log({ timeranges });
+  console.log({ timeranges, holidays });
   const methods = useForm({
     defaultValues: {
-      holidays: [],
+      holidays: holidays.map((range) => ({ ...range, id: ++holidayId })),
       ranges: timeranges.map((range) => ({ ...range, id: ++id })),
     },
   });
