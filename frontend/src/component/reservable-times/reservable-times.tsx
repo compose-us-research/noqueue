@@ -18,7 +18,15 @@ import { useShopFetch } from "../../service/server/connection";
 import generateTimerangesFromTimeslots from "../../lib/generate-timeranges-from-timeslots/generate-timeranges-from-timeslots";
 
 interface ReservableTimesProps {
-  handleSubmit: SubmitHandler<Record<string, any>>;
+  handleSubmit: SubmitHandler<{
+    holidays: {
+      range: {
+        start: Date;
+        end: Date;
+      };
+    }[];
+    ranges: Timerange[];
+  }>;
 }
 
 function createNewTimerange(lastRange?: Timerange): Timerange {

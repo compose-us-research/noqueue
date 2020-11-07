@@ -30,8 +30,15 @@ function dayslot({ db }) {
 
   router.put("/", bodyParser.json(), async (req, res, next) => {
     try {
+      const isZeroOrMore = (n) => {
+        try {
+          const parsed = parseInt(n, 10);
+          return parsed >= 0;
+        } catch (e) {
+          return false;
+        }
+      };
       const validates = req.body.member.every((member) => {
-        const isZeroOrMore = (n) => !!n && n >= 0;
         return (
           isZeroOrMore(member.customers) &&
           isZeroOrMore(member.minDuration) &&

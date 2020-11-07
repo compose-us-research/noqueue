@@ -57,12 +57,20 @@ const UpdateShopApp: React.FC<UpdateShopAppProps> = ({ backToIndex }) => {
               <Stub next={() => push(`${url}`)}>Just holidays</Stub>
             ) : (
               <ReservableTimes
-                handleSubmit={async ({ ranges }) => {
+                handleSubmit={async ({ holidays, ranges }) => {
+                  const toSubmit: Dayslot[] = holidays.map((item) => ({
+                    start: item.range.start,
+                    end: item.range.end,
+                    minDuration: 0,
+                    maxDuration: 0,
+                    customers: 0,
+                  }));
                   try {
                     await updateOpeningHours(
                       shop,
                       generateTimeslotsFromTimeranges(ranges)
                     );
+                    await updateOpeningDays(shop, toSubmit);
                     push(`${url}/share`);
                   } catch (e) {
                     setError(() => {
