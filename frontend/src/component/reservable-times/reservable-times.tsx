@@ -45,12 +45,10 @@ const mapper = (data: any): Timeslot[] => {
 
 const holidayMapper = (data: any): AvailableSlot[] => {
   return data.member
-    .filter((m: any) => m.customer <= 0)
+    .filter((m: any) => m.customers === 0)
     .map((m: any) => ({
       ...m,
       end: parseISO(m.end),
-      maxDuration: m.max_duration,
-      minDuration: m.min_duration,
       start: parseISO(m.start),
     }));
 };
