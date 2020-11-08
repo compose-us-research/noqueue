@@ -35,17 +35,21 @@ const HolidaySelector: React.FC<HolidaySelectorProps> = ({ name }) => {
               defaultValue={holiday}
               name={`${prefix}.range`}
               render={({ onChange, value }) => (
-                <>
-                  <DatePicker
-                    endDate={value.end}
-                    inline
-                    onChange={([start, end]: any) => {
-                      onChange({ ...holiday, start, end });
-                    }}
-                    selectsRange
-                    startDate={value.start}
-                  />
-                </>
+                <DatePicker
+                  className={styles.datepicker}
+                  calendarClassName={styles.datepicker}
+                  dayClassName={() => styles.datepickerWeekAndDays}
+                  endDate={value.end}
+                  inline
+                  monthClassName={() => styles.datepickerMonthContainer}
+                  onChange={([start, end]: any) => {
+                    onChange({ ...holiday, start, end });
+                  }}
+                  selectsRange
+                  startDate={value.start}
+                  weekDayClassName={() => styles.datepickerWeekAndDays}
+                  wrapperClassName={styles.datepickerWrapper}
+                />
               )}
             />
             <Button
