@@ -95,10 +95,7 @@ class ShopConnection {
   }
 
   getAvailableTicketsQuery (slotType) {
-    if (slotType === "days") {
-      return this.getAvailableTicketsQueryByDays();
-    }
-    if (slotType === "holidays") {
+    if (slotType === "days" || slotType === "holidays") {
       return this.getAvailableTicketsQueryByDays();
     }
     return this.getAvailableTicketsQueryByTimes();
