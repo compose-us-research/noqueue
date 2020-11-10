@@ -98,6 +98,10 @@ class ShopConnection {
     if (slotType === "days" || slotType === "holidays") {
       return this.getAvailableTicketsQueryByDays();
     }
+    // Holidays are currently set in the dayslots, where timeslots are used for
+    // regular slots during the day (or a full day, if from/to times are set to
+    // the same time of day). The plan is to merge both queries and filter 
+    // holidays out at the timeslots.
     return this.getAvailableTicketsQueryByTimes();
   }
 
