@@ -214,11 +214,26 @@ class ShopConnection {
 
   async availableTickets ({ start, end }) {
     const config = await this.getConfig()
-    const query = this.getAvailableTicketsQuery(config.slotType);
+    const query = this.getAvailableTicketsQuery(config.slotType)
     const values = [start.toISOString(), end.toISOString()]
     const result = await this.client.query(query, values)
 
-    return result.rows
+    const rows = result.rows
+
+    if (config.slotType === "timeslot") {
+      const dayQuery = this.getAvailableTicketsQueryByDays()
+      const dayValues = [start.toISOString(), end.toISOString()]
+      const dayResult = await this.client.query(dayQuery, dayValues)
+  
+      const holidays = dayResult.rows.filter(r => r.customers === 0)
+      return rows.filter(r => !holidays.find(h => {
+        const startsInHoliday = h.start <= r.start && r.start <= h.end
+        const endsInHoliday = h.start <= r.end && r.end <= h.end
+        return startsInHoliday || endsInHoliday
+      }))
+    }
+
+    return rows
   }
 
   async replaceDailyAvailabilityAndHolidays ({ dailyAvailability, holidays }) {
