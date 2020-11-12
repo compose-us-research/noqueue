@@ -105,6 +105,15 @@ class ShopConnection {
     return this.getAvailableTicketsQueryByTimes();
   }
 
+  getHolidaysQuery () {
+    return `
+    SELECT "holidays"."start", "holidays"."end"
+      FROM "${this.prefix}_dayslots" AS holidays
+     WHERE $1::date <= "holidays"."start" AND "holidays"."end" <= $2::date
+       AND "holidays"."customers" = 0
+    `
+  }
+
   getAvailableTicketsQueryByDays () {
     return `
     SELECT "range"."start", "range"."end", COUNT("booked".*)::integer AS "reserved", COALESCE("dayslots"."customers", 0) AS "allowed", COALESCE("dayslots"."customers", 0) - COUNT("booked".*)::integer AS "available" FROM (
@@ -220,19 +229,19 @@ class ShopConnection {
 
     const rows = result.rows
 
-    if (config.slotType === "timeslot") {
-      const dayQuery = this.getAvailableTicketsQueryByDays()
+    if (config.slotType === "times") {
+      const dayQuery = this.getHolidaysQuery()
       const dayValues = [start.toISOString(), end.toISOString()]
       const dayResult = await this.client.query(dayQuery, dayValues)
-  
-      const holidays = dayResult.rows.filter(r => r.customers === 0)
+
+      const holidays = dayResult.rows
       return rows.filter(r => !holidays.find(h => {
         const startsInHoliday = h.start <= r.start && r.start <= h.end
         const endsInHoliday = h.start <= r.end && r.end <= h.end
         return startsInHoliday || endsInHoliday
       }))
     }
-
+    
     return rows
   }
 
