@@ -32,7 +32,6 @@ function shop ({ db }) {
     res.end()
   })
 
-  router.use('/days', days({ db }))
   router.use('/dayslot', dayslot({ db }))
   router.use('/ticket', ticket({ db }))
   router.use('/timeslot', timeslot({ db }))
