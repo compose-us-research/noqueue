@@ -74,13 +74,7 @@ const UpdateShop: React.FC<UpdateShopProps> = ({ onSave, shop }) => {
             <Radio
               name="slotType"
               value="days"
-              label="Nur an ganz bestimmten Tagen buchbar (Festivals, etc.)"
-            />
-            <Spacer />
-            <Radio
-              name="slotType"
-              value="holidays"
-              label="Tageweise buchbar (bestimmte Wochentage, alle Tage, ggf. mit Ferienzeiten)"
+              label="Nur an bestimmten Tagen buchbar (Festivals, Christkindlmärkte, etc.)"
             />
             <Spacer />
             <Checkbox

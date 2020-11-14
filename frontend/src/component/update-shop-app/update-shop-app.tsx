@@ -53,8 +53,6 @@ const UpdateShopApp: React.FC<UpdateShopAppProps> = ({ backToIndex }) => {
                   }
                 }}
               />
-            ) : shop.slotType === "holidays" ? (
-              <Stub next={() => push(`${url}`)}>Just holidays</Stub>
             ) : (
               <ReservableTimes
                 handleSubmit={async ({ holidays, ranges }) => {
