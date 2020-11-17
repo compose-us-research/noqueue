@@ -55,7 +55,6 @@ class ShopConnection {
     const values = [this.name]
     const result = await this.client.query(query, values)
 
-    console.log('selecting', this.name);
     return result.rows[0].data
   }
 
