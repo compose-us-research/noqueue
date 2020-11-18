@@ -60,7 +60,6 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
   const holidays = useShopFetch("/dayslot", { mapper: holidayMapper });
   const timeranges = generateTimerangesFromTimeslots(timeslots);
   const [opened, setOpened] = useState<{ [key: number]: boolean }>({});
-  console.log({ timeranges, holidays });
   const methods = useForm({
     defaultValues: {
       holidays: holidays.map((range) => ({ ...range, id: ++holidayId })),
