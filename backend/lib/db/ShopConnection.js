@@ -108,7 +108,10 @@ class ShopConnection {
     return `
     SELECT "holidays"."start", "holidays"."end"
       FROM "${this.prefix}_dayslots" AS holidays
-     WHERE $1::date <= "holidays"."start" AND "holidays"."end" <= $2::date
+     WHERE (
+             ("holidays"."start" <= $1::date AND $1::date <= "holidays"."end") OR
+             ("holidays"."start" <= $2::date AND $2::date <= "holidays"."end")
+           )
        AND "holidays"."customers" = 0
     `
   }
