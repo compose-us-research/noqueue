@@ -78,7 +78,7 @@ export async function registerTicket({
   const dataToPost = { ...ticket, contact: customer };
   const res = await postData(`${shop["@id"]}/ticket/`, dataToPost);
   const ticketUrl = res.headers.get("location");
-  const fetchedTicket = await fetcher(ticketUrl);
+  const fetchedTicket = await fetcher!(ticketUrl);
   const registeredTicket = toRegisteredTicket(fetchedTicket);
   return { ...dataToPost, ...registeredTicket, ticketUrl, shop };
 }

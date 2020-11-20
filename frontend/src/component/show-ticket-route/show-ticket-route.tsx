@@ -33,7 +33,7 @@ function isLocalTicket(
 }
 
 const ShowTicketRoute: React.FC<ShowTicketRouteProps> = ({ backToIndex }) => {
-  const { ticketId } = useParams();
+  const { ticketId } = useParams<{ ticketId: string }>();
   const { saveTickets, tickets } = useLocalTickets();
   const { path } = useRouteMatch();
   const retrievedTicket = useShopFetch<RegisteredTicket | LocalTicket>(
