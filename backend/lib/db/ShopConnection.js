@@ -130,7 +130,7 @@ class ShopConnection {
           SELECT "end" AS "start" FROM "${this.prefix}_tickets" WHERE "start" >= $1::date AND "end" <= $2::date UNION
 
           -- combine the day range with the start time of the available days
-          SELECT "dayslots"."start" AS "start" FROM "${this.prefix}_dayslots" AS dayslots WHERE dayslots.start <= $1::date AND $1::date <= dayslots.end
+          SELECT "dayslots"."start" AS "start" FROM "${this.prefix}_dayslots" AS "dayslots" WHERE "dayslots"."start" <= $1::date AND $1::date <= "dayslots"."end"
 
           ORDER BY "start"
         ) AS "start", (
@@ -142,8 +142,8 @@ class ShopConnection {
           -- ...and end date
           SELECT "end" AS "raw_end" FROM "${this.prefix}_tickets" WHERE "start" >= $1::date AND "end" <= $2::date UNION
 
-          -- combine the day range with the end time of the timeslot matching the day of week
-          SELECT "dayslots"."end" AS "raw_end" FROM "${this.prefix}_dayslots" AS dayslots WHERE dayslots.start <= $2::date AND $2::date <= dayslots.end
+          -- combine the day range with the end time of the available days
+          SELECT "dayslots"."end" AS "raw_end" FROM "${this.prefix}_dayslots" AS "dayslots" WHERE "dayslots"."start" <= $2::date AND $2::date <= "dayslots"."end"
 
           ORDER BY "raw_end"
         ) AS "end"
@@ -157,8 +157,9 @@ class ShopConnection {
     )
     -- add the dayslots for the built ranges
     LEFT JOIN "${this.prefix}_dayslots" "dayslots" ON (
-      ("dayslots"."start" <= CAST("range"."start" AS date) AND "dayslots"."end" > CAST("range"."start" AS date)) OR
-      ("dayslots"."start" < CAST("range"."end" AS date) AND "dayslots"."end" >= CAST("range"."end" AS date))
+      ("dayslots"."start" <= CAST("range"."start" AS date) AND CAST("range"."start" AS date) <= "dayslots"."end") OR
+      ("dayslots"."start" <= CAST("range"."end" AS date) AND CAST("range"."end" AS date) <= "dayslots"."end") OR
+      (CAST("range"."start" AS date) <= "dayslots"."start" AND "dayslots"."end" <= CAST("range"."end" AS date))
     )
     GROUP BY "range"."start", "range"."end", "allowed", "dayslots"."customers"
     ORDER BY "range"."start"`;
@@ -231,6 +232,9 @@ class ShopConnection {
 
     const rows = result.rows
 
+    console.log(query)
+    console.log({config, values, rows})
+
     if (config.slotType === "times") {
       const dayQuery = this.getHolidaysQuery()
       const dayValues = [start.toISOString(), end.toISOString()]
@@ -243,7 +247,7 @@ class ShopConnection {
         return startsInHoliday || endsInHoliday
       }))
     }
-    
+
     return rows
   }
 
