@@ -55,6 +55,25 @@ function dayslot({ db }) {
         return res.status(400).send(JSON.stringify(error));
       }
 
+      const overlaps = req.body.member.every((member) => {
+        const found = req.body.member.find((slot) => {
+          return (
+            slot !== member &&
+            ((slot.start <= member.start && member.start < slot.end) ||
+              (slot.start < member.end && member.end <= slot.end))
+          );
+        });
+        return !!found;
+      });
+
+      if (overlaps) {
+        const error = {
+          code: 400,
+          message: "InvalidRequest - two day slots overlap",
+        };
+        return res.status(400).send(JSON.stringify(error));
+      }
+
       await db.replaceDayslots(
         req.body.member.map((member) => ({
           customers: member.customers,
