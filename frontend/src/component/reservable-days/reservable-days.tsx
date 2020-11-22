@@ -12,7 +12,7 @@ import DayRangePicker from "../day-range-picker/day-range-picker";
 import Spacer from "../spacer/spacer";
 import Button from "../button/button";
 import { useShopFetch } from "../../service/server/connection";
-import { AvailableSlot } from "../../service/domain";
+import { Dayslot } from "../../service/domain";
 
 interface ReservableDaysProps {
   handleSubmit: SubmitHandler<
@@ -27,9 +27,10 @@ interface ReservableDaysProps {
   >;
 }
 
-const mapper = (data: any): AvailableSlot[] => {
+const mapper = (data: any): Dayslot[] => {
   return data.member.map((m: any) => ({
-    ...m,
+    id: m.id,
+    customers: m.customers,
     end: parseISO(m.end),
     maxDuration: m.max_duration,
     minDuration: m.min_duration,
@@ -42,7 +43,6 @@ const ReservableDays: React.FC<ReservableDaysProps> = ({ handleSubmit }) => {
   const dayslots = useShopFetch("/dayslot", { mapper });
   const methods = useForm({
     defaultValues: {
-      holidays: [],
       ranges: dayslots.map((range) => ({ ...range, id: id++ })),
     },
   });
