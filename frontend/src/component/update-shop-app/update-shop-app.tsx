@@ -11,7 +11,6 @@ import generateTimeslotsFromTimeranges from "../../lib/generate-timeslots-from-t
 import styles from "./update-shop-app.module.css";
 import ReservableDays from "../reservable-days/reservable-days";
 import { updateOpeningDays } from "../../service/server/push";
-import Stub from "../stub/stub";
 import { Dayslot } from "../../service/domain";
 
 interface UpdateShopAppProps {
