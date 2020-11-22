@@ -113,7 +113,7 @@ class ShopConnection {
              ("holidays"."start" <= $2::date AND $2::date <= "holidays"."end")
            )
        AND "holidays"."customers" = 0
-    `
+    `;
   }
 
   getAvailableTicketsQueryByDays () {
@@ -130,7 +130,10 @@ class ShopConnection {
           SELECT "end" AS "start" FROM "${this.prefix}_tickets" WHERE "start" >= $1::date AND "end" <= $2::date UNION
 
           -- combine the day range with the start time of the available days
-          SELECT "dayslots"."start" AS "start" FROM "${this.prefix}_dayslots" AS "dayslots" WHERE "dayslots"."start" <= $1::date AND $1::date <= "dayslots"."end"
+          SELECT "dayslots"."start" AS "start" FROM "${this.prefix}_dayslots" AS "dayslots" WHERE
+                ("dayslots"."start" <= $1::date AND $1::date <= "dayslots"."end") OR
+                ("dayslots"."start" <= $2::date AND $2::date <= "dayslots"."end") OR
+                ($1::date <= "dayslots"."start" AND "dayslots"."end" <= $2::date)
 
           ORDER BY "start"
         ) AS "start", (
@@ -143,7 +146,10 @@ class ShopConnection {
           SELECT "end" AS "raw_end" FROM "${this.prefix}_tickets" WHERE "start" >= $1::date AND "end" <= $2::date UNION
 
           -- combine the day range with the end time of the available days
-          SELECT "dayslots"."end" AS "raw_end" FROM "${this.prefix}_dayslots" AS "dayslots" WHERE "dayslots"."start" <= $2::date AND $2::date <= "dayslots"."end"
+          SELECT "dayslots"."end" AS "raw_end" FROM "${this.prefix}_dayslots" AS "dayslots" WHERE
+                ("dayslots"."start" <= $1::date AND $1::date <= "dayslots"."end") OR
+                ("dayslots"."start" <= $2::date AND $2::date <= "dayslots"."end") OR
+                ($1::date <= "dayslots"."start" AND "dayslots"."end" <= $2::date)
 
           ORDER BY "raw_end"
         ) AS "end"
@@ -152,13 +158,14 @@ class ShopConnection {
     ) AS "range"
     -- add the tickets for the built ranges
     LEFT JOIN "${this.prefix}_tickets" "booked" ON (
-      ("booked"."start" <= "range"."start" AND "booked"."end" > "range"."start") OR
-      ("booked"."start" < "range"."end" AND "booked"."end" >= "range"."end")
+      ("booked"."start" <= "range"."start" AND "range"."start" < "booked"."end") OR
+      ("booked"."start" < "range"."end"    AND "range"."end" <= "booked"."end") OR
+      ("range"."start" <= "booked"."start" AND "booked"."end" <= "range"."end")
     )
     -- add the dayslots for the built ranges
     LEFT JOIN "${this.prefix}_dayslots" "dayslots" ON (
       ("dayslots"."start" <= CAST("range"."start" AS date) AND CAST("range"."start" AS date) <= "dayslots"."end") OR
-      ("dayslots"."start" <= CAST("range"."end" AS date) AND CAST("range"."end" AS date) <= "dayslots"."end") OR
+      ("dayslots"."start" <= CAST("range"."end" AS date)   AND CAST("range"."end" AS date)   <= "dayslots"."end") OR
       (CAST("range"."start" AS date) <= "dayslots"."start" AND "dayslots"."end" <= CAST("range"."end" AS date))
     )
     GROUP BY "range"."start", "range"."end", "allowed", "dayslots"."customers"
@@ -208,7 +215,8 @@ class ShopConnection {
     -- add the tickets for the built ranges
     LEFT JOIN "${this.prefix}_tickets" "booked" ON (
       ("booked"."start" <= "range"."start" AND "range"."start" < "booked"."end") OR
-      ("booked"."start" < "range"."end" AND "range"."end" <= "booked"."end")
+      ("booked"."start" < "range"."end"    AND "range"."end" <= "booked"."end") OR
+      ("range"."start" <= "booked"."start" AND "booked"."end" <= "range"."end")
     )
     -- add the timeslots for the built ranges
     LEFT JOIN "${this.prefix}_timeslots" "timeslots" ON (
@@ -229,11 +237,7 @@ class ShopConnection {
     const query = this.getAvailableTicketsQuery(config.slotType)
     const values = [start.toISOString(), end.toISOString()]
     const result = await this.client.query(query, values)
-
     const rows = result.rows
-
-    console.log(query)
-    console.log({config, values, rows})
 
     if (config.slotType === "times") {
       const dayQuery = this.getHolidaysQuery()
