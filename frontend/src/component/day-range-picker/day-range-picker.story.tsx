@@ -11,7 +11,10 @@ export const Regular = () => {
   const now = new Date();
   return (
     <Form>
-      <DayRangePicker name="days" range={{ id: "1", start: now, end: now }} />
+      <DayRangePicker
+        name="days"
+        range={{ id: "1", duration: { start: now, end: now } }}
+      />
     </Form>
   );
 };

@@ -31,10 +31,11 @@ const mapper = (data: any): Dayslot[] => {
   return data.member.map((m: any) => ({
     id: m.id,
     customers: m.customers,
-    end: parseISO(m.end),
-    maxDuration: m.max_duration,
-    minDuration: m.min_duration,
-    start: parseISO(m.start),
+    duration: { end: parseISO(m.end), start: parseISO(m.start) },
+    days: {
+      maxDuration: m.maxDuration,
+      minDuration: m.minDuration,
+    },
   }));
 };
 

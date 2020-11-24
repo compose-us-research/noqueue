@@ -14,10 +14,11 @@ interface DayRangePickerProps {
   range: {
     id?: any;
     customers?: AmountOfPeople;
-    end?: Date;
-    maxDuration?: AmountOfDays;
-    minDuration?: AmountOfDays;
-    start?: Date;
+    duration?: { end?: Date; start?: Date };
+    days?: {
+      maxDuration?: AmountOfDays;
+      minDuration?: AmountOfDays;
+    };
   };
   name: string;
 }
@@ -31,7 +32,10 @@ const DayRangePicker: React.FC<DayRangePickerProps> = ({
   return (
     <>
       <Controller
-        defaultValue={{ start: range.start, end: range.end }}
+        defaultValue={{
+          start: range.duration?.start,
+          end: range.duration?.end,
+        }}
         name={`${name}.duration`}
         rules={{
           validate: () => {
@@ -75,8 +79,8 @@ const DayRangePicker: React.FC<DayRangePickerProps> = ({
       <span className={styles.label}>Mögliche Dauer</span>
       <Controller
         defaultValue={{
-          minDuration: range.minDuration,
-          maxDuration: range.maxDuration,
+          minDuration: range.days?.minDuration,
+          maxDuration: range.days?.maxDuration,
         }}
         name={`${name}.days`}
         rules={{
