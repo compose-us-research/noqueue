@@ -57,10 +57,18 @@ function dayslot({ db }) {
 
       const overlaps = req.body.member.every((member) => {
         const found = req.body.member.find((slot) => {
+          const isSame = slot === member;
+          if (isSame) {
+            return false;
+          }
+
           return (
-            slot !== member &&
-            ((slot.start <= member.start && member.start < slot.end) ||
-              (slot.start < member.end && member.end <= slot.end))
+            (+new Date(slot.start) <= +new Date(member.start) &&
+              +new Date(member.start) < +new Date(slot.end)) ||
+            (+new Date(slot.start) < +new Date(member.end) &&
+              +new Date(member.end) <= +new Date(slot.end)) ||
+            (+new Date(member.start) <= +new Date(slot.start) &&
+              +new Date(slot.end) <= +new Date(member.end))
           );
         });
         return !!found;
