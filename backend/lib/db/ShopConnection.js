@@ -159,13 +159,13 @@ class ShopConnection {
     -- add the tickets for the built ranges
     LEFT JOIN "${this.prefix}_tickets" "booked" ON (
       ("booked"."start" <= "range"."start" AND "range"."start" < "booked"."end") OR
-      ("booked"."start" < "range"."end"    AND "range"."end" <= "booked"."end") OR
+      ("booked"."start" <  "range"."end"   AND "range"."end"  <= "booked"."end") OR
       ("range"."start" <= "booked"."start" AND "booked"."end" <= "range"."end")
     )
     -- add the dayslots for the built ranges
     LEFT JOIN "${this.prefix}_dayslots" "dayslots" ON (
-      ("dayslots"."start" <= CAST("range"."start" AS date) AND CAST("range"."start" AS date) <= "dayslots"."end") OR
-      ("dayslots"."start" <= CAST("range"."end" AS date)   AND CAST("range"."end" AS date)   <= "dayslots"."end") OR
+      ("dayslots"."start" <= CAST("range"."start" AS date) AND CAST("range"."start" AS date) <  "dayslots"."end") OR
+      ("dayslots"."start" <  CAST("range"."end" AS date)   AND CAST("range"."end" AS date)   <= "dayslots"."end") OR
       (CAST("range"."start" AS date) <= "dayslots"."start" AND "dayslots"."end" <= CAST("range"."end" AS date))
     )
     GROUP BY "range"."start", "range"."end", "allowed", "dayslots"."customers"
