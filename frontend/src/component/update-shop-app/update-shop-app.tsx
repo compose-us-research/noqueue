@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
+import { differenceInDays } from "date-fns";
 
 import UpdateShop from "../update-shop/update-shop";
 import Spacer from "../spacer/spacer";
@@ -39,9 +40,18 @@ const UpdateShopApp: React.FC<UpdateShopAppProps> = ({ backToIndex }) => {
                     start: range.duration.start,
                     end: range.duration.end,
                     minDuration: range.days.minDuration,
-                    maxDuration: range.days.maxDuration,
+                    maxDuration: Math.min(
+                      range.days.maxDuration,
+                      Math.abs(
+                        differenceInDays(
+                          range.duration.start,
+                          range.duration.end
+                        )
+                      ) + 1
+                    ),
                     customers: range.customers,
                   }));
+                  console.log({ toSubmit });
                   try {
                     await updateOpeningDays(shop, toSubmit);
                     push(`${url}/share`);

@@ -9,38 +9,58 @@ import ControlledRangeSlider from "../controlled-range-slider/controlled-range-s
 import Spacer from "../spacer/spacer";
 import styles from "./day-range-picker.module.css";
 
+export interface DayRange {
+  id?: any;
+  customers: AmountOfPeople;
+  duration: { end: Date; start: Date };
+  days: {
+    maxDuration: AmountOfDays;
+    minDuration: AmountOfDays;
+  };
+}
+
 interface DayRangePickerProps {
   error?: any;
-  range: {
-    id?: any;
-    customers?: AmountOfPeople;
-    duration?: { end?: Date; start?: Date };
-    days?: {
-      maxDuration?: AmountOfDays;
-      minDuration?: AmountOfDays;
-    };
-  };
+  range: DayRange;
   name: string;
+  checkForOverlaps?: DayRange[];
 }
 
 const DayRangePicker: React.FC<DayRangePickerProps> = ({
   error,
   name,
   range,
+  checkForOverlaps,
 }) => {
   const { getValues, watch } = useFormContext();
   return (
     <>
+      {error ? (
+        <div>error! {JSON.stringify(error, null, 2)}</div>
+      ) : (
+        "no error on validation"
+      )}
       <Controller
         defaultValue={{
-          start: range.duration?.start,
-          end: range.duration?.end,
+          start: range.duration.start,
+          end: range.duration.end,
         }}
         name={`${name}.duration`}
         rules={{
           validate: () => {
             const value = getValues(`${name}.duration`);
-            return value.start < value.end;
+            const startBeforeEnd = value.start < value.end;
+            const hasOverlaps = checkForOverlaps
+              ? checkForOverlaps.some((other) => {
+                  return (
+                    (other.duration.start <= value.start &&
+                      value.start <= other.duration.end) ||
+                    (other.duration.start <= value.end &&
+                      value.end <= other.duration.end)
+                  );
+                })
+              : false;
+            return startBeforeEnd && !hasOverlaps;
           },
         }}
         render={({ onChange, value }) => (
@@ -79,22 +99,27 @@ const DayRangePicker: React.FC<DayRangePickerProps> = ({
       <span className={styles.label}>Mögliche Dauer</span>
       <Controller
         defaultValue={{
-          minDuration: range.days?.minDuration,
-          maxDuration: range.days?.maxDuration,
+          minDuration: range.days.minDuration,
+          maxDuration: Math.min(
+            range.days.maxDuration,
+            Math.abs(
+              differenceInDays(range.duration.start, range.duration.end)
+            ) + 1
+          ),
         }}
         name={`${name}.days`}
-        rules={{
-          validate: () => {
-            const duration = getValues(`${name}.duration`);
-            const amountOfDays = getValues(`${name}.days`);
+        // rules={{
+        //   validate: () => {
+        //     const duration = getValues(`${name}.duration`);
+        //     const amountOfDays = getValues(`${name}.days`);
 
-            return (
-              1 <= amountOfDays.minDuration &&
-              amountOfDays.maxDuration <=
-                Math.abs(differenceInDays(duration.start, duration.end)) + 1
-            );
-          },
-        }}
+        //     return (
+        //       1 <= amountOfDays.minDuration &&
+        //       amountOfDays.maxDuration <=
+        //         Math.abs(differenceInDays(duration.start, duration.end)) + 1
+        //     );
+        //   },
+        // }}
         render={({ onChange, value }) => {
           const duration = watch(`${name}.duration`);
           const hasDuration = duration?.start && duration?.end;
@@ -115,7 +140,10 @@ const DayRangePicker: React.FC<DayRangePickerProps> = ({
                 }
               }}
               step={1}
-              value={[value.minDuration || 1, value.maxDuration || 1]}
+              value={[
+                value.minDuration || 1,
+                Math.min(value.maxDuration, max) || 1,
+              ]}
             />
           );
         }}
