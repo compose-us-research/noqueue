@@ -55,6 +55,22 @@ function dayslot({ db }) {
         return res.status(400).send(JSON.stringify(error));
       }
 
+      const datesOnly = req.body.member.every((member) => {
+        return (
+          /^\d{4,}\-\d\d?\-\d\d?$/.test(member.start) &&
+          /^\d{4,}\-\d\d?\-\d\d?$/.test(member.end)
+        );
+      });
+
+      if (datesOnly) {
+        const error = {
+          code: 400,
+          message:
+            "InvalidRequest - expecting dates only without times for dayslots",
+        };
+        return res.status(400).send(JSON.stringify(error));
+      }
+
       const overlaps = req.body.member.every((member) => {
         const found = req.body.member.find((slot) => {
           const isSame = slot === member;
