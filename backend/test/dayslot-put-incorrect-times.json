@@ -6,13 +6,6 @@
       "minDuration": 1,
       "maxDuration": 1,
       "customers": 5
-    },
-    {
-      "start": "2020-11-23T23:00:00.000Z",
-      "end": "2020-11-25T23:00:00.000Z",
-      "minDuration": 1,
-      "maxDuration": 1,
-      "customers": 3
     }
   ]
 }

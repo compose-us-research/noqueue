@@ -2,16 +2,16 @@
   "member": [
     {
       "start": "2020-11-20",
-      "end": "2020-11-23",
+      "end": "2020-12-04",
       "minDuration": 1,
-      "maxDuration": 2,
+      "maxDuration": 1,
       "customers": 5
     },
     {
-      "start": "2020-11-24",
-      "end": "2020-11-28",
+      "start": "2020-11-23",
+      "end": "2020-11-25",
       "minDuration": 1,
-      "maxDuration": 3,
+      "maxDuration": 1,
       "customers": 3
     }
   ]
