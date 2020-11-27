@@ -62,7 +62,7 @@ function dayslot({ db }) {
         );
       });
 
-      if (datesOnly) {
+      if (!datesOnly) {
         const error = {
           code: 400,
           message:
@@ -71,7 +71,7 @@ function dayslot({ db }) {
         return res.status(400).send(JSON.stringify(error));
       }
 
-      const overlaps = req.body.member.every((member) => {
+      const overlaps = req.body.member.some((member) => {
         const found = req.body.member.find((slot) => {
           const isSame = slot === member;
           if (isSame) {
@@ -80,11 +80,9 @@ function dayslot({ db }) {
 
           return (
             (+new Date(slot.start) <= +new Date(member.start) &&
-              +new Date(member.start) < +new Date(slot.end)) ||
-            (+new Date(slot.start) < +new Date(member.end) &&
-              +new Date(member.end) <= +new Date(slot.end)) ||
-            (+new Date(member.start) <= +new Date(slot.start) &&
-              +new Date(slot.end) <= +new Date(member.end))
+              +new Date(member.start) <= +new Date(slot.end)) ||
+            (+new Date(slot.start) <= +new Date(member.end) &&
+              +new Date(member.end) <= +new Date(slot.end))
           );
         });
         return !!found;
