@@ -19,6 +19,8 @@ export const Regular = () => {
           days: { minDuration: 1, maxDuration: 1 },
           duration: { start: now, end: now },
         }}
+        checkForOverlaps="others"
+        fields={[]}
       />
     </Form>
   );

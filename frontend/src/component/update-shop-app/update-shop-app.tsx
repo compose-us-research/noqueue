@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
-import { differenceInDays } from "date-fns";
+import { differenceInDays, format } from "date-fns";
 
 import UpdateShop from "../update-shop/update-shop";
 import Spacer from "../spacer/spacer";
@@ -37,8 +37,8 @@ const UpdateShopApp: React.FC<UpdateShopAppProps> = ({ backToIndex }) => {
               <ReservableDays
                 handleSubmit={async ({ ranges }) => {
                   const toSubmit: Dayslot[] = ranges.map((range) => ({
-                    start: range.duration.start,
-                    end: range.duration.end,
+                    start: format(range.duration.start, "yyyy-MM-dd"),
+                    end: format(range.duration.end, "yyyy-MM-dd"),
                     minDuration: range.days.minDuration,
                     maxDuration: Math.min(
                       range.days.maxDuration,

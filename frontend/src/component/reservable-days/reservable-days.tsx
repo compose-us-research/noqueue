@@ -5,7 +5,6 @@ import {
   useForm,
   FormProvider,
 } from "react-hook-form";
-import { parseISO } from "date-fns";
 
 import styles from "./reservable-days.module.css";
 import DayRangePicker, { DayRange } from "../day-range-picker/day-range-picker";
@@ -30,7 +29,7 @@ const mapper = (data: any): DayRange[] => {
   return data.member.map((m: any) => ({
     // id: m.id,
     customers: m.customers,
-    duration: { end: parseISO(m.end), start: parseISO(m.start) },
+    duration: { end: new Date(m.end), start: new Date(m.start) },
     days: {
       maxDuration: m.maxDuration,
       minDuration: m.minDuration,
@@ -62,6 +61,8 @@ const ReservableDays: React.FC<ReservableDaysProps> = ({ handleSubmit }) => {
                   error={methods.errors.ranges?.[index]}
                   name={`ranges[${index}]`}
                   range={range as DayRange}
+                  checkForOverlaps="ranges"
+                  fields={(fields as unknown) as DayRange[]}
                 />
                 <Button onClick={() => remove(index)}>Löschen</Button>
                 <Spacer />

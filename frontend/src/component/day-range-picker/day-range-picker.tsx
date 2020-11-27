@@ -2,6 +2,7 @@ import React from "react";
 import DatePicker from "react-datepicker";
 import { Controller, useFormContext } from "react-hook-form";
 import { differenceInDays } from "date-fns";
+import cn from "classnames";
 import "react-datepicker/dist/react-datepicker.css";
 import ControlledTextField from "../controlled-text-field/controlled-text-field";
 import { AmountOfDays, AmountOfPeople } from "../../service/domain";
@@ -23,7 +24,8 @@ interface DayRangePickerProps {
   error?: any;
   range: DayRange;
   name: string;
-  checkForOverlaps?: DayRange[];
+  checkForOverlaps: string;
+  fields: DayRange[];
 }
 
 const DayRangePicker: React.FC<DayRangePickerProps> = ({
@@ -31,15 +33,11 @@ const DayRangePicker: React.FC<DayRangePickerProps> = ({
   name,
   range,
   checkForOverlaps,
+  fields,
 }) => {
-  const { getValues, watch } = useFormContext();
+  const { control, getValues, watch } = useFormContext();
   return (
-    <>
-      {error ? (
-        <div>error! {JSON.stringify(error, null, 2)}</div>
-      ) : (
-        "no error on validation"
-      )}
+    <div className={cn(styles.root, error && styles.error)}>
       <Controller
         defaultValue={{
           start: range.duration.start,
@@ -49,17 +47,22 @@ const DayRangePicker: React.FC<DayRangePickerProps> = ({
         rules={{
           validate: () => {
             const value = getValues(`${name}.duration`);
-            const startBeforeEnd = value.start < value.end;
-            const hasOverlaps = checkForOverlaps
-              ? checkForOverlaps.some((other) => {
-                  return (
-                    (other.duration.start <= value.start &&
-                      value.start <= other.duration.end) ||
-                    (other.duration.start <= value.end &&
-                      value.end <= other.duration.end)
-                  );
-                })
-              : false;
+            const others = fields.reduce<DayRange[]>((acc, x, index) => {
+              if (x.id === range.id) return acc;
+              return [
+                ...acc,
+                watch(`${checkForOverlaps}[${index}]`) || fields[index],
+              ];
+            }, []);
+            const startBeforeEnd = value.start <= value.end;
+            const hasOverlaps = others.some((other: DayRange) => {
+              return (
+                (other.duration.start <= value.start &&
+                  value.start <= other.duration.end) ||
+                (other.duration.start <= value.end &&
+                  value.end <= other.duration.end)
+              );
+            });
             return startBeforeEnd && !hasOverlaps;
           },
         }}
@@ -68,7 +71,12 @@ const DayRangePicker: React.FC<DayRangePickerProps> = ({
             endDate={value.end}
             inline
             onChange={([start, end]: any) => {
-              onChange({ ...value, start, end });
+              onChange({
+                ...value,
+                start,
+                end,
+              });
+              control.trigger();
             }}
             selectsRange
             startDate={value.start}
@@ -148,7 +156,7 @@ const DayRangePicker: React.FC<DayRangePickerProps> = ({
           );
         }}
       />
-    </>
+    </div>
   );
 };
 
