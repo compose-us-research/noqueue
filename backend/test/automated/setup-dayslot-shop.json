@@ -1,0 +1,13 @@
+{
+  "name": "automated-test-shop",
+  "config": {
+    "address": {
+      "streetAddress": "Am Bahnhofsplatz 1",
+      "postalCode": 94032,
+      "city": "Passau"
+    },
+    "name": "Automated Test Shop",
+    "mail": "betatester@platzhalter.io",
+    "slotType": "days"
+  }
+}

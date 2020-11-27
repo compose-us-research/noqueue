@@ -1,0 +1,8 @@
+{
+  "start": "2020-06-25T09:00:00",
+  "end": "2020-06-25T09:30:00",
+  "contact": {
+    "name": "Max Mustermann",
+    "email": "max@mustermann.example.org"
+  }
+}
