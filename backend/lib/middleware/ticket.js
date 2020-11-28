@@ -12,11 +12,28 @@ function ticket ({ db }) {
 
   router.post('/', bodyParser.json(), async (req, res, next) => {
     try {
+      const { start, end, contact } = req.body
+
+      const timeframe = await db.availableTickets({
+        start: new Date(start),
+        end: new Date(end)
+      })
+      const hasAvailableSpot = timeframe.some(spot => {
+        return spot.available > 0
+      })
+      if (!hasAvailableSpot) {
+        const error = {
+          code: 400,
+          message: "InvalidRequest - no available slot for ticket"
+        }
+        return res.status(400).json(error)
+      }
+
       const result = await db.addTicket({
         id: uuid(),
-        start: req.body.start,
-        end: req.body.end,
-        contact: req.body.contact
+        start,
+        end,
+        contact
       })
 
       res
