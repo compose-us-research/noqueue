@@ -3,7 +3,7 @@ const migrations = [
   {
     version: 1,
     update: async (client) => {
-      client.query("INSERT INTO version (current_version) VALUES (1)");
+      await client.query("INSERT INTO version (current_version) VALUES (1)");
     },
   },
   {
