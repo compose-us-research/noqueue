@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 
 import useLocalTickets from "../../service/tickets/use-local-tickets";
 import { useParams, Switch, Route, useRouteMatch } from "react-router-dom";
@@ -52,13 +52,17 @@ const ShowTicketRoute: React.FC<ShowTicketRouteProps> = ({ backToIndex }) => {
       refreshWhenOffline: false,
     },
   });
-  const ticket = isLocalTicket(retrievedTicket)
-    ? retrievedTicket
-    : {
-        ...retrievedTicket,
-        shop,
-        ticketUrl: `${shop["@id"]}/ticket/${retrievedTicket.id}`,
-      };
+  const ticket = useMemo(
+    () =>
+      isLocalTicket(retrievedTicket)
+        ? retrievedTicket
+        : {
+            ...retrievedTicket,
+            shop,
+            ticketUrl: `${shop["@id"]}/ticket/${retrievedTicket.id}`,
+          },
+    [retrievedTicket, shop]
+  );
 
   useEffect(() => {
     if (!tickets[ticket.id]) {
