@@ -66,8 +66,8 @@ const UpdateShopApp: React.FC<UpdateShopAppProps> = ({ backToIndex }) => {
               <ReservableTimes
                 handleSubmit={async ({ holidays, ranges }) => {
                   const toSubmit: Dayslot[] = holidays.map((item) => ({
-                    start: item.range.start,
-                    end: item.range.end,
+                    start: format(item.range.start, "yyyy-MM-dd"),
+                    end: format(item.range.end, "yyyy-MM-dd"),
                     minDuration: 0,
                     maxDuration: 0,
                     customers: 0,
