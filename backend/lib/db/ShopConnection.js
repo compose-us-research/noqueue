@@ -109,8 +109,8 @@ class ShopConnection {
     SELECT "holidays"."start", "holidays"."end"
       FROM "${this.prefix}_dayslots" AS holidays
      WHERE (
-             ("holidays"."start" <= $1::date AND $1::date <= "holidays"."end") OR
-             ("holidays"."start" <= $2::date AND $2::date <= "holidays"."end")
+             ($1::date <= "holidays"."start" AND "holidays"."start" <= $2::date) OR
+             ($1::date <= "holidays"."end" AND "holidays"."end" <= $2::date)
            )
        AND "holidays"."customers" = 0
     `;
@@ -246,8 +246,9 @@ class ShopConnection {
 
       const holidays = dayResult.rows
       return rows.filter(r => !holidays.find(h => {
-        const startsInHoliday = h.start <= r.start && r.start <= h.end
-        const endsInHoliday = h.start <= r.end && r.end <= h.end
+        const holidayEnd = (+h.end + (24 * 60 * 60 * 1000))
+        const startsInHoliday = +h.start <= +r.start && +r.start <= holidayEnd
+        const endsInHoliday = +h.start <= +r.end && +r.end <= holidayEnd
         return startsInHoliday || endsInHoliday
       }))
     }
