@@ -85,10 +85,10 @@ these commands in them:
 3. `docker-compose -f dev-docker-compose.yml run --service-ports --rm frontend bash` -
    runs the frontend container: In the shell, have a look into `/app/frontend`
    and run one of the frontend scripts after installing the dependencies
-   (`yarn`). `yarn storybook` starts Storybook and allows you to change the
-   various components with hot module reload. `yarn start` starts a development
-   server to see changes live in the app. Since the live backend will send you
-   the URL of the backend service when selecting a shop, the URL might change
-   and as a result changes might not be visible. Use the local URL to check
-   this. With `yarn build`, a static version of the page will be built and the
-   live backend is going to use that.
+   (`npm ci`). `npm run storybook` starts Storybook and allows you to change the
+   various components with hot module reload. `npm run start` starts a
+   development server to see changes live in the app. Since the live backend
+   will send you the URL of the backend service when selecting a shop, the URL
+   might change and as a result changes might not be visible. Use the local URL
+   to check this. With `npm run build`, a static version of the page will be
+   built and the live backend is going to use that.
