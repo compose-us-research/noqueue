@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useForm, FormContext } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 
 import { ShopConfig } from "../../service/domain";
 import Button from "../button/button";
@@ -8,6 +8,7 @@ import Spacer from "../spacer/spacer";
 import TextField from "../text-field/text-field";
 
 import styles from "./update-shop.module.css";
+import Radio from "../radio/radio";
 
 interface UpdateShopProps {
   onSave: (newShop: ShopConfig) => void;
@@ -26,7 +27,7 @@ const UpdateShop: React.FC<UpdateShopProps> = ({ onSave, shop }) => {
     <div className={styles.root}>
       <h2>Bearbeite Dein Geschäft auf Platzhalter.io</h2>
       <form onSubmit={methods.handleSubmit(handleSubmit)}>
-        <FormContext {...methods}>
+        <FormProvider {...methods}>
           <div className={styles.fields}>
             <TextField
               name="name"
@@ -64,6 +65,18 @@ const UpdateShop: React.FC<UpdateShopProps> = ({ onSave, shop }) => {
               required
             />
             <Spacer />
+            <Radio
+              name="slotType"
+              value="times"
+              label="Es gibt reguläre Öffnungszeiten pro Tag"
+            />
+            <Spacer />
+            <Radio
+              name="slotType"
+              value="days"
+              label="Nur an bestimmten Tagen buchbar (Festivals, Christkindlmärkte, etc.)"
+            />
+            <Spacer />
             <Checkbox
               name="needsRegistration"
               label="Das Geschäft unterliegt der Aufzeichnungspflicht, um im Falle einer Infektion Kontaktpersonen ausfindig machen zu können."
@@ -71,7 +84,7 @@ const UpdateShop: React.FC<UpdateShopProps> = ({ onSave, shop }) => {
             <Spacer />
             <Button type="submit">Lege Deine Öffnungszeiten fest</Button>
           </div>
-        </FormContext>
+        </FormProvider>
       </form>
     </div>
   );

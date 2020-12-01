@@ -1,0 +1,65 @@
+/* elements */
+.root {
+  align-items: center;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  flex-flow: wrap;
+  max-width: 600px;
+  padding: 25px;
+  width: 100%;
+}
+
+.fields > * {
+  width: 100%;
+}
+
+.range {
+}
+
+.expander {
+}
+
+.remover {
+  padding: 25px;
+}
+
+.details {
+  display: none;
+}
+
+.timeframe {
+  display: inline-flex;
+  justify-content: stretch;
+}
+
+.timeframe > * {
+  flex-grow: 1;
+}
+
+.addButton {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  width: 100%;
+}
+
+.submit {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* modifiers */
+
+.details.open {
+  display: block;
+}

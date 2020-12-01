@@ -11,7 +11,7 @@ import styles from "./timerange-setter.module.css";
 import Button from "../button/button";
 import { Timerange } from "../../service/domain";
 import daysToString from "../../lib/days-to-string/days-to-string";
-import { useFormContext, Validate } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import ErrorBoundary from "../error-boundary/error-boundary";
 import { checkTime } from "../../lib/calculate-max-duration/calculate-max-duration";
 
@@ -42,11 +42,11 @@ const TimerangeSetter: React.FC<TimerangeSetterProps> = ({
   const start = watch(`${prefix}.start`, range.start);
   const end = watch(`${prefix}.end`, range.end);
   const duration = watch(`${prefix}.duration`, range.duration);
-  const greaterThanZero = useCallback<Validate>(
+  const greaterThanZero = useCallback(
     (value: string) => parseInt(value, 10) > 0,
     []
   );
-  const checkTimeValidator = useCallback<Validate>((value) => {
+  const checkTimeValidator = useCallback((value: string) => {
     try {
       checkTime(value);
       return true;

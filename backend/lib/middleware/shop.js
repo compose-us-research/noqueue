@@ -1,6 +1,7 @@
 const absoluteUrl = require('absolute-url')
 const express = require('express')
 const bodyParser = require('body-parser')
+const dayslot = require('./dayslot')
 const ticket = require('./ticket')
 const timeslot = require('./timeslot')
 
@@ -26,8 +27,11 @@ function shop ({ db }) {
 
   router.delete('/', async (req, res, next) => {
     await db.delete()
+
+    res.end()
   })
 
+  router.use('/dayslot', dayslot({ db }))
   router.use('/ticket', ticket({ db }))
   router.use('/timeslot', timeslot({ db }))
 

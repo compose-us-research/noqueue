@@ -1,0 +1,47 @@
+version: "3"
+
+volumes:
+  platzhalterio-data:
+
+services:
+  platzhalterio-frontend:
+    image: node:14
+    container_name: platzhalterio_frontend
+    environment:
+      NODE_ENV: "development"
+      REACT_APP_BASE_URL: "http://localhost:9090"
+    ports:
+      - "0.0.0.0:9000:3000"
+      - "0.0.0.0:9009:9009"
+    volumes:
+      - ./backend:/app/backend
+      - ./frontend:/app/frontend
+
+  platzhalterio:
+    container_name: platzhalterio
+    image: node:14
+    restart: unless-stopped
+    depends_on:
+      - platzhalterio-db
+    environment:
+      DB_PASSWORD: "abcd"
+      DB_HOST: "platzhalterio-db"
+      NODE_ENV: "development"
+    links:
+      - "platzhalterio-db:platzhalterio-db"
+    ports:
+      - "0.0.0.0:9090:80"
+    volumes:
+      - ./backend:/app/backend
+      - ./frontend:/app/frontend
+
+  platzhalterio-db:
+    container_name: platzhalterio_db
+    image: postgres:12
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: "abcd"
+    ports:
+      - "0.0.0.0:5432:5432"
+    volumes:
+      - platzhalterio-data:/var/lib/postgresql/data

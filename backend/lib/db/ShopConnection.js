@@ -55,7 +55,6 @@ class ShopConnection {
     const values = [this.name]
     const result = await this.client.query(query, values)
 
-    console.log('selecting', this.name);
     return result.rows[0].data
   }
 
@@ -94,61 +93,209 @@ class ShopConnection {
     return result.rows[0]
   }
 
+  getAvailableTicketsQuery (slotType) {
+    if (slotType === "days" || slotType === "holidays") {
+      return this.getAvailableTicketsQueryByDays();
+    }
+    // Holidays are currently set in the dayslots, where timeslots are used for
+    // regular slots during the day (or a full day, if from/to times are set to
+    // the same time of day). The plan is to merge both queries and filter 
+    // holidays out at the timeslots.
+    return this.getAvailableTicketsQueryByTimes();
+  }
+
+  getHolidaysQuery () {
+    return `
+    SELECT "holidays"."start", "holidays"."end"
+      FROM "${this.prefix}_dayslots" AS holidays
+     WHERE (
+             ($1::date <= "holidays"."start" AND "holidays"."start" <= $2::date) OR
+             ($1::date <= "holidays"."end" AND "holidays"."end" <= $2::date)
+           )
+       AND "holidays"."customers" = 0
+    `;
+  }
+
+  getAvailableTicketsQueryByDays () {
+    return `
+    SELECT "range"."start", "range"."end", COUNT("booked".*)::integer AS "reserved", COALESCE("dayslots"."customers", 0) AS "allowed", COALESCE("dayslots"."customers", 0) - COUNT("booked".*)::integer AS "available" FROM (
+      -- combine the start and end timestamps to ranges 
+      SELECT "start", MIN("raw_end") AS "end" FROM (
+          -- the next 3 selects combine all possible start timestamps for varying number of allowed and reserved customers 
+
+          -- find all tickets issued in the given time range and get start...
+          SELECT "start" FROM "${this.prefix}_tickets" WHERE "start" >= $1::date AND "end" <= $2::date UNION
+
+          -- ...and end date
+          SELECT "end" AS "start" FROM "${this.prefix}_tickets" WHERE "start" >= $1::date AND "end" <= $2::date UNION
+
+          -- combine the day range with the start time of the available days
+          SELECT "dayslots"."start" AS "start" FROM "${this.prefix}_dayslots" AS "dayslots" WHERE
+                ("dayslots"."start" <= $1::date AND $1::date <= "dayslots"."end") OR
+                ("dayslots"."start" <= $2::date AND $2::date <= "dayslots"."end") OR
+                ($1::date <= "dayslots"."start" AND "dayslots"."end" <= $2::date)
+
+          ORDER BY "start"
+        ) AS "start", (
+          -- the next 3 selects combine all possible end timestamps for varying number of allowed and reserved customers
+
+          -- find all tickets issued in the given time range and get start...
+          SELECT "start" AS "raw_end" FROM "${this.prefix}_tickets" WHERE "start" >= $1::date AND "end" <= $2::date UNION
+
+          -- ...and end date
+          SELECT "end" AS "raw_end" FROM "${this.prefix}_tickets" WHERE "start" >= $1::date AND "end" <= $2::date UNION
+
+          -- combine the day range with the end time of the available days
+          SELECT "dayslots"."end" AS "raw_end" FROM "${this.prefix}_dayslots" AS "dayslots" WHERE
+                ("dayslots"."start" <= $1::date AND $1::date <= "dayslots"."end") OR
+                ("dayslots"."start" <= $2::date AND $2::date <= "dayslots"."end") OR
+                ($1::date <= "dayslots"."start" AND "dayslots"."end" <= $2::date)
+
+          ORDER BY "raw_end"
+        ) AS "end"
+      WHERE "start" < "raw_end"
+      GROUP BY "start"
+    ) AS "range"
+    -- add the tickets for the built ranges
+    LEFT JOIN "${this.prefix}_tickets" "booked" ON (
+      ("booked"."start" <= "range"."start" AND "range"."start" < "booked"."end") OR
+      ("booked"."start" <  "range"."end"   AND "range"."end"  <= "booked"."end") OR
+      ("range"."start" <= "booked"."start" AND "booked"."end" <= "range"."end")
+    )
+    -- add the dayslots for the built ranges
+    LEFT JOIN "${this.prefix}_dayslots" "dayslots" ON (
+      ("dayslots"."start" <= CAST("range"."start" AS date) AND CAST("range"."start" AS date) <  "dayslots"."end") OR
+      ("dayslots"."start" <  CAST("range"."end" AS date)   AND CAST("range"."end" AS date)   <= "dayslots"."end") OR
+      (CAST("range"."start" AS date) <= "dayslots"."start" AND "dayslots"."end" <= CAST("range"."end" AS date))
+    )
+    GROUP BY "range"."start", "range"."end", "allowed", "dayslots"."customers"
+    ORDER BY "range"."start"`;
+  }
+
+  getAvailableTicketsQueryByTimes () {
+    return `
+    SELECT "range"."start", "range"."end", COUNT("booked".*)::integer AS "reserved", COALESCE("timeslots"."customers", 0) AS "allowed", COALESCE("timeslots"."customers", 0) - COUNT("booked".*)::integer AS "available" FROM (
+      -- combine the start and end timestamps to ranges 
+      SELECT "start", MIN("raw_end") AS "end" FROM (
+          -- the next 3 selects combine all possible start timestamps for varying number of allowed and reserved customers 
+
+          -- find all tickets issued in the given time range and get start...
+          SELECT "start" FROM "${this.prefix}_tickets" WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+
+          -- ...and end date
+          SELECT "end" AS "start" FROM "${this.prefix}_tickets" WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+
+          -- combine the day range with the start time of the timeslot matching the day of week
+          SELECT "range"."day" + "timeslots"."start" AS "start" FROM (
+            -- create timestamps for each day from start to end with the time 00:00:00.000 
+            SELECT generate_series AS "day" FROM generate_series(($1::date)::timestamp, $2, '24 hours')
+          ) AS "range", "${this.prefix}_timeslots" AS timeslots WHERE timeslots.day = EXTRACT(DOW FROM "range"."day")
+
+          ORDER BY "start"
+        ) AS "start", (
+          -- the next 3 selects combine all possible end timestamps for varying number of allowed and reserved customers
+
+          -- find all tickets issued in the given time range and get start...
+          SELECT "start" AS "raw_end" FROM "${this.prefix}_tickets" WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+
+          -- ...and end date
+          SELECT "end" AS "raw_end" FROM "${this.prefix}_tickets" WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
+
+          -- combine the day range with the end time of the timeslot matching the day of week
+          SELECT "range"."day" + "timeslots"."end" AS "end" FROM (
+            -- create timestamps for each day from start to end with the time 00:00:00.000
+            SELECT generate_series AS "day" FROM generate_series(($1::date)::timestamp, $2, '24 hours')
+          ) AS "range", "${this.prefix}_timeslots" AS timeslots WHERE timeslots.day = EXTRACT(DOW FROM "range"."day")
+
+          ORDER BY "raw_end"
+        ) AS "end"
+      WHERE "start" < "raw_end"
+      GROUP BY "start"
+    ) AS "range"
+    -- add the tickets for the built ranges
+    LEFT JOIN "${this.prefix}_tickets" "booked" ON (
+      ("booked"."start" <= "range"."start" AND "range"."start" < "booked"."end") OR
+      ("booked"."start" < "range"."end"    AND "range"."end" <= "booked"."end") OR
+      ("range"."start" <= "booked"."start" AND "booked"."end" <= "range"."end")
+    )
+    -- add the timeslots for the built ranges
+    LEFT JOIN "${this.prefix}_timeslots" "timeslots" ON (
+      ("timeslots"."start" = "timeslots"."end" AND (
+        ("timeslots"."start" <= CAST("range"."start" AS time) AND "timeslots"."day" = EXTRACT(DOW FROM "range"."start")) OR
+        (CAST("range"."end" AS time) <= "timeslots"."end" AND "timeslots"."day" = EXTRACT(DOW FROM "range"."end"))
+      )) OR ("timeslots"."start" <> "timeslots"."end" AND (
+        ("timeslots"."start" <= CAST("range"."start" AS time) AND CAST("range"."start" AS time) < "timeslots"."end" AND "timeslots"."day" = EXTRACT(DOW FROM "range"."start")) OR
+        ("timeslots"."start" < CAST("range"."end" AS time) AND CAST("range"."end" AS time) <= "timeslots"."end" AND "timeslots"."day" = EXTRACT(DOW FROM "range"."end"))
+      ))
+    )
+    GROUP BY "range"."start", "range"."end", "allowed", "timeslots"."customers"
+    ORDER BY "range"."start"`;
+  }
+
   async availableTickets ({ start, end }) {
-    const query = `
-SELECT "range"."start", "range"."end", COUNT("booked".*)::integer AS "reserved", COALESCE("timeslots"."customers", 0) AS "allowed", COALESCE("timeslots"."customers", 0) - COUNT("booked".*)::integer AS "available" FROM (
-  -- combine the start and end timestamps to ranges 
-  SELECT "start", MIN("raw_end") AS "end" FROM (
-      -- the next 3 selects combine all possible start timestamps for varying number of allowed and reserved customers 
-  
-      -- find all tickets issued in the given time range and get start...
-      SELECT "start" FROM "${this.prefix}_tickets" WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
-
-      -- ...and end date
-      SELECT "end" AS "start" FROM "${this.prefix}_tickets" WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
-
-      -- combine the day range with the start time of the timeslot matching the day of week
-      SELECT "range"."day" + "timeslots"."start" AS "start" FROM (
-        -- create timestamps for each day from start to end with the time 00:00:00.000 
-        SELECT generate_series AS "day" FROM generate_series(($1::date)::timestamp, $2, '24 hours')
-      ) AS "range", "${this.prefix}_timeslots" AS timeslots WHERE timeslots.day = EXTRACT(DOW FROM "range"."day")
-
-      ORDER BY "start"
-    ) AS "start", (
-      -- the next 3 selects combine all possible end timestamps for varying number of allowed and reserved customers
-    
-      -- find all tickets issued in the given time range and get start...
-      SELECT "start" AS "raw_end" FROM "${this.prefix}_tickets" WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
-
-      -- ...and end date
-      SELECT "end" AS "raw_end" FROM "${this.prefix}_tickets" WHERE "start" >= $1::timestamp AND "end" <= $2::timestamp UNION
-      
-      -- combine the day range with the end time of the timeslot matching the day of week
-      SELECT "range"."day" + "timeslots"."end" AS "end" FROM (
-        -- create timestamps for each day from start to end with the time 00:00:00.000
-        SELECT generate_series AS "day" FROM generate_series(($1::date)::timestamp, $2, '24 hours')
-      ) AS "range", "${this.prefix}_timeslots" AS timeslots WHERE timeslots.day = EXTRACT(DOW FROM "range"."day")
-
-      ORDER BY "raw_end"
-    ) AS "end"
-  WHERE "start" < "raw_end"
-  GROUP BY "start"
-) AS "range"
--- add the tickets for the built ranges
-LEFT JOIN "${this.prefix}_tickets" "booked" ON (
-  ("booked"."start" <= "range"."start" AND "booked"."end" > "range"."start") OR
-  ("booked"."start" < "range"."end" AND "booked"."end" >= "range"."end")
-)
--- add the timeslots for the built ranges
-LEFT JOIN "${this.prefix}_timeslots" "timeslots" ON (
-  ("timeslots"."start" <= CAST("range"."start" AS time) AND "timeslots"."end" > CAST("range"."start" AS time) AND "timeslots"."day" = EXTRACT(DOW FROM "range"."start")) OR
-  ("timeslots"."start" < CAST("range"."end" AS time) AND "timeslots"."end" >= CAST("range"."end" AS time) AND "timeslots"."day" = EXTRACT(DOW FROM "range"."start"))
-)
-GROUP BY "range"."start", "range"."end", "allowed", "timeslots"."customers"
-ORDER BY "range"."start"
-`
+    const config = await this.getConfig()
+    const query = this.getAvailableTicketsQuery(config.slotType)
     const values = [start.toISOString(), end.toISOString()]
     const result = await this.client.query(query, values)
+    const rows = result.rows
+
+    if (config.slotType === "times") {
+      const dayQuery = this.getHolidaysQuery()
+      const dayValues = [start.toISOString(), end.toISOString()]
+      const dayResult = await this.client.query(dayQuery, dayValues)
+
+      const holidays = dayResult.rows
+      return rows.filter(r => !holidays.find(h => {
+        const holidayEnd = (+h.end + (24 * 60 * 60 * 1000))
+        const startsInHoliday = +h.start <= +r.start && +r.start <= holidayEnd
+        const endsInHoliday = +h.start <= +r.end && +r.end <= holidayEnd
+        return startsInHoliday || endsInHoliday
+      }))
+    }
+
+    return rows
+  }
+
+  async replaceDailyAvailabilityAndHolidays ({ dailyAvailability, holidays }) {
+    try {
+      await this.client.query('BEGIN')
+      await this.replaceDailyAvailability(dailyAvailability)
+      await this.replaceDailyAvailability(holidays)
+      await this.client.query('COMMIT')
+    } catch (e) {
+      await this.client.query('ROLLBACK')
+      throw e
+    }
+  }
+
+  async replaceDayslots (listOfSlots) {
+    const query = `WITH inserted_ids AS (INSERT INTO "${
+      this.prefix
+    }_dayslots"("start", "end", "customers", "min_duration", "max_duration") VALUES ${listOfSlots
+      .map((_slot, idx) => {
+        const row = idx * 5
+        return `($${row + 1}, $${row + 2}, $${row + 3}, $${row + 4}, $${row + 5})`
+      })
+      .join(',')} RETURNING id) DELETE FROM "${
+      this.prefix
+    }_dayslots" WHERE id NOT IN (SELECT id FROM inserted_ids)`
+    const values = listOfSlots.reduce(
+      (acc, { customers, end, minDuration, maxDuration, start }) => [
+        ...acc,
+        start,
+        end,
+        customers,
+        minDuration,
+        maxDuration
+      ],
+      []
+    )
+    await this.client.query(query, values)
+  }
+
+  async getDayslots () {
+    const query = `SELECT * FROM "${this.prefix}_dayslots"`
+    const result = await this.client.query(query)
 
     return result.rows
   }

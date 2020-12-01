@@ -1,5 +1,8 @@
-import { LocalTicket } from "../../../src/service/domain";
-import { RegisterTicketParams } from "../../../src/service/server/push";
+import { LocalTicket, ShopConfig, Dayslot } from "../../../src/service/domain";
+import {
+  RegisterTicketParams,
+  RemoveTicketParams,
+} from "../../../src/service/server/push";
 
 export const putData = async (url: string, data: any) => {
   console.log("putting (mock)", { url, data });
@@ -16,5 +19,14 @@ export async function registerTicket({
   customer,
 }: RegisterTicketParams): Promise<LocalTicket> {
   const ticketUrl = `${shop["@id"]}/ticket/1`;
-  return { ...ticket, shop, id: ticketUrl, ticketUrl };
+  return { ...ticket, contact: customer, shop, id: ticketUrl, ticketUrl };
 }
+
+export async function removeTicket({
+  ticketUrl,
+}: RemoveTicketParams): Promise<void> {}
+
+export async function updateOpeningDays(
+  shop: ShopConfig,
+  dayslots: Dayslot[]
+): Promise<void> {}

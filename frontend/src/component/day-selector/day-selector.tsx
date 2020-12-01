@@ -63,7 +63,10 @@ const DaySelector: React.FC<DaySelectorProps> = ({
                     !selected[backendIndex],
                     ...selected.slice(backendIndex + 1),
                   ] as AvailableDays;
-                  setValue(name, newSelected, true);
+                  setValue(name, newSelected, {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  });
                   onChange(newSelected);
                 }}
                 type="button"

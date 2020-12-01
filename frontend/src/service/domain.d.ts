@@ -30,7 +30,9 @@ export type Address = {
   streetAddress: StreetAddress;
 };
 export type AmountOfPeople = Flavor<number, "AmountOfPeople">;
+export type AmountOfDays = Flavor<number, "AmountOfDays">;
 export type City = Flavor<string, "City">;
+export type DateString = Flavor<string, "DateString">;
 export type Day = "Mo" | "Di" | "Mi" | "Do" | "Fr" | "Sa" | "So";
 export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 export type EMail = Flavor<string, "EMail">;
@@ -53,6 +55,7 @@ export interface BaseShopConfig {
   name: ShopName;
   needsRegistration: boolean;
   path: string;
+  slotType: "days" | "times" | "holidays";
 }
 
 export interface UpdateShopConfig extends BaseShopConfig {
@@ -99,6 +102,14 @@ export interface Timeslot {
   end: Time;
   minDuration: Minutes;
   maxDuration: Minutes;
+}
+
+export interface Dayslot {
+  end: DateString;
+  customers: AmountOfPeople;
+  maxDuration: AmountOfDays;
+  minDuration: AmountOfDays;
+  start: DateString;
 }
 
 export type TicketMap = { [id: string]: LocalTicket };

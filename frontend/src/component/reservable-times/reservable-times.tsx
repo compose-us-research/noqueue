@@ -1,17 +1,32 @@
 import React, { useState } from "react";
+import {
+  FormProvider,
+  useForm,
+  SubmitHandler,
+  useFieldArray,
+} from "react-hook-form";
+import { parseISO } from "date-fns";
 
 import { ReactComponent as PlusIcon } from "../../asset/image/plus-icon.svg";
-import { Timerange, Timeslot } from "../../service/domain";
+import { AvailableSlot, Timerange, Timeslot } from "../../service/domain";
 import Button from "../button/button";
 import styles from "./reservable-times.module.css";
-import { FormContext, useForm, OnSubmit, useFieldArray } from "react-hook-form";
+import HolidaySelector from "../holiday-selector/holiday-selector";
 import Spacer from "../spacer/spacer";
 import TimerangeSetter from "../timerange-setter/timerange-setter";
 import { useShopFetch } from "../../service/server/connection";
 import generateTimerangesFromTimeslots from "../../lib/generate-timeranges-from-timeslots/generate-timeranges-from-timeslots";
 
 interface ReservableTimesProps {
-  handleSubmit: OnSubmit<Record<string, any>>;
+  handleSubmit: SubmitHandler<{
+    holidays: {
+      range: {
+        start: Date;
+        end: Date;
+      };
+    }[];
+    ranges: Timerange[];
+  }>;
 }
 
 function createNewTimerange(lastRange?: Timerange): Timerange {
@@ -28,17 +43,34 @@ const mapper = (data: any): Timeslot[] => {
   return data.member;
 };
 
+const holidayMapper = (data: any): AvailableSlot[] => {
+  return data.member
+    .filter((m: any) => m.customers === 0)
+    .map((m: any) => ({
+      ...m,
+      end: parseISO(m.end),
+      start: parseISO(m.start),
+    }));
+};
+
 let id = 0;
+let holidayId = 0;
 const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
   const timeslots = useShopFetch("/timeslot", { mapper });
+  const holidays = useShopFetch("/dayslot", { mapper: holidayMapper });
   const timeranges = generateTimerangesFromTimeslots(timeslots);
   const [opened, setOpened] = useState<{ [key: number]: boolean }>({});
   const methods = useForm({
     defaultValues: {
+      holidays: holidays.map((range) => ({ ...range, id: ++holidayId })),
       ranges: timeranges.map((range) => ({ ...range, id: ++id })),
     },
   });
-  const { fields, append, remove } = useFieldArray({
+  const {
+    fields: rangesFields,
+    append: rangesAppend,
+    remove: rangesRemove,
+  } = useFieldArray({
     control: methods.control,
     name: "ranges",
   });
@@ -46,11 +78,11 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
   return (
     <div className={styles.root}>
       <h2>Buchbare Zeiten hinterlegen</h2>
-      <FormContext {...methods}>
+      <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(handleSubmit)}>
           <Spacer />
           <div className={styles.fields}>
-            {fields.map((range, index) => {
+            {rangesFields.map((range, index) => {
               const id = range.id as any;
               return (
                 <React.Fragment key={id}>
@@ -60,7 +92,7 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
                     label={`Zeitraum ${index + 1}`}
                     name={"ranges"}
                     range={range as Timerange}
-                    remover={() => remove(index)}
+                    remover={() => rangesRemove(index)}
                     toggleOpen={() =>
                       setOpened((old) => ({
                         ...old,
@@ -76,7 +108,9 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
             <Button
               className={styles.addButton}
               onClick={() => {
-                const lastRange = fields[fields.length - 1] as Timerange;
+                const lastRange = rangesFields[
+                  rangesFields.length - 1
+                ] as Timerange;
                 const appendTimerange = {
                   ...createNewTimerange(lastRange),
                   id: ++id,
@@ -84,7 +118,7 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
                 setOpened({
                   [id]: true,
                 });
-                append(appendTimerange);
+                rangesAppend(appendTimerange);
               }}
               variant="secondary"
             >
@@ -92,12 +126,16 @@ const ReservableTimes: React.FC<ReservableTimesProps> = ({ handleSubmit }) => {
               <PlusIcon />
             </Button>
             <Spacer />
+
+            <HolidaySelector name="holidays" />
+            <Spacer />
+
             <Button className={styles.submit} type="submit">
               Fertig! Erzähl es deinen Kunden!
             </Button>
           </div>
         </form>
-      </FormContext>
+      </FormProvider>
     </div>
   );
 };

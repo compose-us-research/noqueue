@@ -15,6 +15,7 @@ interface AvailableTicketsProps {
   onSelect: (slot: AvailableSlot) => void;
   selectedSlot?: AvailableSlot;
   start: Date;
+  usesDays: boolean;
 }
 
 const mapper: (from: any) => Ticket[] = (tickets) => {
@@ -33,23 +34,31 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
   onSelect,
   selectedSlot,
   start,
+  usesDays,
 }) => {
   const url = `/ticket/available?start=${encodeURIComponent(
     start.toISOString()
   )}&end=${encodeURIComponent(end.toISOString())}`;
   const data = useShopFetch<Ticket[]>(url, { mapper });
+  const defaultMinutes = usesDays ? 24 * 60 : 15;
+  const durationInMinutes = usesDays ? duration * 24 * 60 : duration;
   const from = new Date(
-    Math.floor(Date.now() / (15 * 60 * 1000)) * 15 * 60 * 1000
+    Math.floor(Date.now() / (defaultMinutes * 60 * 1000)) *
+      defaultMinutes *
+      60 *
+      1000
   );
   const spontaneousSlots = generateSlotsFromData({
     slots: data,
-    duration: duration + 15,
+    duration: durationInMinutes + defaultMinutes,
     from,
+    usesDays: false,
   });
   const generatedSlots = generateSlotsFromData({
     slots: data,
     duration,
-    from: new Date(+from + 15 * 60 * 1000),
+    from: new Date(+from + defaultMinutes * 60 * 1000),
+    usesDays,
   });
   const firstIsNow =
     spontaneousSlots.length > 0 && +spontaneousSlots[0].start === +from;
@@ -77,8 +86,13 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
               >
                 <span className={styles.big}>Spontan</span>
                 <span className={styles.mini}>
-                  (bis {tdf(slotRightNow.end.getHours())}:
-                  {tdf(slotRightNow.end.getMinutes())})
+                  {usesDays
+                    ? `(bis ${tdf(slotRightNow.end.getUTCDate())}.${tdf(
+                        slotRightNow.end.getUTCMonth() + 1
+                      )}.${slotRightNow.end.getUTCFullYear()})`
+                    : `(bis ${tdf(slotRightNow.end.getHours())}:${tdf(
+                        slotRightNow.end.getMinutes()
+                      )})`}
                 </span>
               </Button>
             </div>
@@ -104,12 +118,22 @@ const AvailableTickets: React.FC<AvailableTicketsProps> = ({
                       }
                     >
                       <span className={styles.big}>
-                        {tdf(slot.start.getHours())}:
-                        {tdf(slot.start.getMinutes())}
+                        {usesDays
+                          ? `${tdf(slot.start.getUTCDate())}.${tdf(
+                              slot.start.getUTCMonth() + 1
+                            )}.${slot.start.getUTCFullYear()}`
+                          : `${tdf(slot.start.getHours())}:${tdf(
+                              slot.start.getMinutes()
+                            )}`}
                       </span>
                       <span className={styles.mini}>
-                        (bis {tdf(slot.end.getHours())}:
-                        {tdf(slot.end.getMinutes())})
+                        {usesDays
+                          ? `(bis ${tdf(slot.end.getUTCDate())}.${tdf(
+                              slot.end.getUTCMonth() + 1
+                            )}.${slot.end.getUTCFullYear()})`
+                          : `(bis ${tdf(slot.end.getHours())}:${tdf(
+                              slot.end.getMinutes()
+                            )})`}
                       </span>
                     </Button>
                   ))}

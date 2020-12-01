@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useForm, FormContext } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 
 import Button from "../button/button";
 import TextField from "../text-field/text-field";
@@ -65,7 +65,7 @@ const RegisterCustomer: React.FC<RegisterCustomerProps> = ({
       <h2>Achtung!</h2>
       <h3>Das gewünschte Unternehmen unterliegt der Aufzeichnungspflicht.</h3>
       <form onSubmit={methods.handleSubmit(handleSubmit)}>
-        <FormContext {...methods}>
+        <FormProvider {...methods}>
           <div className={styles.fields}>
             <p>
               Um die Verbreitung des Corona-Virus weiter einzudämmen, müssen
@@ -140,7 +140,7 @@ const RegisterCustomer: React.FC<RegisterCustomerProps> = ({
             <Button type="submit">Ticketbuchung abschließen</Button>
             <Spacer />
           </div>
-        </FormContext>
+        </FormProvider>
       </form>
     </div>
   );

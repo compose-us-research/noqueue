@@ -1,5 +1,38 @@
+import { addDays, endOfDay, startOfDay } from "date-fns";
 import { ShopConfig } from "../../../src/service/domain";
 import { fetcherFn } from "swr/dist/types";
+
+const featureFestival: ShopConfig = {
+  address: {
+    streetAddress: "Auf der Wiese 17",
+    postalCode: "94032",
+    city: "Passau",
+  },
+  "@id": "/shop/feature-festival",
+  mail: "someone@example.org",
+  maxDuration: 5,
+  minDuration: 3,
+  name: "Feature Festival",
+  needsRegistration: true,
+  path: "feature-festival",
+  slotType: "holidays",
+};
+
+const lovelyLandmark: ShopConfig = {
+  address: {
+    streetAddress: "Am Bahnhofsplatz 1",
+    postalCode: "94032",
+    city: "Passau",
+  },
+  "@id": "/shop/lovely-landmark",
+  mail: "someone@example.org",
+  maxDuration: 28,
+  minDuration: 1,
+  name: "Lovely Landmark",
+  needsRegistration: true,
+  path: "lovely-landmark",
+  slotType: "days",
+};
 
 const shop: ShopConfig = {
   address: {
@@ -7,20 +40,58 @@ const shop: ShopConfig = {
     postalCode: "94032",
     city: "Passau",
   },
-  "@id": "/shop/buchhandlung-pustet",
+  "@id": "/shop/cozy-costumes",
   mail: "someone@example.org",
   maxDuration: 120,
   minDuration: 15,
-  name: "Buchhandlung Pustet",
+  name: "Cozy Costumes",
   needsRegistration: true,
-  path: "buchhandlung-pustet",
+  path: "cozy-costumes",
+  slotType: "times",
 };
 
 export const fetcher: fetcherFn<any> = async (url: string) => {
   console.log("fetching", { url });
+  if (/\/shop\/lovely-landmark\/?$/.test(url)) {
+    return lovelyLandmark;
+  }
+  if (/\/shop\/feature-festival\/?$/.test(url)) {
+    return featureFestival;
+  }
   if (/\/shop\/([^/]+?)\/?$/.test(url)) {
     return shop;
   }
+  if (/\/shop\/feature-festival\/dayslot\/?$/.test(url)) {
+    const now = new Date();
+    return {
+      member: [
+        {
+          id: 13,
+          customers: 4,
+          end: startOfDay(new Date(+now + 5 * 24 * 60 * 60 * 1000)),
+          minDuration: 1,
+          maxDuration: 3,
+          start: startOfDay(now),
+        },
+      ],
+    };
+  }
+  if (/\/shop\/lovely-landmark\/dayslot\/?$/.test(url)) {
+    const now = new Date();
+    return {
+      member: [
+        {
+          id: 13,
+          customers: 4,
+          end: startOfDay(new Date(+now + 30 * 24 * 60 * 60 * 1000)),
+          minDuration: 1,
+          maxDuration: 3,
+          start: startOfDay(now),
+        },
+      ],
+    };
+  }
+
   if (/\/shop\/([^/]+?)\/timeslot\/?$/.test(url)) {
     return {
       member: [
@@ -70,40 +141,55 @@ export const fetcher: fetcherFn<any> = async (url: string) => {
   if (/\/shop\/([^/]+?)\/ticket\/?$/.test(url)) {
     return { member: [] };
   }
-  if (/\/shop\/([^/]+?)\/ticket\/available/.test(url)) {
+  if (/\/shop\/cozy-costumes\/ticket\/available/.test(url)) {
+    const now = new Date();
     return {
       member: [
         {
-          start: "2020-07-13T00:00:00.000Z",
-          end: "2020-07-13T23:59:00.000Z",
+          start: startOfDay(now),
+          end: endOfDay(now),
           reserved: 0,
           allowed: 4,
           available: 4,
         },
         {
-          start: "2020-07-14T00:00:00.000Z",
-          end: "2020-07-14T23:59:00.000Z",
+          start: startOfDay(+now + 24 * 60 * 60 * 1000),
+          end: endOfDay(+now + 24 * 60 * 60 * 1000),
           reserved: 0,
           allowed: 4,
           available: 4,
         },
         {
-          start: "2020-07-15T00:00:00.000Z",
-          end: "2020-07-15T23:59:00.000Z",
+          start: startOfDay(+now + 2 * 24 * 60 * 60 * 1000),
+          end: endOfDay(+now + 2 * 24 * 60 * 60 * 1000),
           reserved: 0,
           allowed: 4,
           available: 4,
         },
         {
-          start: "2020-07-16T00:00:00.000Z",
-          end: "2020-07-16T23:59:00.000Z",
+          start: startOfDay(+now + 3 * 24 * 60 * 60 * 1000),
+          end: endOfDay(+now + 3 * 24 * 60 * 60 * 1000),
           reserved: 0,
           allowed: 4,
           available: 4,
         },
         {
-          start: "2020-07-17T00:00:00.000Z",
-          end: "2020-07-17T23:59:00.000Z",
+          start: startOfDay(+now + 4 * 24 * 60 * 60 * 1000),
+          end: endOfDay(+now + 4 * 24 * 60 * 60 * 1000),
+          reserved: 0,
+          allowed: 4,
+          available: 4,
+        },
+      ],
+    };
+  }
+  if (/\/shop\/([^/]+?)\/ticket\/available/.test(url)) {
+    const now = new Date();
+    return {
+      member: [
+        {
+          start: startOfDay(now),
+          end: addDays(startOfDay(now), 5),
           reserved: 0,
           allowed: 4,
           available: 4,

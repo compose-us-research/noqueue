@@ -9,8 +9,24 @@ export default {
   component: ChooseTicket,
 };
 
-export const Simple = () => (
+export const TimeslotShop = () => (
   <Connected>
+    <BrowserRouter>
+      <ChooseTicket onSelect={action("reserved slot")} />
+    </BrowserRouter>
+  </Connected>
+);
+
+export const DayslotShop = () => (
+  <Connected shopId="lovely-landmark">
+    <BrowserRouter>
+      <ChooseTicket onSelect={action("reserved slot")} />
+    </BrowserRouter>
+  </Connected>
+);
+
+export const HolidayShop = () => (
+  <Connected shopId="feature-festival">
     <BrowserRouter>
       <ChooseTicket onSelect={action("reserved slot")} />
     </BrowserRouter>

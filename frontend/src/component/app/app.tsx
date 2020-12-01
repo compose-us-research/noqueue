@@ -73,7 +73,7 @@ interface CurrentShopAppProps {
 }
 
 const CurrentShopApp: React.FC<CurrentShopAppProps> = ({ connection }) => {
-  const { shopId } = useParams();
+  const { shopId } = useParams<{ shopId: string }>();
   const { push } = useHistory();
   const { path } = useRouteMatch();
   const backToIndex = () => push("/");

@@ -1,0 +1,38 @@
+.root {
+  align-items: stretch;
+  border-radius: 28.5px;
+  display: grid;
+  font-size: 16px;
+  font-weight: 600;
+  grid-template-columns: 25px 1fr;
+  grid-column-gap: 25px;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.input {
+  display: none;
+}
+
+.input + .radio {
+  background-color: #fff;
+  border: 1px solid #000;
+  border-radius: 50%;
+  content: "";
+  flex-grow: 0;
+  flex-shrink: 0;
+  height: 25px;
+  margin: 3px 3px 3px 4px;
+  width: 25px;
+}
+
+.label {
+  color: #afafbd;
+  flex-grow: 1;
+}
+
+/* Modifiers */
+
+.checked .radio {
+  background-color: #fe805c;
+}

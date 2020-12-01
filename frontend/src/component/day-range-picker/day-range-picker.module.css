@@ -1,0 +1,16 @@
+/* elements */
+.root {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.label {
+  font-weight: 600;
+  padding-left: 9px;
+}
+
+.error {
+  border: 1px solid red;
+}
+
+/* modifiers */

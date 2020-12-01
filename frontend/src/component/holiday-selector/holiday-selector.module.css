@@ -1,0 +1,33 @@
+/* elements */
+.root {
+  width: 100%;
+}
+
+.addButton {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  width: 100%;
+}
+
+:global(.react-datepicker),
+:global(.react-datepicker__month-container) {
+  width: 100%;
+}
+
+.datepickerMonthContainer {
+  width: 100%;
+}
+
+:global(.react-datepicker__day-names),
+:global(.react-datepicker__week) {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.datepickerWrapper {
+  width: 100%;
+}
+
+/* modifiers */
