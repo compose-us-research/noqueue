@@ -4,7 +4,7 @@ BASE_URL="http://localhost:9090"
 SHOP_NAME="automated-test-shop"
 TESTS="$@"
 if [ "$TESTS" == "" ]; then
-  TESTS=$(ls -1 test-with-dayslot-shop-*.sh)
+  TESTS=$(ls -1 test-*.sh)
 fi
 
 testIt() {
@@ -23,11 +23,23 @@ testIt() {
 
 echo "Running tests"
 for test in $TESTS; do
-  source setup-dayslot-shop.sh
+  [[ $test =~ ^test-with-dayslot-shop-.* ]]
+  IS_DAYSLOT=$?
+  [[ $test =~ ^test-with-timeslot-shop-.* ]]
+  IS_TIMESLOT=$?
+  if [ $IS_DAYSLOT -eq 0 ]; then
+    source setup-dayslot-shop.sh
+  elif [ $IS_TIMESLOT -eq 0 ]; then
+    source setup-timeslot-shop.sh
+  fi
 
   echo ""
   echo "$test ..."
   source $test
 
-  source setup-shop-delete.sh
+  if [ $IS_DAYSLOT -eq 0 ]; then
+    source setup-shop-delete.sh
+  elif [ $IS_TIMESLOT -eq 0 ]; then
+    source setup-shop-delete.sh
+  fi
 done

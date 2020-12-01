@@ -1,0 +1,60 @@
+{
+  "member": [
+    {
+      "day": 1,
+      "start": "08:00:00",
+      "end": "11:30:00",
+      "customers": 4,
+      "minDuration": 5,
+      "maxDuration": 30
+    },
+    {
+      "day": 1,
+      "start": "13:00:00",
+      "end": "17:00:00",
+      "customers": 3,
+      "minDuration": 5,
+      "maxDuration": 30
+    },
+    {
+      "day": 2,
+      "start": "08:00:00",
+      "end": "11:30:00",
+      "customers": 4,
+      "minDuration": 5,
+      "maxDuration": 30
+    },
+    {
+      "day": 2,
+      "start": "13:00:00",
+      "end": "17:00:00",
+      "customers": 3,
+      "minDuration": 5,
+      "maxDuration": 30
+    },
+    {
+      "day": 4,
+      "start": "08:00:00",
+      "end": "11:30:00",
+      "customers": 4,
+      "minDuration": 5,
+      "maxDuration": 30
+    },
+    {
+      "day": 4,
+      "start": "13:00:00",
+      "end": "17:00:00",
+      "customers": 3,
+      "minDuration": 5,
+      "maxDuration": 30
+    },
+    {
+      "day": 6,
+      "start": "08:00:00",
+      "end": "11:30:00",
+      "customers": 2,
+      "minDuration": 5,
+      "maxDuration": 30
+    }
+  ]
+}
