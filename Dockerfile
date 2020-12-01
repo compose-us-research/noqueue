@@ -5,10 +5,10 @@ RUN mkdir -p /app/backend && mkdir -p /app/frontend
 COPY backend/package.json /app/backend/package.json
 COPY backend/package-lock.json /app/backend/package-lock.json
 COPY frontend/package.json /app/frontend/package.json
-COPY frontend/yarn.lock /app/frontend/yarn.lock
+COPY frontend/package-lock.json /app/frontend/package-lock.json
 
 WORKDIR /app/frontend
-RUN yarn install
+RUN npm ci
 
 WORKDIR /app/backend
 RUN npm ci
@@ -20,7 +20,7 @@ COPY frontend /app/frontend
 WORKDIR /app/backend
 
 WORKDIR /app/frontend
-RUN yarn build
+RUN npm run build
 
 FROM node:12-alpine AS runner
 RUN mkdir -p /app/backend && mkdir -p /app/frontend
