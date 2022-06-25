@@ -21,7 +21,7 @@
     "uuid": "^8.1.0"
   },
   "devDependencies": {
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.7",
     "prettier-standard": "^16.3.0"
   }
 }
