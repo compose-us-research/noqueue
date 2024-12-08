@@ -1,3 +1,5 @@
+If you have any inquiries about this repository or the Domain Platzhalter.io, please contact the compose.us team. This repository is not maintained right now.
+
 # The problem 🤯
 
 Sporteln, Essen gehen, in den Urlaub fahren, Ausflüge machen und generell unter Menschen sein - das erfordert aktuell alles etwas mehr Planung. Das Ganze muss außerdem unter Wahrung des Datenschutzes stattfinden.
